@@ -32,6 +32,9 @@ class TelegramService implements TelegramServiceInterface
             case '/start':
                 $responseMessage = __('telegram.startMessage');
                 break;
+            case '/env':
+                $responseMessage = __('telegram.environment', ['env' => config('app.env')]);
+                break;
             default:
         }
 
