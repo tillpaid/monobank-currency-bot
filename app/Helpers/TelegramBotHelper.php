@@ -7,6 +7,8 @@ use Longman\TelegramBot\Telegram;
 
 class TelegramBotHelper
 {
+    private static $bot;
+
     public static function sendMessage($chatId, $message, $keyboard = [])
     {
         $sendData = [
@@ -25,12 +27,14 @@ class TelegramBotHelper
 
     public static function getBot(): Telegram
     {
-        $botUserName = config('telegram.botUserName');
-        $botApiKey = config('telegram.botApiToken');
+        if (is_null(self::$bot)) {
+            $botUserName = config('telegram.botUserName');
+            $botApiKey = config('telegram.botApiToken');
 
-        $telegram = new Telegram($botApiKey, $botUserName);
+            self::$bot = new Telegram($botApiKey, $botUserName);
+        }
 
-        return $telegram;
+        return self::$bot;
     }
 
     public static function myId(): string
