@@ -7,16 +7,16 @@ use Longman\TelegramBot\Telegram;
 
 class TelegramBotHelper
 {
-    public static function sendMessage($chatId, $message, $replyMarkup = [])
+    public static function sendMessage($chatId, $message, $keyboard = [])
     {
         $sendData = [
-            'chat_id' => $chatId,
-            'text'    => $message
+            'chat_id'      => $chatId,
+            'text'         => $message,
+            'reply_markup' => [
+                'remove_keyboard' => true,
+                'keyboard'        => $keyboard
+            ]
         ];
-
-        if (!empty($replyMarkup)) {
-            $sendData['reply_markup'] = $replyMarkup;
-        }
 
         // Need for Request sendMessage code
         $telegram = self::getBot();
