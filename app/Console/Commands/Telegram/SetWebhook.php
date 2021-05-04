@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Telegram;
 
 use App\Helpers\TelegramBotHelper;
+use App\Services\Interfaces\TelegramServiceInterface;
 use Illuminate\Console\Command;
 use Longman\TelegramBot\Exception\TelegramException;
 
@@ -14,6 +15,8 @@ class SetWebhook extends Command
      * @var string
      */
     protected $signature = 'telegram:set-webhook';
+
+    private $telegramService;
 
     /**
      * The console command description.
@@ -27,9 +30,11 @@ class SetWebhook extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(TelegramServiceInterface $telegramService)
     {
         parent::__construct();
+
+        $this->telegramService = $telegramService;
     }
 
     /**
@@ -47,6 +52,7 @@ class SetWebhook extends Command
 
             if ($result->isOk()) {
                 echo $result->getDescription() . PHP_EOL;
+                $this->telegramService->sendMessageAboutChangeEnv();
             }
         } catch (TelegramException $exception) {
             echo $exception->getMessage() . PHP_EOL;

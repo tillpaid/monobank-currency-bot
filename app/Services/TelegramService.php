@@ -19,6 +19,14 @@ class TelegramService implements TelegramServiceInterface
         $this->processMessage($chatId, $messageText);
     }
 
+    public function sendMessageAboutChangeEnv(): void
+    {
+        $chatId = TelegramBotHelper::myId();
+        $message = __('telegram.environmentChanged', ['env' => config('app.env')]);
+
+        TelegramBotHelper::sendMessage($chatId, $message);
+    }
+
     private function processMessage($chatId, $messageText): void
     {
         if (!$this->checkAuth($chatId)) {
