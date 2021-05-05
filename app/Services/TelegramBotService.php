@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Services;
 
+use App\Services\Interfaces\TelegramBotServiceInterface;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 
-class TelegramBotHelper
+class TelegramBotService implements TelegramBotServiceInterface
 {
-    private static $bot;
+    private $bot;
 
-    public static function sendMessage($chatId, $message, $keyboard = [])
+    public function sendMessage(string $chatId, string $message, array $keyboard = []): void
     {
         $sendData = [
             'chat_id'      => $chatId,
@@ -21,23 +22,23 @@ class TelegramBotHelper
         ];
 
         // Need for Request sendMessage code
-        $telegram = self::getBot();
+        $telegram = $this->getBot();
         Request::sendMessage($sendData);
     }
 
-    public static function getBot(): Telegram
+    public function getBot(): Telegram
     {
-        if (is_null(self::$bot)) {
+        if (is_null($this->bot)) {
             $botUserName = config('telegram.botUserName');
             $botApiKey = config('telegram.botApiToken');
 
-            self::$bot = new Telegram($botApiKey, $botUserName);
+            $this->bot = new Telegram($botApiKey, $botUserName);
         }
 
-        return self::$bot;
+        return $this->bot;
     }
 
-    public static function myId(): string
+    public function getMyId(): string
     {
         return config('telegram.myChatId');
     }
