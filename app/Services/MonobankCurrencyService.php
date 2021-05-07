@@ -18,8 +18,8 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
     {
         $this->currencyRateService = $currencyRateService;
 
-        $this->uahCode = config('app.uahCode');
-        $this->currencyCodes = config('app.currencyCodes');
+        $this->uahCode = config('monobank.uahCode');
+        $this->currencyCodes = config('monobank.currencyCodes');
     }
 
     public function updateCurrencyRates(): bool
@@ -33,7 +33,7 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
     private function getCurrency(): array
     {
         $output = [];
-        $response = Http::get(config('app.monobank_currency_url'));
+        $response = Http::get(config('monobank.monobank_currency_url'));
 
         if ($response->status() == 200 && $response->body()) {
             $output = json_decode($response->body(), true);

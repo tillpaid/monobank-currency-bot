@@ -25,7 +25,7 @@ class CurrencyRateFactory extends Factory
         $buy = $this->faker->randomFloat(2, $sell, $sell + 1);
 
         return [
-            'currency' => $this->faker->randomElement(config('app.currencies')),
+            'currency' => $this->faker->randomElement(config('monobank.currencies')),
             'sell'     => $sell,
             'buy'      => $buy,
         ];
