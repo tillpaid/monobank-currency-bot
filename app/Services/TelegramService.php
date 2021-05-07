@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\TelegramUser;
 use App\Services\Interfaces\TelegramBotServiceInterface;
 use App\Services\Interfaces\TelegramServiceInterface;
 
@@ -23,6 +24,7 @@ class TelegramService implements TelegramServiceInterface
         $chatId = $message['chat']['id'];
         $messageText = $message['text'];
 
+        $this->createUserIfNotExists($chatId);
         $this->processMessage($chatId, $messageText);
     }
 
@@ -59,5 +61,12 @@ class TelegramService implements TelegramServiceInterface
     private function checkAuth($chatId): bool
     {
         return $chatId == $this->telegramBotService->getMyId();
+    }
+
+    private function createUserIfNotExists($chatId): void
+    {
+        if (!TelegramUser::where('chat_id', $chatId)->count()) {
+            TelegramUser::create(['chat_id' => $chatId]);
+        }
     }
 }
