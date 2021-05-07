@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Models;
 
 use App\Models\CurrencyRate;
 use App\Repositories\Interfaces\CurrencyRateRepositoryInterface;

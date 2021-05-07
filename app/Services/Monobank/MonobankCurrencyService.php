@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Monobank;
 
 use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
 use App\Services\Interfaces\Monobank\MonobankCurrencyServiceInterface;

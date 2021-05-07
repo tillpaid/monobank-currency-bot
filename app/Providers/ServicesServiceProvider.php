@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
-use App\Services\CurrencyRateService;
+use App\Services\Models\CurrencyRateService;
 use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
 use App\Services\Interfaces\Monobank\MonobankCurrencyServiceInterface;
 use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
 use App\Services\Interfaces\Telegram\TelegramServiceInterface;
-use App\Services\MonobankCurrencyService;
-use App\Services\TelegramBotService;
-use App\Services\TelegramService;
+use App\Services\Monobank\MonobankCurrencyService;
+use App\Services\Telegram\TelegramBotService;
+use App\Services\Telegram\TelegramService;
 use Illuminate\Support\ServiceProvider;
 
 class ServicesServiceProvider extends ServiceProvider

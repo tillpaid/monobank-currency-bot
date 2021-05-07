@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Telegram;
 
 use App\Models\TelegramUser;
 use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
 use App\Services\Interfaces\Telegram\TelegramServiceInterface;
-
 
 class TelegramService implements TelegramServiceInterface
 {
