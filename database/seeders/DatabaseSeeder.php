@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TelegramUserSeeder::class,
             CurrencyRateSeeder::class,
+            CurrencyAccountSeeder::class,
         ]);
     }
 }
