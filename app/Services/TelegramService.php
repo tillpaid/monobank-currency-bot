@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use App\Models\TelegramUser;
-use App\Services\Interfaces\TelegramBotServiceInterface;
-use App\Services\Interfaces\TelegramServiceInterface;
+use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
+use App\Services\Interfaces\Telegram\TelegramServiceInterface;
+
 
 class TelegramService implements TelegramServiceInterface
 {

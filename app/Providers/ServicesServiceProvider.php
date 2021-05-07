@@ -3,10 +3,10 @@
 namespace App\Providers;
 
 use App\Services\CurrencyRateService;
-use App\Services\Interfaces\CurrencyRateServiceInterface;
-use App\Services\Interfaces\MonobankCurrencyServiceInterface;
-use App\Services\Interfaces\TelegramBotServiceInterface;
-use App\Services\Interfaces\TelegramServiceInterface;
+use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
+use App\Services\Interfaces\Monobank\MonobankCurrencyServiceInterface;
+use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
+use App\Services\Interfaces\Telegram\TelegramServiceInterface;
 use App\Services\MonobankCurrencyService;
 use App\Services\TelegramBotService;
 use App\Services\TelegramService;

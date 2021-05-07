@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Services\Interfaces\CurrencyRateServiceInterface;
-use App\Services\Interfaces\MonobankCurrencyServiceInterface;
+use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
+use App\Services\Interfaces\Monobank\MonobankCurrencyServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 

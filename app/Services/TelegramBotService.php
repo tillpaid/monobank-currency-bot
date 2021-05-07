@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Services\Interfaces\TelegramBotServiceInterface;
+use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 

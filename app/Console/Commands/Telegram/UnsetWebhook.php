@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Telegram;
 
-use App\Services\Interfaces\TelegramBotServiceInterface;
+use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
 use Illuminate\Console\Command;
 use Longman\TelegramBot\Exception\TelegramException;
 

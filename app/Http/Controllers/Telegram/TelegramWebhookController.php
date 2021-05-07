@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Telegram;
 
 use App\Http\Controllers\Controller;
-use App\Services\Interfaces\TelegramBotServiceInterface;
-use App\Services\Interfaces\TelegramServiceInterface;
+use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
+use App\Services\Interfaces\Telegram\TelegramServiceInterface;
 use Longman\TelegramBot\Exception\TelegramException;
 
 class TelegramWebhookController extends Controller

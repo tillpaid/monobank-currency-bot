@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\CurrencyRate;
 use App\Repositories\Interfaces\CurrencyRateRepositoryInterface;
-use App\Services\Interfaces\CurrencyRateServiceInterface;
+use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 
 class CurrencyRateService implements CurrencyRateServiceInterface
