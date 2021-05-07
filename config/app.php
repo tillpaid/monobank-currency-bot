@@ -121,6 +121,8 @@ return [
 
     'key' => env('APP_KEY'),
 
+    'currencies' => ['usd', 'eur'],
+
     'cipher' => 'AES-256-CBC',
 
     /*
