@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
-use App\Services\Interfaces\MonobankServiceInterface;
+use App\Services\CurrencyRateService;
+use App\Services\Interfaces\CurrencyRateServiceInterface;
+use App\Services\Interfaces\MonobankCurrencyServiceInterface;
 use App\Services\Interfaces\TelegramBotServiceInterface;
 use App\Services\Interfaces\TelegramServiceInterface;
-use App\Services\MonobankService;
+use App\Services\MonobankCurrencyService;
 use App\Services\TelegramBotService;
 use App\Services\TelegramService;
 use Illuminate\Support\ServiceProvider;
@@ -21,7 +23,8 @@ class ServicesServiceProvider extends ServiceProvider
     {
         $this->app->bind(TelegramServiceInterface::class, TelegramService::class);
         $this->app->bind(TelegramBotServiceInterface::class, TelegramBotService::class);
-        $this->app->bind(MonobankServiceInterface::class, MonobankService::class);
+        $this->app->bind(MonobankCurrencyServiceInterface::class, MonobankCurrencyService::class);
+        $this->app->bind(CurrencyRateServiceInterface::class, CurrencyRateService::class);
     }
 
     /**
