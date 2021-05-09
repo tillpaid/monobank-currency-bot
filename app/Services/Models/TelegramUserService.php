@@ -24,4 +24,10 @@ class TelegramUserService implements TelegramUserServiceInterface
     {
         $this->telegramUserRepository->createIfNotExists($chatId);
     }
+
+    public function updateState(Model $telegramUser, ?string $state): bool
+    {
+        $telegramUser->state = $state;
+        return $telegramUser->save();
+    }
 }
