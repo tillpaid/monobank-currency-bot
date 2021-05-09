@@ -2,17 +2,26 @@
 
 namespace App\Services\Telegram;
 
-use App\Models\TelegramUser;
+use App\Services\Interfaces\Models\TelegramUserServiceInterface;
 use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
 use App\Services\Interfaces\Telegram\TelegramServiceInterface;
+use App\Telegram\ProcessTelegramRequest;
 
 class TelegramService implements TelegramServiceInterface
 {
     private $telegramBotService;
+    private $telegramUserService;
+    private $processTelegramRequest;
 
-    public function __construct(TelegramBotServiceInterface $telegramBotService)
+    public function __construct(
+        TelegramBotServiceInterface $telegramBotService,
+        TelegramUserServiceInterface $telegramUserService,
+        ProcessTelegramRequest $processTelegramRequest
+    )
     {
         $this->telegramBotService = $telegramBotService;
+        $this->telegramUserService = $telegramUserService;
+        $this->processTelegramRequest = $processTelegramRequest;
     }
 
     public function processWebhook(array $data): void
@@ -24,7 +33,7 @@ class TelegramService implements TelegramServiceInterface
         $chatId = $message['chat']['id'];
         $messageText = $message['text'];
 
-        $this->createUserIfNotExists($chatId);
+        $this->telegramUserService->createIfNotExists($chatId);
         $this->processMessage($chatId, $messageText);
     }
 
@@ -43,17 +52,8 @@ class TelegramService implements TelegramServiceInterface
             return;
         }
 
-        $responseMessage = $messageText;
-
-        switch ($messageText) {
-            case '/start':
-                $responseMessage = __('telegram.startMessage');
-                break;
-            case '/env':
-                $responseMessage = __('telegram.environment', ['env' => config('app.env')]);
-                break;
-            default:
-        }
+        $user = $this->telegramUserService->getByChatId($chatId);
+        $responseMessage = $this->processTelegramRequest->process($user, $messageText);
 
         $this->telegramBotService->sendMessage($chatId, $responseMessage);
     }
@@ -61,12 +61,5 @@ class TelegramService implements TelegramServiceInterface
     private function checkAuth($chatId): bool
     {
         return $chatId == $this->telegramBotService->getMyId();
-    }
-
-    private function createUserIfNotExists($chatId): void
-    {
-        if (!TelegramUser::where('chat_id', $chatId)->count()) {
-            TelegramUser::create(['chat_id' => $chatId]);
-        }
     }
 }
