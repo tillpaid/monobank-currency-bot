@@ -13,6 +13,7 @@ class ProcessTelegramSellConfirmState extends AbstractProcessTelegramState
             case __('telegram_buttons.back'):
                 $currency = $user->state_additional['sell-currency'] ?? 'usd';
                 $currencySum = $user->state_additional['sell-currency-sum-all'] ?? 0;
+                $currencySum = number_format($currencySum, 5, '.', ' ');
 
                 $this->updateUserState($user, config('states.sell-sum'));
                 $responseMessage = __('telegram.sellSum', ['currencySum' => $currencySum, 'currency' => $currency]);
@@ -21,6 +22,7 @@ class ProcessTelegramSellConfirmState extends AbstractProcessTelegramState
             case __('telegram_buttons.confirm'):
                 $currency = $user->state_additional['sell-currency'] ?? 'usd';
                 $currencySum = $user->state_additional['sell-currency-sum'] ?? 0;
+                $currencySum = number_format($currencySum, 5, '.', ' ');
 
                 $this->currencyAccountService->sellCurrency($user->id, $currency, $currencySum);
 

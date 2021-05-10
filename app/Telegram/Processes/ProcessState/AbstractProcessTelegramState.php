@@ -41,7 +41,7 @@ abstract class AbstractProcessTelegramState implements ProcessTelegramStateInter
         $this->telegramUserService->updateStateAdditional($user, ['buy-currency-rate' => $currencyRate]);
 
         $sumUah = $user->state_additional['buy-currency-sum'] ?? 0;
-        $uahToCurrency = round($sumUah / $currencyRate, 2);
+        $uahToCurrency = number_format($sumUah / $currencyRate, 2, '.', ' ');
 
         return __('telegram.buyMessage', ['currencyRate' => $currencyRate, 'uahToCurrency' => $uahToCurrency, 'currency' => $currency]);
     }

@@ -17,9 +17,9 @@ class CreateCurrencyAccountsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('telegram_user_id');
             $table->string('currency');
-            $table->float('uah_value', 11, 5);
-            $table->float('purchase_rate', 11, 5);
-            $table->float('currency_value', 11, 5);
+            $table->float('uah_value', 45, 5);
+            $table->float('purchase_rate', 45, 5);
+            $table->float('currency_value', 45, 5);
             $table->timestamps();
 
             $table->foreign('telegram_user_id')
