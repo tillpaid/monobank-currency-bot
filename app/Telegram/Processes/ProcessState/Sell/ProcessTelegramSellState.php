@@ -12,7 +12,12 @@ class ProcessTelegramSellState extends AbstractProcessTelegramState
         switch (true) {
             case in_array($messageText, config('monobank.currencies')):
                 $currencySum = $this->currencyAccountService->getUserCurrencySum($user->id, $messageText);
-                $responseMessage = __('telegram.sellSum', ['currencySum' => $currencySum, 'currency' => $messageText]);
+
+                if ($currencySum > 0) {
+                    $responseMessage = __('telegram.sellSum', ['currencySum' => $currencySum, 'currency' => $messageText]);
+                } else {
+                    $responseMessage = __('telegram.sellEmptySum');
+                }
 
                 break;
             case $messageText == __('telegram_buttons.back'):
