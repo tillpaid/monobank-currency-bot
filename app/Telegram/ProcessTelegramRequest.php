@@ -20,7 +20,7 @@ class ProcessTelegramRequest
     public function process(Model $user, string $messageText): string
     {
         return $this->isCommand($messageText)
-            ? $this->processTelegramCommand->process($messageText)
+            ? $this->processTelegramCommand->process($user, $messageText)
             : $this->processTelegramState->process($user, $messageText);
     }
 

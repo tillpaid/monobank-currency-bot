@@ -12,6 +12,10 @@ class TelegramUser extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'state_additional' => 'array'
+    ];
+
     public function currencyAccounts(): HasMany
     {
         return $this->hasMany(CurrencyAccount::class);

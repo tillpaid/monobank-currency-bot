@@ -4,14 +4,19 @@ namespace App\Telegram\Processes\ProcessState;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProcessTelegramDefaultState extends AbstractProcessTelegramState
+class ProcessTelegramBuySumState extends AbstractProcessTelegramState
 {
     public function process(Model $user, string $messageText): string
     {
-        switch ($messageText) {
-            case __('telegram_buttons.buy'):
+        switch (true) {
+            case $messageText == __('telegram_buttons.back'):
                 $this->updateUserState($user, config('states.buy'));
                 $responseMessage = __('telegram.chooseCurrency');
+
+                break;
+            case $messageText == (string)(float)$messageText:
+                $this->updateUserState($user, config('states.buy-rate'), ['buy-currency-sum' => $messageText]);
+                $responseMessage = $this->buildBuyConfirmMessage($user);
 
                 break;
             default:

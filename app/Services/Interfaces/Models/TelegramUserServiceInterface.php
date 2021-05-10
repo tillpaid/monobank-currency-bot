@@ -10,5 +10,5 @@ interface TelegramUserServiceInterface
 
     public function createIfNotExists(string $chatId): void;
 
-    public function updateState(Model $telegramUser, ?string $state): bool;
+    public function updateState(Model $telegramUser, ?string $state, ?array $stateAdditional): bool;
 }
