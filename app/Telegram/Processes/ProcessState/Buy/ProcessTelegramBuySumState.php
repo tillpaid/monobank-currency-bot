@@ -12,7 +12,7 @@ class ProcessTelegramBuySumState extends AbstractProcessTelegramState
         switch (true) {
             case $messageText == __('telegram_buttons.back'):
                 $this->updateUserState($user, config('states.buy'));
-                $responseMessage = __('telegram.chooseCurrency');
+                $responseMessage = __('telegram.chooseCurrencyBuy');
 
                 break;
             case $messageText == (string)(float)$messageText:

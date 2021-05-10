@@ -5,7 +5,7 @@ namespace App\Telegram\Processes\ProcessState\Sell;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 use Illuminate\Database\Eloquent\Model;
 
-class ProcessTelegramSellConfirm extends AbstractProcessTelegramState
+class ProcessTelegramSellConfirmState extends AbstractProcessTelegramState
 {
     public function process(Model $user, string $messageText): string
     {
@@ -19,7 +19,14 @@ class ProcessTelegramSellConfirm extends AbstractProcessTelegramState
 
                 break;
             case __('telegram_buttons.confirm'):
-                $responseMessage = $messageText . " | Processed ProcessTelegramSellConfirm";
+                $currency = $user->state_additional['sell-currency'] ?? 'usd';
+                $currencySum = $user->state_additional['sell-currency-sum'] ?? 0;
+
+                $this->currencyAccountService->sellCurrency($user->id, $currency, $currencySum);
+
+                $this->updateUserState($user, null);
+                $responseMessage = __('telegram.sellSuccessMessage');
+
                 break;
             default:
                 $responseMessage = __('telegram.occurredError');

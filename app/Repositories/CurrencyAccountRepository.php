@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\CurrencyAccount;
+use App\Repositories\Interfaces\CurrencyAccountRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
 
-class CurrencyAccountRepository implements Interfaces\CurrencyAccountRepositoryInterface
+class CurrencyAccountRepository implements CurrencyAccountRepositoryInterface
 {
     private $model;
 
@@ -14,10 +16,18 @@ class CurrencyAccountRepository implements Interfaces\CurrencyAccountRepositoryI
     }
 
     public function getUserCurrencySum(int $userId, string $currency): ?int
-	{
-	    return $this->model
+    {
+        return $this->model
             ->where('telegram_user_id', $userId)
             ->where('currency', $currency)
             ->sum('currency_value');
-	}
+    }
+
+    public function getFirstUserCurrencyAccount(int $userId, string $currency): ?Model
+    {
+        return $this->model
+            ->where('telegram_user_id', $userId)
+            ->where('currency', $currency)
+            ->first();
+    }
 }

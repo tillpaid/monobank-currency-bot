@@ -11,12 +11,12 @@ class ProcessTelegramDefaultState extends AbstractProcessTelegramState
         switch ($messageText) {
             case __('telegram_buttons.buy'):
                 $this->updateUserState($user, config('states.buy'));
-                $responseMessage = __('telegram.chooseCurrency');
+                $responseMessage = __('telegram.chooseCurrencyBuy');
 
                 break;
             case __('telegram_buttons.sell'):
                 $this->updateUserState($user, config('states.sell'));
-                $responseMessage = __('telegram.chooseCurrency');
+                $responseMessage = __('telegram.chooseCurrencySell');
 
                 break;
             default:
