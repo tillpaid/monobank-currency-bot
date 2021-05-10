@@ -33,6 +33,7 @@ class TelegramBotService implements TelegramBotServiceInterface
             'text'         => $message,
             'reply_markup' => [
                 'remove_keyboard' => true,
+                'resize_keyboard' => true,
                 'keyboard'        => $keyboard
             ]
         ];
