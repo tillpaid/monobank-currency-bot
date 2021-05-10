@@ -3,10 +3,18 @@
 namespace App\Services\Models;
 
 use App\Models\CurrencyAccount;
+use App\Repositories\Interfaces\CurrencyAccountRepositoryInterface;
 use App\Services\Interfaces\Models\CurrencyAccountServiceInterface;
 
 class CurrencyAccountService implements CurrencyAccountServiceInterface
 {
+    private $currencyAccountRepository;
+
+    public function __construct(CurrencyAccountRepositoryInterface $currencyAccountRepository)
+    {
+        $this->currencyAccountRepository = $currencyAccountRepository;
+    }
+
     public function create(int $userId, string $currency, float $uahValue, float $purchaseRate): bool
     {
         $currencyAccount = CurrencyAccount::create([
@@ -18,5 +26,10 @@ class CurrencyAccountService implements CurrencyAccountServiceInterface
         ]);
 
         return isset($currencyAccount->id);
+    }
+
+    public function getUserCurrencySum(int $userId, string $currency): ?int
+    {
+        return $this->currencyAccountRepository->getUserCurrencySum($userId, $currency);
     }
 }
