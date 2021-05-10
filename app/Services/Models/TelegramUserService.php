@@ -30,11 +30,18 @@ class TelegramUserService implements TelegramUserServiceInterface
         $telegramUser->state = $state;
 
         if ($stateAdditional) {
-            if ($telegramUser->state_additional) {
-                $telegramUser->state_additional = array_merge($telegramUser->state_additional, $stateAdditional);
-            } else {
-                $telegramUser->state_additional = $stateAdditional;
-            }
+            $this->updateStateAdditional($telegramUser, $stateAdditional);
+        }
+
+        return $telegramUser->save();
+    }
+
+    public function updateStateAdditional(Model $telegramUser, ?array $stateAdditional): bool
+    {
+        if ($telegramUser->state_additional) {
+            $telegramUser->state_additional = array_merge($telegramUser->state_additional, $stateAdditional);
+        } else {
+            $telegramUser->state_additional = $stateAdditional;
         }
 
         return $telegramUser->save();

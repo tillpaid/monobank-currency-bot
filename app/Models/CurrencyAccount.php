@@ -10,6 +10,8 @@ class CurrencyAccount extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function telegramUser(): BelongsTo
     {
         return $this->belongsTo(TelegramUser::class);
