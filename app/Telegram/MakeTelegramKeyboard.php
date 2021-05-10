@@ -10,9 +10,10 @@ class MakeTelegramKeyboard
 
         switch ($state) {
             case null:
-                $keyboard = [[__('telegram_buttons.buy')]];
+                $keyboard = [[__('telegram_buttons.buy'), __('telegram_buttons.sell')]];
                 break;
             case config('states.buy'):
+            case config('states.sell'):
                 $keyboard = [config('monobank.currencies'), [__('telegram_buttons.back')]];
                 break;
             case config('states.buy-sum'):
