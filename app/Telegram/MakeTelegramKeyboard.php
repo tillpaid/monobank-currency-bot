@@ -16,10 +16,11 @@ class MakeTelegramKeyboard
                 $keyboard = [config('monobank.currencies'), [__('telegram_buttons.back')]];
                 break;
             case config('states.buy-sum'):
+            case config('states.buy-rate-own'):
                 $keyboard = [[__('telegram_buttons.back')]];
                 break;
             case config('states.buy-rate'):
-                $keyboard = [[__('telegram_buttons.confirm'), __('telegram_buttons.editRate')], [__('telegram_buttons.back')]];
+                $keyboard = [[__('telegram_buttons.back'), __('telegram_buttons.editRate')], [__('telegram_buttons.confirm')]];
                 break;
         }
 

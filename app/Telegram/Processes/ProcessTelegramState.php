@@ -2,6 +2,7 @@
 
 namespace App\Telegram\Processes;
 
+use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuyRateOwnState;
 use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuyRateState;
 use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuyState;
 use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuySumState;
@@ -15,18 +16,21 @@ class ProcessTelegramState
     private $processTelegramBuyState;
     private $processTelegramBuySumState;
     private $processTelegramBuyRateState;
+    private $processTelegramBuyRateOwnState;
 
     public function __construct(
         ProcessTelegramDefaultState $processTelegramDefaultState,
         ProcessTelegramBuyState $processTelegramBuyState,
         ProcessTelegramBuySumState $processTelegramBuySumState,
-        ProcessTelegramBuyRateState $processTelegramBuyRateState
+        ProcessTelegramBuyRateState $processTelegramBuyRateState,
+        ProcessTelegramBuyRateOwnState $processTelegramBuyRateOwnState
     )
     {
         $this->processTelegramDefaultState = $processTelegramDefaultState;
         $this->processTelegramBuyState = $processTelegramBuyState;
         $this->processTelegramBuySumState = $processTelegramBuySumState;
         $this->processTelegramBuyRateState = $processTelegramBuyRateState;
+        $this->processTelegramBuyRateOwnState = $processTelegramBuyRateOwnState;
     }
 
     public function process(Model $user, string $messageText): string
@@ -46,6 +50,9 @@ class ProcessTelegramState
                 break;
             case config('states.buy-rate'):
                 $processor = $this->processTelegramBuyRateState;
+                break;
+            case config('states.buy-rate-own'):
+                $processor = $this->processTelegramBuyRateOwnState;
                 break;
             default:
                 $processor = $this->processTelegramDefaultState;

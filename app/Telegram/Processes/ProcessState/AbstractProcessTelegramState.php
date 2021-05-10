@@ -30,10 +30,13 @@ abstract class AbstractProcessTelegramState implements ProcessTelegramStateInter
         return $this->telegramUserService->updateState($user, $state, $stateAdditional);
     }
 
-    final protected function buildBuyConfirmMessage(Model $user): string
+    final protected function buildBuyConfirmMessage(Model $user, ?float $currencyRate = null): string
     {
         $currency = $user->state_additional['buy-currency'] ?? 'usd';
-        $currencyRate = $this->currencyRateService->getLatestCurrencyRate($currency)->sell;
+
+        if (is_null($currencyRate)) {
+            $currencyRate = $this->currencyRateService->getLatestCurrencyRate($currency)->sell;
+        }
 
         $this->telegramUserService->updateStateAdditional($user, ['buy-currency-rate' => $currencyRate]);
 

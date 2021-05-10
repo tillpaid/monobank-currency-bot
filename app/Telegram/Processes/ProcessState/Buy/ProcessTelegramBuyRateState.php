@@ -27,6 +27,11 @@ class ProcessTelegramBuyRateState extends AbstractProcessTelegramState
                 $responseMessage = __('telegram.buySuccessMessage');
 
                 break;
+            case __('telegram_buttons.editRate'):
+                $this->updateUserState($user, config('states.buy-rate-own'));
+                $responseMessage = __('telegram.changeRateMessage');
+
+                break;
             default:
                 $responseMessage = __('telegram.occurredError');
         }
