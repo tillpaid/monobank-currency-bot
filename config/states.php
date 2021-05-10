@@ -7,4 +7,5 @@ return [
     'buy-rate-own' => 'buy-rate-own',
     'sell'         => 'sell',
     'sell-sum'     => 'sell-sum',
+    'sell-confirm' => 'sell-confirm',
 ];

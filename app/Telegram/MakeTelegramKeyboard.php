@@ -24,6 +24,9 @@ class MakeTelegramKeyboard
             case config('states.buy-rate'):
                 $keyboard = [[__('telegram_buttons.back'), __('telegram_buttons.editRate')], [__('telegram_buttons.confirm')]];
                 break;
+            case config('states.sell-confirm'):
+                $keyboard = [[__('telegram_buttons.confirm')], [__('telegram_buttons.back')]];
+                break;
         }
 
         return $keyboard;

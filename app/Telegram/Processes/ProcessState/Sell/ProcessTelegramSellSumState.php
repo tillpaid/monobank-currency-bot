@@ -16,14 +16,16 @@ class ProcessTelegramSellSumState extends AbstractProcessTelegramState
 
                 break;
             case $messageText == (string)(float)$messageText:
+                $currency = $user->state_additional['sell-currency'] ?? 'usd';
                 $currencySumAll = $user->state_additional['sell-currency-sum-all'] ?? 0;
 
-                if ($messageText > $currencySumAll) {
-                    $responseMessage = __('telegram.moreThanHave');
+                if ($currencySumAll >= $messageText) {
+                    $this->updateUserState($user, config('states.sell-confirm'), ['sell-currency-sum' => $messageText]);
+                    $responseMessage = __('telegram.sellConfirm', ['sum' => $messageText, 'currency' => $currency]);
                 } else {
-                    $responseMessage = $messageText . ' | Processed';
+                    $responseMessage = __('telegram.moreThanHave');
                 }
-                
+
                 break;
             default:
                 $responseMessage = __('telegram.occurredError');
