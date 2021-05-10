@@ -19,11 +19,15 @@ class ProcessTelegramSellSumState extends AbstractProcessTelegramState
                 $currency = $user->state_additional['sell-currency'] ?? 'usd';
                 $currencySumAll = $user->state_additional['sell-currency-sum-all'] ?? 0;
 
-                if ($currencySumAll >= $messageText) {
-                    $this->updateUserState($user, config('states.sell-confirm'), ['sell-currency-sum' => $messageText]);
-                    $responseMessage = __('telegram.sellConfirm', ['sum' => $messageText, 'currency' => $currency]);
+                if ($messageText > 0) {
+                    if ($currencySumAll >= $messageText) {
+                        $this->updateUserState($user, config('states.sell-confirm'), ['sell-currency-sum' => $messageText]);
+                        $responseMessage = __('telegram.sellConfirm', ['sum' => $messageText, 'currency' => $currency]);
+                    } else {
+                        $responseMessage = __('telegram.moreThanHave');
+                    }
                 } else {
-                    $responseMessage = __('telegram.moreThanHave');
+                    $responseMessage = __('telegram.numberMustBeGreaterThanZero');
                 }
 
                 break;

@@ -16,8 +16,12 @@ class ProcessTelegramBuySumState extends AbstractProcessTelegramState
 
                 break;
             case $messageText == (string)(float)$messageText:
-                $this->updateUserState($user, config('states.buy-rate'), ['buy-currency-sum' => $messageText]);
-                $responseMessage = $this->buildBuyConfirmMessage($user);
+                if ($messageText > 0) {
+                    $this->updateUserState($user, config('states.buy-rate'), ['buy-currency-sum' => $messageText]);
+                    $responseMessage = $this->buildBuyConfirmMessage($user);
+                } else {
+                    $responseMessage = __('telegram.numberMustBeGreaterThanZero');
+                }
 
                 break;
             default:

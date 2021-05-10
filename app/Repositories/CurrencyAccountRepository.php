@@ -15,7 +15,7 @@ class CurrencyAccountRepository implements CurrencyAccountRepositoryInterface
         $this->model = $currencyAccount;
     }
 
-    public function getUserCurrencySum(int $userId, string $currency): ?int
+    public function getUserCurrencySum(int $userId, string $currency): ?float
     {
         return $this->model
             ->where('telegram_user_id', $userId)
