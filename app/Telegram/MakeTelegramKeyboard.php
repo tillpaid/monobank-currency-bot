@@ -18,6 +18,7 @@ class MakeTelegramKeyboard
                 break;
             case config('states.buy-sum'):
             case config('states.buy-rate-own'):
+            case config('states.sell-sum'):
                 $keyboard = [[__('telegram_buttons.back')]];
                 break;
             case config('states.buy-rate'):

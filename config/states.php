@@ -6,4 +6,5 @@ return [
     'buy-rate'     => 'buy-rate',
     'buy-rate-own' => 'buy-rate-own',
     'sell'         => 'sell',
+    'sell-sum'     => 'sell-sum',
 ];

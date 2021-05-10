@@ -9,6 +9,7 @@ use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuySumState;
 use App\Telegram\Processes\ProcessState\Interfaces\ProcessTelegramStateInterface;
 use App\Telegram\Processes\ProcessState\ProcessTelegramDefaultState;
 use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellState;
+use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellSumState;
 use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramState
@@ -19,6 +20,7 @@ class ProcessTelegramState
     private $processTelegramBuyRateState;
     private $processTelegramBuyRateOwnState;
     private $processTelegramSellState;
+    private $processTelegramSellSumState;
 
     public function __construct(
         ProcessTelegramDefaultState $processTelegramDefaultState,
@@ -26,7 +28,8 @@ class ProcessTelegramState
         ProcessTelegramBuySumState $processTelegramBuySumState,
         ProcessTelegramBuyRateState $processTelegramBuyRateState,
         ProcessTelegramBuyRateOwnState $processTelegramBuyRateOwnState,
-        ProcessTelegramSellState $processTelegramSellState
+        ProcessTelegramSellState $processTelegramSellState,
+        ProcessTelegramSellSumState $processTelegramSellSumState
     )
     {
         $this->processTelegramDefaultState = $processTelegramDefaultState;
@@ -35,6 +38,7 @@ class ProcessTelegramState
         $this->processTelegramBuyRateState = $processTelegramBuyRateState;
         $this->processTelegramBuyRateOwnState = $processTelegramBuyRateOwnState;
         $this->processTelegramSellState = $processTelegramSellState;
+        $this->processTelegramSellSumState = $processTelegramSellSumState;
     }
 
     public function process(Model $user, string $messageText): string
@@ -60,6 +64,9 @@ class ProcessTelegramState
                 break;
             case config('states.sell'):
                 $processor = $this->processTelegramSellState;
+                break;
+            case config('states.sell-sum'):
+                $processor = $this->processTelegramSellSumState;
                 break;
             default:
                 $processor = $this->processTelegramDefaultState;

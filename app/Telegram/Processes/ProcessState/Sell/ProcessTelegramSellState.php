@@ -14,6 +14,7 @@ class ProcessTelegramSellState extends AbstractProcessTelegramState
                 $currencySum = $this->currencyAccountService->getUserCurrencySum($user->id, $messageText);
 
                 if ($currencySum > 0) {
+                    $this->updateUserState($user, config('states.sell-sum'), ['sell-currency' => $messageText, 'sell-currency-sum-all' => $currencySum]);
                     $responseMessage = __('telegram.sellSum', ['currencySum' => $currencySum, 'currency' => $messageText]);
                 } else {
                     $responseMessage = __('telegram.sellEmptySum');
