@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Telegram\Processes\ProcessState;
+namespace App\Telegram\Processes\ProcessState\Buy;
 
+use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramBuyRateState extends AbstractProcessTelegramState

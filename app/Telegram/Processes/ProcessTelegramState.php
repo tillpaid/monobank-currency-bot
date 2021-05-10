@@ -2,10 +2,10 @@
 
 namespace App\Telegram\Processes;
 
+use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuyRateState;
+use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuyState;
+use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuySumState;
 use App\Telegram\Processes\ProcessState\Interfaces\ProcessTelegramStateInterface;
-use App\Telegram\Processes\ProcessState\ProcessTelegramBuyRateState;
-use App\Telegram\Processes\ProcessState\ProcessTelegramBuyState;
-use App\Telegram\Processes\ProcessState\ProcessTelegramBuySumState;
 use App\Telegram\Processes\ProcessState\ProcessTelegramDefaultState;
 use Illuminate\Database\Eloquent\Model;
 
