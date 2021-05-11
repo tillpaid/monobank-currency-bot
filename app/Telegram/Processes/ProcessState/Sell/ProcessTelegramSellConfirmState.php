@@ -24,9 +24,11 @@ class ProcessTelegramSellConfirmState extends AbstractProcessTelegramState
                 $currencySum = $user->state_additional['sell-currency-sum'] ?? 0;
 
                 $this->currencyAccountService->sellCurrency($user->id, $currency, $currencySum);
-
                 $this->updateUserState($user, null);
+
                 $responseMessage = __('telegram.sellSuccessMessage');
+                $responseMessage .= __('telegram.delimiter');
+                $responseMessage .= $this->telegramBotService->buildUserBalanceMessage($user->id);
 
                 break;
             default:

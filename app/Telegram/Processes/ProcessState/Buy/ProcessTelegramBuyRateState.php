@@ -25,6 +25,8 @@ class ProcessTelegramBuyRateState extends AbstractProcessTelegramState
                 );
 
                 $responseMessage = __('telegram.buySuccessMessage');
+                $responseMessage .= __('telegram.delimiter');
+                $responseMessage .= $this->telegramBotService->buildUserBalanceMessage($user->id);
 
                 break;
             case __('telegram_buttons.editRate'):

@@ -19,6 +19,10 @@ class ProcessTelegramDefaultState extends AbstractProcessTelegramState
                 $responseMessage = __('telegram.chooseCurrencySell');
 
                 break;
+            case __('telegram_buttons.balance'):
+                $responseMessage = $this->telegramBotService->buildUserBalanceMessage($user->id);
+
+                break;
             default:
                 $responseMessage = __('telegram.occurredError');
         }

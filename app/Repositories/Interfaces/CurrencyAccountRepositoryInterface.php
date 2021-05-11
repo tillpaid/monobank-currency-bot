@@ -9,4 +9,6 @@ interface CurrencyAccountRepositoryInterface
     public function getUserCurrencySum(int $userId, string $currency): ?float;
 
     public function getFirstUserCurrencyAccount(int $userId, string $currency): ?Model;
+
+    public function getUserBalanceSum(int $userId): ?array;
 }

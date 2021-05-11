@@ -11,4 +11,6 @@ interface TelegramBotServiceInterface
     public function getBot(): Telegram;
 
     public function getMyId(): string;
+
+    public function buildUserBalanceMessage(int $userId): string;
 }

@@ -23,4 +23,6 @@ return [
     'sellConfirm'                 => "Подтвердите продажу :sum :currency",
     'sellSuccessMessage'          => 'Операция успешно сохранена',
     'numberMustBeGreaterThanZero' => 'Число должно быть больше нуля',
+    'userBalanceSum'              => "Ваши счета:\n\n:balance\nСуммарно в гривне: :uahSum",
+    'delimiter'                   => "\n\n-----\n\n",
 ];

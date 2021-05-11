@@ -13,4 +13,6 @@ interface CurrencyAccountServiceInterface
     public function getFirstUserCurrencyAccount(int $userId, string $currency): ?Model;
 
     public function sellCurrency(int $userId, string $currency, float $currencySum): void;
+
+    public function getUserBalanceSum(int $userId): ?array;
 }

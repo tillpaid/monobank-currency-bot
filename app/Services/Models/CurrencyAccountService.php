@@ -58,4 +58,9 @@ class CurrencyAccountService implements CurrencyAccountServiceInterface
             }
         }
     }
+
+    public function getUserBalanceSum(int $userId): ?array
+    {
+        return $this->currencyAccountRepository->getUserBalanceSum($userId);
+    }
 }
