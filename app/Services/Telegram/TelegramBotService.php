@@ -66,8 +66,13 @@ class TelegramBotService implements TelegramBotServiceInterface
 
     public function buildUserBalanceMessage(int $userId): string
     {
-        $currencies = config('monobank.currencies');
         $userBalanceSum = $this->currencyAccountService->getUserBalanceSum($userId);
+
+        if (empty($userBalanceSum)) {
+            return __('telegram.userBalanceEmpty');
+        }
+
+        $currencies = config('monobank.currencies');
 
         $balance = '';
         $uahSum = 0;

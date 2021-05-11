@@ -24,5 +24,6 @@ return [
     'sellSuccessMessage'          => 'Операция успешно сохранена',
     'numberMustBeGreaterThanZero' => 'Число должно быть больше нуля',
     'userBalanceSum'              => "Ваши счета:\n\n:balance\nСуммарно в гривне: :uahSum",
+    'userBalanceEmpty'            => "На Ваших счетах нет средств",
     'delimiter'                   => "\n\n-----\n\n",
 ];
