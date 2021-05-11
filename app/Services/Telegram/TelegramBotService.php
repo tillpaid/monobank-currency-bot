@@ -113,7 +113,7 @@ class TelegramBotService implements TelegramBotServiceInterface
         ];
 
         foreach ($currencies as $currencyName) {
-            [$rateOld, $rateNew] = $this->currencyRateService->getLastTwoCurrencyRates($currencyName);
+            [$rateNew, $rateOld] = $this->currencyRateService->getLastTwoCurrencyRates($currencyName);
 
             $rateChange[] = $this->getRateChange($rateOld, $rateNew);
 

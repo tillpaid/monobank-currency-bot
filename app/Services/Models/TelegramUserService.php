@@ -4,6 +4,7 @@ namespace App\Services\Models;
 
 use App\Repositories\Interfaces\TelegramUserRepositoryInterface;
 use App\Services\Interfaces\Models\TelegramUserServiceInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class TelegramUserService implements TelegramUserServiceInterface
@@ -45,5 +46,10 @@ class TelegramUserService implements TelegramUserServiceInterface
         }
 
         return $telegramUser->save();
+    }
+
+    public function all(): ?Collection
+    {
+        return $this->telegramUserRepository->all();
     }
 }

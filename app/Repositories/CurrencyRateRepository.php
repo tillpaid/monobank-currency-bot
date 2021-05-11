@@ -28,6 +28,7 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
     {
         return $this->model
             ->where('currency', $currency)
+            ->orderBy('id', 'DESC')
             ->take(2)
             ->get();
     }

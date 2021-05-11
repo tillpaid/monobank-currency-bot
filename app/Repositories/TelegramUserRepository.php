@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\TelegramUser;
 use App\Repositories\Interfaces\TelegramUserRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class TelegramUserRepository implements TelegramUserRepositoryInterface
@@ -25,5 +26,10 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
         if (!$this->model->where('chat_id', $chatId)->count()) {
             $this->model->create(['chat_id' => $chatId]);
         }
+    }
+
+    public function all(): ?Collection
+    {
+        return $this->model->all();
     }
 }
