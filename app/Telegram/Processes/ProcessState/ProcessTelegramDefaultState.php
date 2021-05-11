@@ -23,6 +23,10 @@ class ProcessTelegramDefaultState extends AbstractProcessTelegramState
                 $responseMessage = $this->telegramBotService->buildUserBalanceMessage($user->id);
 
                 break;
+            case __('telegram_buttons.report'):
+                $responseMessage = $this->telegramBotService->buildUserReport($user->id);
+
+                break;
             default:
                 $responseMessage = __('telegram.occurredError');
         }

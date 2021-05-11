@@ -10,7 +10,11 @@ class MakeTelegramKeyboard
 
         switch ($state) {
             case null:
-                $keyboard = [[__('telegram_buttons.buy'), __('telegram_buttons.sell')], [__('telegram_buttons.balance')]];
+                $keyboard = [
+                    [__('telegram_buttons.buy'), __('telegram_buttons.sell')],
+                    [__('telegram_buttons.balance')],
+                    [__('telegram_buttons.report')],
+                ];
                 break;
             case config('states.buy'):
             case config('states.sell'):

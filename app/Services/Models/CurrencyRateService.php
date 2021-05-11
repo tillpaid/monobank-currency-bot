@@ -5,6 +5,7 @@ namespace App\Services\Models;
 use App\Models\CurrencyRate;
 use App\Repositories\Interfaces\CurrencyRateRepositoryInterface;
 use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class CurrencyRateService implements CurrencyRateServiceInterface
@@ -30,5 +31,10 @@ class CurrencyRateService implements CurrencyRateServiceInterface
     public function getLatestCurrencyRate(string $currency): ?Model
     {
         return $this->currencyRateRepository->getLatestCurrencyRate($currency);
+    }
+
+    public function getLastTwoCurrencyRates(string $currency): ?Collection
+    {
+        return $this->currencyRateRepository->getLastTwoCurrencyRates($currency);
     }
 }

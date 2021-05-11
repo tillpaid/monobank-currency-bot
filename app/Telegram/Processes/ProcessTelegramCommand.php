@@ -3,15 +3,21 @@
 namespace App\Telegram\Processes;
 
 use App\Services\Interfaces\Models\TelegramUserServiceInterface;
+use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramCommand
 {
     protected $telegramUserService;
+    protected $telegramBotService;
 
-    public function __construct(TelegramUserServiceInterface $telegramUserService)
+    public function __construct(
+        TelegramUserServiceInterface $telegramUserService,
+        TelegramBotServiceInterface $telegramBotService
+    )
     {
         $this->telegramUserService = $telegramUserService;
+        $this->telegramBotService = $telegramBotService;
     }
 
     public function process(Model $user, string $messageText): string
@@ -24,6 +30,9 @@ class ProcessTelegramCommand
                 break;
             case '/env':
                 $responseMessage = __('telegram.environment', ['env' => config('app.env')]);
+                break;
+            case '/report':
+                $responseMessage = $this->telegramBotService->buildUserReport($user->id);
                 break;
             default:
                 $responseMessage = __('telegram.commandNotFound');

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\CurrencyRate;
 use App\Repositories\Interfaces\CurrencyRateRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class CurrencyRateRepository implements CurrencyRateRepositoryInterface
@@ -21,5 +22,13 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
             ->where('currency', $currency)
             ->latest('id')
             ->first();
+    }
+
+    public function getLastTwoCurrencyRates(string $currency): ?Collection
+    {
+        return $this->model
+            ->where('currency', $currency)
+            ->take(2)
+            ->get();
     }
 }

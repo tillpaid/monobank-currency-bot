@@ -26,4 +26,5 @@ return [
     'userBalanceSum'              => "Ваши счета:\n\n:balance\nСуммарно в гривне: :uahSum",
     'userBalanceEmpty'            => "На Ваших счетах нет средств",
     'delimiter'                   => "\n\n-----\n\n",
+    'userReport'                  => "Изменился курс валют.\n\n:rateChange\n-----\nОтчет по вашим счетам:\n\n:accountChange\n-----\nСумма: :sum",
 ];
