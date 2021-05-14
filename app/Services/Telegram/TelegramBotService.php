@@ -11,14 +11,40 @@ use Illuminate\Database\Eloquent\Model;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 
+/**
+ * Class TelegramBotService
+ * @package App\Services\Telegram
+ */
 class TelegramBotService implements TelegramBotServiceInterface
 {
+    /**
+     * @var Telegram
+     */
     private $bot;
+    /**
+     * @var TelegramUserServiceInterface
+     */
     private $telegramUserService;
+    /**
+     * @var MakeTelegramKeyboard
+     */
     private $makeTelegramKeyboard;
+    /**
+     * @var CurrencyAccountServiceInterface
+     */
     private $currencyAccountService;
+    /**
+     * @var CurrencyRateServiceInterface
+     */
     private $currencyRateService;
 
+    /**
+     * TelegramBotService constructor.
+     * @param TelegramUserServiceInterface $telegramUserService
+     * @param MakeTelegramKeyboard $makeTelegramKeyboard
+     * @param CurrencyAccountServiceInterface $currencyAccountService
+     * @param CurrencyRateServiceInterface $currencyRateService
+     */
     public function __construct(
         TelegramUserServiceInterface $telegramUserService,
         MakeTelegramKeyboard $makeTelegramKeyboard,
@@ -32,6 +58,12 @@ class TelegramBotService implements TelegramBotServiceInterface
         $this->currencyRateService = $currencyRateService;
     }
 
+    /**
+     * @param string $chatId
+     * @param string $message
+     * @return void
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
     public function sendMessage(string $chatId, string $message): void
     {
         $user = $this->telegramUserService->getByChatId($chatId);
@@ -53,6 +85,10 @@ class TelegramBotService implements TelegramBotServiceInterface
         Request::sendMessage($sendData);
     }
 
+    /**
+     * @return Telegram
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
     public function getBot(): Telegram
     {
         if (is_null($this->bot)) {
@@ -65,11 +101,18 @@ class TelegramBotService implements TelegramBotServiceInterface
         return $this->bot;
     }
 
+    /**
+     * @return string
+     */
     public function getMyId(): string
     {
         return config('telegram.myChatId');
     }
 
+    /**
+     * @param int $userId
+     * @return string
+     */
     public function buildUserBalanceMessage(int $userId): string
     {
         $userBalanceSum = $this->currencyAccountService->getUserBalanceSum($userId);
@@ -100,6 +143,10 @@ class TelegramBotService implements TelegramBotServiceInterface
         return __('telegram.userBalanceSum', ['balance' => $balance, 'uahSum' => $uahSum]);
     }
 
+    /**
+     * @param int $userId
+     * @return string
+     */
     public function buildUserReport(int $userId): string
     {
         $currencies = config('monobank.currencies');
@@ -133,6 +180,11 @@ class TelegramBotService implements TelegramBotServiceInterface
         return __('telegram.userReport', compact('rateChange', 'accountChange', 'sum'));
     }
 
+    /**
+     * @param Model $rateOld
+     * @param Model $rateNew
+     * @return string
+     */
     private function getRateChange(Model $rateOld, Model $rateNew): string
     {
         $currencyName = mb_strtoupper($rateNew->currency);
@@ -145,6 +197,12 @@ class TelegramBotService implements TelegramBotServiceInterface
         return "{$currencyName}: {$buy} / {$sell} (*{$buyDiff} / {$sellDiff}*)";
     }
 
+    /**
+     * @param array $userBalanceSum
+     * @param string $currencyName
+     * @param float $buyRate
+     * @return string
+     */
     private function getAccountChange(array $userBalanceSum, string $currencyName, float $buyRate): string
     {
         $currencyNameUpper = mb_strtoupper($currencyName);
@@ -157,6 +215,12 @@ class TelegramBotService implements TelegramBotServiceInterface
         return "{$currencyNameUpper}: {$this->format($currency)} ({$this->format($uah)}₴) | {$this->format($newUah)}₴ (*{$diff}₴*)";
     }
 
+    /**
+     * @param array $userBalanceSum
+     * @param Model $rateNew
+     * @param array $totalSum
+     * @return void
+     */
     private function getAccountSum(array $userBalanceSum, Model $rateNew, array &$totalSum): void
     {
         if (array_key_exists($rateNew->currency, $userBalanceSum)) {
@@ -167,6 +231,12 @@ class TelegramBotService implements TelegramBotServiceInterface
         }
     }
 
+    /**
+     * @param float $old
+     * @param float $new
+     * @param int $decimals
+     * @return string
+     */
     private function getCurrencyDiff(float $old, float $new, int $decimals = 2): string
     {
         $diff = $new - $old;
@@ -174,6 +244,11 @@ class TelegramBotService implements TelegramBotServiceInterface
         return $diff >= 0 ? "+$formattedDiff" : "$formattedDiff";
     }
 
+    /**
+     * @param $number
+     * @param int $decimals
+     * @return string
+     */
     private function format($number, $decimals = 2): string
     {
         $output = number_format($number, $decimals, '.', ' ');

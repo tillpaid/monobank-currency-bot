@@ -28,7 +28,8 @@ class SetWebhook extends Command
 
     /**
      * Create a new command instance.
-     *
+     * @param TelegramServiceInterface $telegramService
+     * @param TelegramBotServiceInterface $telegramBotService
      * @return void
      */
     public function __construct(TelegramServiceInterface $telegramService, TelegramBotServiceInterface $telegramBotService)

@@ -26,7 +26,7 @@ class UnsetWebhook extends Command
 
     /**
      * Create a new command instance.
-     *
+     * @param TelegramBotServiceInterface $telegramBotService
      * @return void
      */
     public function __construct(TelegramBotServiceInterface $telegramBotService)

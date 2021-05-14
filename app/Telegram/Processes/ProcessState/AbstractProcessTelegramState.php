@@ -9,13 +9,36 @@ use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
 use App\Telegram\Processes\ProcessState\Interfaces\ProcessTelegramStateInterface;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class AbstractProcessTelegramState
+ * @package App\Telegram\Processes\ProcessState
+ */
 abstract class AbstractProcessTelegramState implements ProcessTelegramStateInterface
 {
+    /**
+     * @var TelegramUserServiceInterface
+     */
     protected $telegramUserService;
+    /**
+     * @var CurrencyRateServiceInterface
+     */
     protected $currencyRateService;
+    /**
+     * @var CurrencyAccountServiceInterface
+     */
     protected $currencyAccountService;
+    /**
+     * @var TelegramBotServiceInterface
+     */
     protected $telegramBotService;
 
+    /**
+     * AbstractProcessTelegramState constructor.
+     * @param TelegramUserServiceInterface $telegramUserService
+     * @param CurrencyRateServiceInterface $currencyRateService
+     * @param CurrencyAccountServiceInterface $currencyAccountService
+     * @param TelegramBotServiceInterface $telegramBotService
+     */
     public function __construct(
         TelegramUserServiceInterface $telegramUserService,
         CurrencyRateServiceInterface $currencyRateService,
@@ -29,11 +52,22 @@ abstract class AbstractProcessTelegramState implements ProcessTelegramStateInter
         $this->telegramBotService = $telegramBotService;
     }
 
+    /**
+     * @param Model $user
+     * @param string|null $state
+     * @param array|null $stateAdditional
+     * @return bool
+     */
     final protected function updateUserState(Model $user, ?string $state, ?array $stateAdditional = null): bool
     {
         return $this->telegramUserService->updateState($user, $state, $stateAdditional);
     }
 
+    /**
+     * @param Model $user
+     * @param float|null $currencyRate
+     * @return string
+     */
     final protected function buildBuyConfirmMessage(Model $user, ?float $currencyRate = null): string
     {
         $currency = $user->state_additional['buy-currency'] ?? 'usd';
