@@ -5,9 +5,18 @@ namespace App\Telegram\Processes\ProcessState\Buy;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class ProcessTelegramBuyRateState
+ * @package App\Telegram\Processes\ProcessState\Buy
+ */
 class ProcessTelegramBuyRateState extends AbstractProcessTelegramState
 {
-	public function process(Model $user, string $messageText): string
+    /**
+     * @param Model $user
+     * @param string $messageText
+     * @return string
+     */
+    public function process(Model $user, string $messageText): string
 	{
         switch ($messageText) {
             case __('telegram_buttons.back'):

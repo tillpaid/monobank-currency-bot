@@ -29,7 +29,9 @@ class MonobankUpdate extends Command
 
     /**
      * Create a new command instance.
-     *
+     * @param MonobankCurrencyServiceInterface$monobankCurrencyService
+     * @param TelegramUserServiceInterface $telegramUserService,
+     * @param TelegramBotServiceInterface $telegramBotService
      * @return void
      */
     public function __construct(

@@ -13,17 +13,57 @@ use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellState;
 use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellSumState;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class ProcessTelegramState
+ * @package App\Telegram\Processes
+ */
 class ProcessTelegramState
 {
+    /**
+     * @var ProcessTelegramDefaultState
+     */
     private $processTelegramDefaultState;
+    /**
+     * @var ProcessTelegramBuyState
+     */
     private $processTelegramBuyState;
+    /**
+     * @var ProcessTelegramBuySumState
+     */
     private $processTelegramBuySumState;
+    /**
+     * @var ProcessTelegramBuyRateState
+     */
     private $processTelegramBuyRateState;
+    /**
+     * @var ProcessTelegramBuyRateOwnState
+     */
     private $processTelegramBuyRateOwnState;
+    /**
+     * @var ProcessTelegramSellState
+     */
     private $processTelegramSellState;
+    /**
+     * @var ProcessTelegramSellSumState
+     */
     private $processTelegramSellSumState;
+    /**
+     * @var ProcessTelegramSellConfirmState
+     */
     private $processTelegramSellConfirmState;
 
+    /**
+     * ProcessTelegramState constructor.
+     * @param ProcessTelegramDefaultState $processTelegramDefaultState
+     * @param ProcessTelegramBuyState $processTelegramBuyState
+     * @param ProcessTelegramBuySumState $processTelegramBuySumState
+     * @param ProcessTelegramBuyRateState $processTelegramBuyRateState
+     * @param ProcessTelegramBuyRateOwnState $processTelegramBuyRateOwnState
+     * @param ProcessTelegramSellState $processTelegramSellState
+     * @param ProcessTelegramSellSumState $processTelegramSellSumState
+     * @param ProcessTelegramSellConfirmState $processTelegramSellConfirmState
+     * @return void
+     */
     public function __construct(
         ProcessTelegramDefaultState $processTelegramDefaultState,
         ProcessTelegramBuyState $processTelegramBuyState,
@@ -45,12 +85,21 @@ class ProcessTelegramState
         $this->processTelegramSellConfirmState = $processTelegramSellConfirmState;
     }
 
+    /**
+     * @param Model $user
+     * @param string $messageText
+     * @return string
+     */
     public function process(Model $user, string $messageText): string
     {
         $processor = $this->getProcessor($user);
         return $processor->process($user, $messageText);
     }
 
+    /**
+     * @param Model $user
+     * @return ProcessTelegramStateInterface
+     */
     private function getProcessor(Model $user): ProcessTelegramStateInterface
     {
         switch ($user->state) {

@@ -7,13 +7,30 @@ use App\Services\Interfaces\Monobank\MonobankCurrencyServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 
+/**
+ * Class MonobankCurrencyService
+ * @package App\Services\Monobank
+ */
 class MonobankCurrencyService implements MonobankCurrencyServiceInterface
 {
+    /**
+     * @var CurrencyRateServiceInterface
+     */
     private $currencyRateService;
 
+    /**
+     * @var int
+     */
     private $uahCode;
+    /**
+     * @var array
+     */
     private $currencyCodes;
 
+    /**
+     * MonobankCurrencyService constructor.
+     * @param CurrencyRateServiceInterface $currencyRateService
+     */
     public function __construct(CurrencyRateServiceInterface $currencyRateService)
     {
         $this->currencyRateService = $currencyRateService;
@@ -22,6 +39,9 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         $this->currencyCodes = config('monobank.currencyCodes');
     }
 
+    /**
+     * @return bool
+     */
     public function updateCurrencyRates(): bool
     {
         $newRates = $this->getCurrency();
@@ -30,6 +50,9 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         return $changed;
     }
 
+    /**
+     * @return array
+     */
     private function getCurrency(): array
     {
         $output = [];
@@ -42,6 +65,10 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         return $output;
     }
 
+    /**
+     * @param array $newRates
+     * @return bool
+     */
     private function processNewRates(array $newRates): bool
     {
         $changed = false;
@@ -61,6 +88,10 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         return $changed;
     }
 
+    /**
+     * @param array $newRate
+     * @return bool
+     */
     private function isItNeedleRate(array $newRate): bool
     {
         $needle = true;
@@ -74,6 +105,11 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         return $needle;
     }
 
+    /**
+     * @param Model|null $rate
+     * @param array $newRate
+     * @return bool
+     */
     private function isRateDifferent(?Model $rate, array $newRate): bool
     {
         return

@@ -16,6 +16,9 @@ class TelegramUser extends Model
         'state_additional' => 'array'
     ];
 
+    /**
+     * @return HasMany
+     */
     public function currencyAccounts(): HasMany
     {
         return $this->hasMany(CurrencyAccount::class);

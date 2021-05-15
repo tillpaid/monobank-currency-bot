@@ -5,8 +5,17 @@ namespace App\Telegram\Processes\ProcessState\Sell;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class ProcessTelegramSellState
+ * @package App\Telegram\Processes\ProcessState\Sell
+ */
 class ProcessTelegramSellState extends AbstractProcessTelegramState
 {
+    /**
+     * @param Model $user
+     * @param string $messageText
+     * @return string
+     */
     public function process(Model $user, string $messageText): string
     {
         switch (true) {
