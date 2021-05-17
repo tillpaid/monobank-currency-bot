@@ -38,4 +38,11 @@ interface TelegramBotServiceInterface
      * @return string
      */
     public function buildUserReport(int $userId): string;
+
+    /**
+     * @param float $number
+     * @param int $decimals
+     * @return string
+     */
+    public function format(float $number, int $decimals = 2): string;
 }

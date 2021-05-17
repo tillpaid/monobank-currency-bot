@@ -257,7 +257,7 @@ class TelegramBotService implements TelegramBotServiceInterface
      * @param int $decimals
      * @return string
      */
-    private function format($number, $decimals = 2): string
+    public function format($number, $decimals = 2): string
     {
         $output = number_format($number, $decimals, '.', ' ');
         $output = rtrim($output, '0');
