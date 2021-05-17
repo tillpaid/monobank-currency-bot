@@ -131,14 +131,14 @@ class TelegramBotService implements TelegramBotServiceInterface
                 $uahSum += $userBalanceSum[$currency]['uah_value'];
 
                 $currencyUpper = mb_strtoupper($currency);
-                $currencyValue = number_format($userBalanceSum[$currency]['currency_value'], 5, '.', ' ');
-                $uahValue = number_format($userBalanceSum[$currency]['uah_value'], 5, '.', ' ');
+                $currencyValue = $this->format($userBalanceSum[$currency]['currency_value'], 5);
+                $uahValue = $this->format($userBalanceSum[$currency]['uah_value'], 5);
 
                 $balance .= "{$currencyUpper}: {$currencyValue} ({$uahValue})\n";
             }
         }
 
-        $uahSum = number_format($uahSum, 5, '.', ' ');
+        $uahSum = $this->format($uahSum, 5);
 
         return __('telegram.userBalanceSum', ['balance' => $balance, 'uahSum' => $uahSum]);
     }
