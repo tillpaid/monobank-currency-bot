@@ -160,15 +160,17 @@ class TelegramBotService implements TelegramBotServiceInterface
         ];
 
         foreach ($currencies as $currencyName) {
-            [$rateNew, $rateOld] = $this->currencyRateService->getLastTwoCurrencyRates($currencyName);
+            if ($lastCurrencyRates = $this->currencyRateService->getLastTwoCurrencyRates($currencyName)) {
+                [$rateNew, $rateOld] = $lastCurrencyRates;
 
-            $rateChange[] = $this->getRateChange($rateOld, $rateNew);
+                $rateChange[] = $this->getRateChange($rateOld, $rateNew);
 
-            if (array_key_exists($currencyName, $userBalanceSum)) {
-                $accountChange[] = $this->getAccountChange($userBalanceSum[$currencyName], $currencyName, $rateNew->buy);
+                if (array_key_exists($currencyName, $userBalanceSum)) {
+                    $accountChange[] = $this->getAccountChange($userBalanceSum[$currencyName], $currencyName, $rateNew->buy);
+                }
+
+                $this->getAccountSum($userBalanceSum, $rateNew, $totalSum);
             }
-
-            $this->getAccountSum($userBalanceSum, $rateNew, $totalSum);
         }
 
         $rateChange = join("\n", $rateChange);

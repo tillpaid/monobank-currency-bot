@@ -45,10 +45,12 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
      */
     public function getLastTwoCurrencyRates(string $currency): ?Collection
     {
-        return $this->model
+        $rates = $this->model
             ->where('currency', $currency)
             ->orderBy('id', 'DESC')
             ->take(2)
             ->get();
+        
+        return $rates->count() == 2 ? $rates : null;
     }
 }
