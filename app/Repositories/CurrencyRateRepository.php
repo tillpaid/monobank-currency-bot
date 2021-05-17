@@ -50,7 +50,7 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
             ->orderBy('id', 'DESC')
             ->take(2)
             ->get();
-        
+
         return $rates->count() == 2 ? $rates : null;
     }
 }

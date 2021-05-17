@@ -179,7 +179,13 @@ class TelegramBotService implements TelegramBotServiceInterface
         $totalDiff = $this->getCurrencyDiff($totalSum['value'], $totalSum['newValue']);
         $sum = "{$this->format($totalSum['value'])}₴ | {$this->format($totalSum['newValue'])}₴ (*{$totalDiff}₴*)";
 
-        return __('telegram.userReport', compact('rateChange', 'accountChange', 'sum'));
+        // Generate output message
+        $reportMessage = __('telegram.userReport');
+        if ($rateChange) $reportMessage .= __('telegram.userReportRate', compact('rateChange'));
+        if ($accountChange) $reportMessage .= __('telegram.userReportAccount', compact('accountChange'));
+        if ($totalSum['value']) $reportMessage .= __('telegram.userReportSum', compact('sum'));
+
+        return $reportMessage;
     }
 
     /**
