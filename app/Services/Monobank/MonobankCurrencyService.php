@@ -4,8 +4,9 @@ namespace App\Services\Monobank;
 
 use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
 use App\Services\Interfaces\Monobank\MonobankCurrencyServiceInterface;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class MonobankCurrencyService
@@ -13,6 +14,11 @@ use Illuminate\Support\Facades\Http;
  */
 class MonobankCurrencyService implements MonobankCurrencyServiceInterface
 {
+    /**
+     * @var Client
+     */
+    private $client;
+
     /**
      * @var CurrencyRateServiceInterface
      */
@@ -29,10 +35,12 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
 
     /**
      * MonobankCurrencyService constructor.
+     * @param Client $client
      * @param CurrencyRateServiceInterface $currencyRateService
      */
-    public function __construct(CurrencyRateServiceInterface $currencyRateService)
+    public function __construct(Client $client, CurrencyRateServiceInterface $currencyRateService)
     {
+        $this->client = $client;
         $this->currencyRateService = $currencyRateService;
 
         $this->uahCode = config('monobank.uahCode');
@@ -56,10 +64,16 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
     private function getCurrency(): array
     {
         $output = [];
-        $response = Http::get(config('monobank.monobank_currency_url'));
 
-        if ($response->status() == 200 && $response->body()) {
-            $output = json_decode($response->body(), true);
+        try {
+            $response = $this->client->get(config('monobank.monobank_currency_url'));
+
+            if ($response->getStatusCode() == 200 && $response->getBody()) {
+                $output = json_decode($response->getBody()->getContents(), true);
+            }
+        } catch (\Exception $exception) {
+            Log::error('Monobank update process error');
+            Log::error($exception);
         }
 
         return $output;
