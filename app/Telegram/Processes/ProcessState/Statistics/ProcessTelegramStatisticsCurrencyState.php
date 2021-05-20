@@ -36,10 +36,9 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
                     $rateBuy = $this->telegramBotService->format($rate->buy, 2, false);
                     $rateSell = $this->telegramBotService->format($rate->sell, 2, false);
 
-                    $rateString = "{$date} - {$rateBuy}₴ / {$rateSell}₴";
-                    $ratesResponse[] = "`{$number}. {$rateString}`";
+                    $ratesResponse[] = "`{$number}. {$date} - {$rateBuy}₴ / {$rateSell}₴`";
 
-                    $this->processMinMaxRates($ratesMinMax, $rate, $rateString);
+                    $this->processMinMaxRates($ratesMinMax, $rate, $date);
                 }
 
                 $ratesResponse = join("\n", $ratesResponse);
@@ -68,27 +67,31 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
     /**
      * @param array $ratesMinMax
      * @param Model $rate
+     * @param string $date
      */
-    private function processMinMaxRates(array &$ratesMinMax, Model $rate, string $rateString): void
+    private function processMinMaxRates(array &$ratesMinMax, Model $rate, string $date): void
     {
+        $buyString = "{$date} - {$rate->buy}₴";
+        $sellString = "{$date} - {$rate->sell}₴";
+
         if ($rate->buy <= $ratesMinMax['values']['buy']['min']) {
             $ratesMinMax['values']['buy']['min'] = $rate->buy;
-            $ratesMinMax['data']['buy']['min'] = $rateString;
+            $ratesMinMax['data']['buy']['min'] = $buyString;
         }
 
         if ($rate->buy >= $ratesMinMax['values']['buy']['max']) {
             $ratesMinMax['values']['buy']['max'] = $rate->buy;
-            $ratesMinMax['data']['buy']['max'] = $rateString;
+            $ratesMinMax['data']['buy']['max'] = $buyString;
         }
 
         if ($rate->sell <= $ratesMinMax['values']['sell']['min']) {
             $ratesMinMax['values']['sell']['min'] = $rate->sell;
-            $ratesMinMax['data']['sell']['min'] = $rateString;
+            $ratesMinMax['data']['sell']['min'] = $sellString;
         }
 
         if ($rate->sell >= $ratesMinMax['values']['sell']['max']) {
             $ratesMinMax['values']['sell']['max'] = $rate->sell;
-            $ratesMinMax['data']['sell']['max'] = $rateString;
+            $ratesMinMax['data']['sell']['max'] = $sellString;
         }
     }
 }
