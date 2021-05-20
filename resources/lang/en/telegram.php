@@ -31,5 +31,5 @@ return [
     'userReportAccount'           => "\n-----\nОтчет по вашим счетам:\n\n:accountChange",
     'userReportSum'               => "\n-----\nСумма: :sum",
     'userReport'                  => "Изменился курс валют.",
-    'statisticsCurrencyReport'    => "Курс :currencyUpper за последний месяц:\n\n:ratesResponse\n-----\nПокупка:\n \n`Min: :buyMin`\n`Max: :buyMax`\n-----\nПродажа\n\n`Min: :sellMin`\n`Max: :sellMax`",
+    'statisticsCurrencyReport'    => "Курс :currencyUpper за последний месяц:\n\n:ratesResponse\n-----\nПокупка:\n \n`Min: :buyMin`\n`Max: :buyMax`\n-----\nПродажа:\n\n`Min: :sellMin`\n`Max: :sellMax`",
 ];
