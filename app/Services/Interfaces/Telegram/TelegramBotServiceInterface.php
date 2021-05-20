@@ -42,7 +42,8 @@ interface TelegramBotServiceInterface
     /**
      * @param float $number
      * @param int $decimals
+     * @param bool $trim
      * @return string
      */
-    public function format(float $number, int $decimals = 2): string;
+    public function format(float $number, int $decimals = 2, $trim = true): string;
 }

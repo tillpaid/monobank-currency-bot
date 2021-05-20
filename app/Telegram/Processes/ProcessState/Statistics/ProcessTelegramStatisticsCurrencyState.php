@@ -5,6 +5,10 @@ namespace App\Telegram\Processes\ProcessState\Statistics;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class ProcessTelegramStatisticsCurrencyState
+ * @package App\Telegram\Processes\ProcessState\Statistics
+ */
 class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramState
 {
     /**
@@ -21,16 +25,32 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
                 $rates = $this->currencyRateService->getCurrencyRatesOfLastMonth($messageText);
                 $ratesResponse = [];
 
+                $ratesMinMax = [
+                    'values' => ['buy' => ['min' => PHP_INT_MAX, 'max' => 0], 'sell' => ['min' => PHP_INT_MAX, 'max' => 0]],
+                    'data'   => ['buy' => ['min' => null, 'max' => null], 'sell' => ['min' => null, 'max' => null]],
+                ];
+
                 foreach ($rates as $key => $rate) {
                     $number = $key + 1;
-                    $date = $rate->created_at->format('Y-m-d H:i:s');
+                    $date = $rate->created_at->format('Y-m-d');
+                    $rateBuy = $this->telegramBotService->format($rate->buy, 2, false);
+                    $rateSell = $this->telegramBotService->format($rate->sell, 2, false);
 
-                    $ratesResponse[] = "{$number}. {$date} - {$rate->buy}₴ / {$rate->sell}₴";
+                    $rateString = "{$date} - {$rateBuy}₴ / {$rateSell}₴";
+                    $ratesResponse[] = "`{$number}. {$rateString}`";
+
+                    $this->processMinMaxRates($ratesMinMax, $rate, $rateString);
                 }
 
-                $currencyUpper = mb_strtoupper($messageText);
                 $ratesResponse = join("\n", $ratesResponse);
-                $responseMessage = __('telegram.statisticsCurrencyReport', compact('currencyUpper', 'ratesResponse'));
+                $responseMessage = __('telegram.statisticsCurrencyReport', [
+                    'currencyUpper' => mb_strtoupper($messageText),
+                    'ratesResponse' => $ratesResponse,
+                    'buyMin'        => $ratesMinMax['data']['buy']['min'],
+                    'buyMax'        => $ratesMinMax['data']['buy']['max'],
+                    'sellMin'       => $ratesMinMax['data']['sell']['min'],
+                    'sellMax'       => $ratesMinMax['data']['sell']['max'],
+                ]);
 
                 break;
             case $messageText == __('telegram_buttons.back'):
@@ -43,5 +63,32 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
         }
 
         return $responseMessage;
+    }
+
+    /**
+     * @param array $ratesMinMax
+     * @param Model $rate
+     */
+    private function processMinMaxRates(array &$ratesMinMax, Model $rate, string $rateString): void
+    {
+        if ($rate->buy <= $ratesMinMax['values']['buy']['min']) {
+            $ratesMinMax['values']['buy']['min'] = $rate->buy;
+            $ratesMinMax['data']['buy']['min'] = $rateString;
+        }
+
+        if ($rate->buy >= $ratesMinMax['values']['buy']['max']) {
+            $ratesMinMax['values']['buy']['max'] = $rate->buy;
+            $ratesMinMax['data']['buy']['max'] = $rateString;
+        }
+
+        if ($rate->sell <= $ratesMinMax['values']['sell']['min']) {
+            $ratesMinMax['values']['sell']['min'] = $rate->sell;
+            $ratesMinMax['data']['sell']['min'] = $rateString;
+        }
+
+        if ($rate->sell >= $ratesMinMax['values']['sell']['max']) {
+            $ratesMinMax['values']['sell']['max'] = $rate->sell;
+            $ratesMinMax['data']['sell']['max'] = $rateString;
+        }
     }
 }

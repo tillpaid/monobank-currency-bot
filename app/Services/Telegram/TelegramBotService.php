@@ -258,12 +258,18 @@ class TelegramBotService implements TelegramBotServiceInterface
     /**
      * @param $number
      * @param int $decimals
+     * @param bool $trim
      * @return string
      */
-    public function format($number, $decimals = 2): string
+    public function format($number, $decimals = 2, $trim = true): string
     {
         $output = number_format($number, $decimals, '.', ' ');
-        $output = rtrim($output, '0');
-        return rtrim($output, '.');
+
+        if ($trim) {
+            $output = rtrim($output, '0');
+            $output = rtrim($output, '.');
+        }
+
+        return $output;
     }
 }
