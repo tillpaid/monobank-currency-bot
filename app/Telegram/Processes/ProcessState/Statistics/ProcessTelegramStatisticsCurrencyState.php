@@ -30,13 +30,12 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
                     'data'   => ['buy' => ['min' => null, 'max' => null], 'sell' => ['min' => null, 'max' => null]],
                 ];
 
-                foreach ($rates as $key => $rate) {
-                    $number = $key + 1;
+                foreach ($rates as $rate) {
                     $date = $rate->created_at->format('Y-m-d');
                     $rateBuy = $this->telegramBotService->format($rate->buy, 2, false);
                     $rateSell = $this->telegramBotService->format($rate->sell, 2, false);
 
-                    $ratesResponse[] = "`{$number}. {$date} - {$rateBuy}₴ / {$rateSell}₴`";
+                    $ratesResponse[] = "`* {$date} - {$rateBuy}₴ / {$rateSell}₴`";
 
                     $this->processMinMaxRates($ratesMinMax, $rate, $date);
                 }
