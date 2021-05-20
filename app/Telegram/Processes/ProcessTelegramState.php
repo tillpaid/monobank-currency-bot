@@ -11,6 +11,7 @@ use App\Telegram\Processes\ProcessState\ProcessTelegramDefaultState;
 use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellConfirmState;
 use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellState;
 use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellSumState;
+use App\Telegram\Processes\ProcessState\Statistics\ProcessTelegramStatisticsCurrencyState;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -53,6 +54,11 @@ class ProcessTelegramState
     private $processTelegramSellConfirmState;
 
     /**
+     * @var ProcessTelegramStatisticsCurrencyState
+     */
+    private $processTelegramStatisticsCurrencyState;
+
+    /**
      * ProcessTelegramState constructor.
      * @param ProcessTelegramDefaultState $processTelegramDefaultState
      * @param ProcessTelegramBuyState $processTelegramBuyState
@@ -62,6 +68,7 @@ class ProcessTelegramState
      * @param ProcessTelegramSellState $processTelegramSellState
      * @param ProcessTelegramSellSumState $processTelegramSellSumState
      * @param ProcessTelegramSellConfirmState $processTelegramSellConfirmState
+     * @param ProcessTelegramStatisticsCurrencyState $processTelegramStatisticsCurrencyState
      * @return void
      */
     public function __construct(
@@ -72,7 +79,8 @@ class ProcessTelegramState
         ProcessTelegramBuyRateOwnState $processTelegramBuyRateOwnState,
         ProcessTelegramSellState $processTelegramSellState,
         ProcessTelegramSellSumState $processTelegramSellSumState,
-        ProcessTelegramSellConfirmState $processTelegramSellConfirmState
+        ProcessTelegramSellConfirmState $processTelegramSellConfirmState,
+        ProcessTelegramStatisticsCurrencyState $processTelegramStatisticsCurrencyState
     )
     {
         $this->processTelegramDefaultState = $processTelegramDefaultState;
@@ -83,6 +91,7 @@ class ProcessTelegramState
         $this->processTelegramSellState = $processTelegramSellState;
         $this->processTelegramSellSumState = $processTelegramSellSumState;
         $this->processTelegramSellConfirmState = $processTelegramSellConfirmState;
+        $this->processTelegramStatisticsCurrencyState = $processTelegramStatisticsCurrencyState;
     }
 
     /**
@@ -123,6 +132,9 @@ class ProcessTelegramState
                 break;
             case config('states.sell-confirm'):
                 $processor = $this->processTelegramSellConfirmState;
+                break;
+            case config('states.statistics-currency'):
+                $processor = $this->processTelegramStatisticsCurrencyState;
                 break;
             default:
                 $processor = $this->processTelegramDefaultState;

@@ -30,4 +30,10 @@ interface CurrencyRateServiceInterface
      * @return Collection|null
      */
     public function getLastTwoCurrencyRates(string $currency): ?Collection;
+
+    /**
+     * @param string $currency
+     * @return Collection|null
+     */
+    public function getCurrencyRatesOfLastMonth(string $currency): ?Collection;
 }

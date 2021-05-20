@@ -20,12 +20,13 @@ class MakeTelegramKeyboard
             case null:
                 $keyboard = [
                     [__('telegram_buttons.buy'), __('telegram_buttons.sell')],
-                    [__('telegram_buttons.balance')],
-                    [__('telegram_buttons.report')],
+                    [__('telegram_buttons.balance'), __('telegram_buttons.report')],
+                    [__('telegram_buttons.statisticsCurrency')],
                 ];
                 break;
             case config('states.buy'):
             case config('states.sell'):
+            case config('states.statistics-currency'):
                 $keyboard = [config('monobank.currencies'), [__('telegram_buttons.back')]];
                 break;
             case config('states.buy-sum'):

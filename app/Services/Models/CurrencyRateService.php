@@ -62,4 +62,15 @@ class CurrencyRateService implements CurrencyRateServiceInterface
     {
         return $this->currencyRateRepository->getLastTwoCurrencyRates($currency);
     }
+
+    /**
+     * @param string $currency
+     * @return Collection|null
+     */
+    public function getCurrencyRatesOfLastMonth(string $currency): ?Collection
+    {
+        return $this->currencyRateRepository->getCurrencyRatesOfLastMonth($currency);
+    }
+
+
 }

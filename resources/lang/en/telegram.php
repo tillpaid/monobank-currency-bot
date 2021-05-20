@@ -13,6 +13,7 @@ return [
     'currencyNotSupported'        => "Эта валюта не поддерживается.\nВыберите пожалуйста валюту из списка.",
     'chooseCurrencyBuy'           => 'Какую валюту вы хотите купить?',
     'chooseCurrencySell'          => 'Какую валюту вы хотите продать?',
+    'chooseCurrency'              => 'Выберите валюту',
     'buySum'                      => "На какую сумму в гривне вы хотите купить валюту?\nВведите только цифры. Для разделителя дроби используйте точку.",
     'buyMessage'                  => ":sumUahFormat₴ = *:uahToCurrency* :currency\n-----\nКурс валюты на сейчас: *:currencyRate*\n\nЭто приемлемый для Вас курс, или вы зададите свой, по которому вы покупали валюту?",
     'buySuccessMessage'           => 'Операция успешно сохранена',
@@ -30,4 +31,5 @@ return [
     'userReportAccount'           => "\n-----\nОтчет по вашим счетам:\n\n:accountChange",
     'userReportSum'               => "\n-----\nСумма: :sum",
     'userReport'                  => "Изменился курс валют.",
+    'statisticsCurrencyReport'    => "Курс :currencyUpper за последний месяц:\n\n:ratesResponse",
 ];
