@@ -225,7 +225,11 @@ class TelegramBotService implements TelegramBotServiceInterface
         $currency = $userBalanceSum['currency_value'];
         $newUah = $currency * $buyRate;
         $diff = $this->getCurrencyDiff($uah, $newUah);
-        $percentProfit = $this->format(($newUah - $uah) / ($uah / 100));
+        $percentProfit = 0;
+
+        if (($uah / 100) != 0) {
+            $percentProfit = $this->format(($newUah - $uah) / ($uah / 100));
+        }
 
         return "{$currencyNameUpper}: {$this->format($currency)} ({$this->format($uah)}₴) | {$this->format($newUah)}₴ (*{$diff}₴ | {$percentProfit}%*)";
     }
