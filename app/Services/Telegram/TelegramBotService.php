@@ -177,7 +177,11 @@ class TelegramBotService implements TelegramBotServiceInterface
         $accountChange = join("\n", $accountChange);
 
         $totalDiff = $this->getCurrencyDiff($totalSum['value'], $totalSum['newValue']);
-        $percentProfit = $this->format(($totalSum['newValue'] - $totalSum['value']) / ($totalSum['value'] / 100));
+        $percentProfit = 0;
+
+        if (($totalSum['value'] / 100) != 0) {
+            $percentProfit = $this->format(($totalSum['newValue'] - $totalSum['value']) / ($totalSum['value'] / 100));
+        }
 
         $sum = "{$this->format($totalSum['value'])}₴ | {$this->format($totalSum['newValue'])}₴ (*{$totalDiff}₴ | {$percentProfit}%*)";
 
