@@ -34,6 +34,20 @@ class CurrencyAccountServiceTest extends TestCase
      * @test
      * @return void
      */
+    public function testCreate(): void
+    {
+        $telegramUser = TelegramUser::factory(1)->create()->first();
+        $currencies = config('monobank.currencies');
+        $currencyName = array_shift($currencies);
+
+        $result = $this->currencyAccountService->create($telegramUser->id, $currencyName, 5, 1);
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
     public function testGetUserCurrencySum(): void
     {
         $telegramUser = TelegramUser::factory(1)->create()->first();
