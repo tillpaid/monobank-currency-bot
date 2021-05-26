@@ -41,7 +41,7 @@ class CurrencyAccountService implements CurrencyAccountServiceInterface
             'currency'         => $currency,
             'uah_value'        => $uahValue,
             'purchase_rate'    => $purchaseRate,
-            'currency_value'   => $uahValue / $purchaseRate,
+            'currency_value'   => round($uahValue / $purchaseRate, 5),
         ]);
 
         return isset($currencyAccount->id);

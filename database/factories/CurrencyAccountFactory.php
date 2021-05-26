@@ -28,7 +28,7 @@ class CurrencyAccountFactory extends Factory
 
         $uahValue = $this->faker->randomFloat(2, 10, 10000);
         $purchaseRate = $currencyRate->sell;
-        $currencyValue = $uahValue / $purchaseRate;
+        $currencyValue = round($uahValue / $purchaseRate, 5);
 
         return [
             'telegram_user_id' => $telegramUser->id,
