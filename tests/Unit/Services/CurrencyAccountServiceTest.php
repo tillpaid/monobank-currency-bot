@@ -115,4 +115,41 @@ class CurrencyAccountServiceTest extends TestCase
             $this->assertEquals($expected, $currencySumAfterSell);
         }
     }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function testGetUserBalanceSum(): void
+    {
+        $telegramUser = TelegramUser::factory(1)->create()->first();
+        $currencies = config('monobank.currencies');
+
+        $expected = [];
+
+        foreach ($currencies as $currencyName) {
+            $expected[$currencyName] = $expected[$currencyName] ?? ['currency_value' => 0, 'uah_value' => 0];
+            $counter = $this->faker->numberBetween(10, 50);
+
+            while ($counter-- > 0) {
+                $uahValue = $this->faker->randomFloat(2, 100, 100000);
+                $purchaseRate = $this->faker->randomFloat(5, 10, 100);
+
+                $expected[$currencyName]['currency_value'] += round($uahValue / $purchaseRate, 5);
+                $expected[$currencyName]['uah_value'] += $uahValue;
+
+                $this->currencyAccountService->create($telegramUser->id, $currencyName, $uahValue, $purchaseRate);
+            }
+
+            $expected[$currencyName]['currency_value'] = round($expected[$currencyName]['currency_value'], 5);
+            $expected[$currencyName]['uah_value'] = round($expected[$currencyName]['uah_value'], 5);
+        }
+
+        $result = $this->currencyAccountService->getUserBalanceSum($telegramUser->id);
+
+        asort($expected);
+        asort($result);
+
+        $this->assertEquals($expected, $result);
+    }
 }
