@@ -73,4 +73,25 @@ class CurrencyAccountServiceTest extends TestCase
             $this->assertEquals($expected, $result);
         }
     }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function testSellCurrency(): void
+    {
+        $telegramUser = TelegramUser::factory(1)->hasCurrencyAccounts(20)->create()->first();
+        $currencies = config('monobank.currencies');
+
+        foreach ($currencies as $currencyName) {
+            $currencySum = $this->currencyAccountService->getUserCurrencySum($telegramUser->id, $currencyName);
+            $expected = $currencySum * 0.85;
+            $toSell = $currencySum * 0.15;
+
+            $this->currencyAccountService->sellCurrency($telegramUser->id, $currencyName, $toSell);
+            $currencySumAfterSell = $this->currencyAccountService->getUserCurrencySum($telegramUser->id, $currencyName);
+
+            $this->assertEquals($expected, $currencySumAfterSell);
+        }
+    }
 }
