@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Models\CurrencyAccount;
 use App\Models\TelegramUser;
 use App\Services\Interfaces\Models\CurrencyAccountServiceInterface;
 use Illuminate\Container\Container;
@@ -70,6 +71,26 @@ class CurrencyAccountServiceTest extends TestCase
 
         foreach ($expectedResults as $currencyName => $expected) {
             $result = $this->currencyAccountService->getUserCurrencySum($telegramUser->id, $currencyName);
+            $this->assertEquals($expected, $result);
+        }
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function testGetFirstUserCurrencyAccount(): void
+    {
+        $telegramUser = TelegramUser::factory(1)->hasCurrencyAccounts(20)->create()->first();
+        $currencies = config('monobank.currencies');
+
+        foreach ($currencies as $currencyName) {
+            $expected = CurrencyAccount
+                ::where('telegram_user_id', $telegramUser->id)
+                ->where('currency', $currencyName)
+                ->first();
+            $result = $this->currencyAccountService->getFirstUserCurrencyAccount($telegramUser->id, $currencyName);
+
             $this->assertEquals($expected, $result);
         }
     }
