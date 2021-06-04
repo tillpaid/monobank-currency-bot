@@ -22,7 +22,9 @@ class TelegramUserFactory extends Factory
     public function definition()
     {
         return [
-            'chat_id' => $this->faker->numberBetween(100000, 999999),
+            'chat_id'          => $this->faker->numberBetween(100000, 999999),
+            'state'            => null,
+            'state_additional' => null,
         ];
     }
 }
