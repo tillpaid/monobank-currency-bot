@@ -25,38 +25,9 @@ class ProcessTelegramState
      */
     private $processTelegramDefaultState;
     /**
-     * @var ProcessTelegramBuyState
+     * @var array
      */
-    private $processTelegramBuyState;
-    /**
-     * @var ProcessTelegramBuySumState
-     */
-    private $processTelegramBuySumState;
-    /**
-     * @var ProcessTelegramBuyRateState
-     */
-    private $processTelegramBuyRateState;
-    /**
-     * @var ProcessTelegramBuyRateOwnState
-     */
-    private $processTelegramBuyRateOwnState;
-    /**
-     * @var ProcessTelegramSellState
-     */
-    private $processTelegramSellState;
-    /**
-     * @var ProcessTelegramSellSumState
-     */
-    private $processTelegramSellSumState;
-    /**
-     * @var ProcessTelegramSellConfirmState
-     */
-    private $processTelegramSellConfirmState;
-
-    /**
-     * @var ProcessTelegramStatisticsCurrencyState
-     */
-    private $processTelegramStatisticsCurrencyState;
+    private $processors;
 
     /**
      * ProcessTelegramState constructor.
@@ -84,14 +55,16 @@ class ProcessTelegramState
     )
     {
         $this->processTelegramDefaultState = $processTelegramDefaultState;
-        $this->processTelegramBuyState = $processTelegramBuyState;
-        $this->processTelegramBuySumState = $processTelegramBuySumState;
-        $this->processTelegramBuyRateState = $processTelegramBuyRateState;
-        $this->processTelegramBuyRateOwnState = $processTelegramBuyRateOwnState;
-        $this->processTelegramSellState = $processTelegramSellState;
-        $this->processTelegramSellSumState = $processTelegramSellSumState;
-        $this->processTelegramSellConfirmState = $processTelegramSellConfirmState;
-        $this->processTelegramStatisticsCurrencyState = $processTelegramStatisticsCurrencyState;
+        $this->processors = [
+            config('states.buy')                 => $processTelegramBuyState,
+            config('states.buy-sum')             => $processTelegramBuySumState,
+            config('states.buy-rate')            => $processTelegramBuyRateState,
+            config('states.buy-rate-own')        => $processTelegramBuyRateOwnState,
+            config('states.sell')                => $processTelegramSellState,
+            config('states.sell-sum')            => $processTelegramSellSumState,
+            config('states.sell-confirm')        => $processTelegramSellConfirmState,
+            config('states.statistics-currency') => $processTelegramStatisticsCurrencyState,
+        ];
     }
 
     /**
@@ -111,35 +84,12 @@ class ProcessTelegramState
      */
     private function getProcessor(Model $user): ProcessTelegramStateInterface
     {
-        switch ($user->state) {
-            case config('states.buy'):
-                $processor = $this->processTelegramBuyState;
-                break;
-            case config('states.buy-sum'):
-                $processor = $this->processTelegramBuySumState;
-                break;
-            case config('states.buy-rate'):
-                $processor = $this->processTelegramBuyRateState;
-                break;
-            case config('states.buy-rate-own'):
-                $processor = $this->processTelegramBuyRateOwnState;
-                break;
-            case config('states.sell'):
-                $processor = $this->processTelegramSellState;
-                break;
-            case config('states.sell-sum'):
-                $processor = $this->processTelegramSellSumState;
-                break;
-            case config('states.sell-confirm'):
-                $processor = $this->processTelegramSellConfirmState;
-                break;
-            case config('states.statistics-currency'):
-                $processor = $this->processTelegramStatisticsCurrencyState;
-                break;
-            default:
-                $processor = $this->processTelegramDefaultState;
+        if ($user->state && array_key_exists($user->state, $this->processors)) {
+            $output = $this->processors[$user->state];
+        } else {
+            $output = $this->processTelegramDefaultState;
         }
 
-        return $processor;
+        return $output;
     }
 }
