@@ -187,13 +187,18 @@ class TelegramBotService implements TelegramBotServiceInterface
             $percentProfit = $this->format(($totalSum['newValue'] - $totalSum['value']) / ($totalSum['value'] / 100));
         }
 
-        $sum = "{$this->format($totalSum['value'])}₴ | {$this->format($totalSum['newValue'])}₴ (*{$totalDiff}₴ | {$percentProfit}%*)";
+        $sumMessage = __('telegram.userBalanceSumTotal', [
+            'uah'           => $this->format($totalSum['value']),
+            'newUah'        => $this->format($totalSum['newValue']),
+            'diff'          => $totalDiff,
+            'percentProfit' => $percentProfit,
+        ]);
 
         // Generate output message
         $reportMessage = __('telegram.userReport');
         if ($rateChange) $reportMessage .= __('telegram.userReportRate', compact('rateChange'));
         if ($accountChange) $reportMessage .= __('telegram.userReportAccount', compact('accountChange'));
-        if ($totalSum['value']) $reportMessage .= __('telegram.userReportSum', compact('sum'));
+        if ($totalSum['value']) $reportMessage .= $sumMessage;
 
         return $reportMessage;
     }
@@ -236,7 +241,15 @@ class TelegramBotService implements TelegramBotServiceInterface
             $percentProfit = $this->format(($newUah - $uah) / ($uah / 100));
         }
 
-        return "{$currencyNameUpper}: {$this->format($currency)} ({$this->format($uah)}₴ | {$this->format($avg)}₴) | {$this->format($newUah)}₴ (*{$diff}₴ | {$percentProfit}%*)";
+        return __('telegram.userBalanceSumItem', [
+            'currencyNameUpper' => $currencyNameUpper,
+            'currency'          => $this->format($currency),
+            'uah'               => $this->format($uah),
+            'avg'               => $this->format($avg),
+            'newUah'            => $this->format($newUah),
+            'diff'              => $diff,
+            'percentProfit'     => $percentProfit,
+        ]);
     }
 
     /**
