@@ -130,11 +130,15 @@ class TelegramBotService implements TelegramBotServiceInterface
             if (array_key_exists($currency, $userBalanceSum)) {
                 $uahSum += $userBalanceSum[$currency]['uah_value'];
 
-                $currencyUpper = mb_strtoupper($currency);
-                $currencyValue = $this->format($userBalanceSum[$currency]['currency_value'], 5);
-                $uahValue = $this->format($userBalanceSum[$currency]['uah_value'], 5);
+                $currencyValue = $userBalanceSum[$currency]['currency_value'];
+                $uahValue = $userBalanceSum[$currency]['uah_value'];
 
-                $balance .= "{$currencyUpper}: {$currencyValue} ({$uahValue})\n";
+                $currencyUpper = mb_strtoupper($currency);
+                $currencyValueFormatted = $this->format($currencyValue, 5);
+                $uahValueFormatted = $this->format($uahValue, 5);
+                $avgValueFormatted = $this->format($uahValue / $currencyValue);
+
+                $balance .= "{$currencyUpper}: {$currencyValueFormatted} ({$uahValueFormatted}₴ | {$avgValueFormatted}₴)\n";
             }
         }
 
@@ -225,13 +229,14 @@ class TelegramBotService implements TelegramBotServiceInterface
         $currency = $userBalanceSum['currency_value'];
         $newUah = $currency * $buyRate;
         $diff = $this->getCurrencyDiff($uah, $newUah);
+        $avg = $uah / $currency;
         $percentProfit = 0;
 
         if (($uah / 100) != 0) {
             $percentProfit = $this->format(($newUah - $uah) / ($uah / 100));
         }
 
-        return "{$currencyNameUpper}: {$this->format($currency)} ({$this->format($uah)}₴) | {$this->format($newUah)}₴ (*{$diff}₴ | {$percentProfit}%*)";
+        return "{$currencyNameUpper}: {$this->format($currency)} ({$this->format($uah)}₴ | {$this->format($avg)}₴) | {$this->format($newUah)}₴ (*{$diff}₴ | {$percentProfit}%*)";
     }
 
     /**
