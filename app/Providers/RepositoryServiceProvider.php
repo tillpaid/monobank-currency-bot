@@ -7,7 +7,9 @@ use App\Repositories\CurrencyRateRepository;
 use App\Repositories\Interfaces\CurrencyAccountRepositoryInterface;
 use App\Repositories\Interfaces\CurrencyRateRepositoryInterface;
 use App\Repositories\Interfaces\TelegramUserRepositoryInterface;
+use App\Repositories\Interfaces\TelegramUserSendRateRepositoryInterface;
 use App\Repositories\TelegramUserRepository;
+use App\Repositories\TelegramUserSendRateRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -20,9 +22,10 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $binds = [
-            CurrencyAccountRepositoryInterface::class => CurrencyAccountRepository::class,
-            CurrencyRateRepositoryInterface::class    => CurrencyRateRepository::class,
-            TelegramUserRepositoryInterface::class    => TelegramUserRepository::class
+            CurrencyAccountRepositoryInterface::class      => CurrencyAccountRepository::class,
+            CurrencyRateRepositoryInterface::class         => CurrencyRateRepository::class,
+            TelegramUserRepositoryInterface::class         => TelegramUserRepository::class,
+            TelegramUserSendRateRepositoryInterface::class => TelegramUserSendRateRepository::class,
         ];
 
         foreach ($binds as $abstract => $concrete) {

@@ -4,6 +4,7 @@ namespace App\Services\Telegram;
 
 use App\Services\Interfaces\Models\CurrencyAccountServiceInterface;
 use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
+use App\Services\Interfaces\Models\TelegramUserSendRateServiceInterface;
 use App\Services\Interfaces\Models\TelegramUserServiceInterface;
 use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
 use App\Telegram\MakeTelegramKeyboard;
@@ -37,6 +38,10 @@ class TelegramBotService implements TelegramBotServiceInterface
      * @var CurrencyRateServiceInterface
      */
     private $currencyRateService;
+    /**
+     * @var TelegramUserSendRateServiceInterface
+     */
+    private $telegramUserSendRateService;
 
     /**
      * TelegramBotService constructor.
@@ -44,18 +49,21 @@ class TelegramBotService implements TelegramBotServiceInterface
      * @param MakeTelegramKeyboard $makeTelegramKeyboard
      * @param CurrencyAccountServiceInterface $currencyAccountService
      * @param CurrencyRateServiceInterface $currencyRateService
+     * @param TelegramUserSendRateServiceInterface $telegramUserSendRateService
      */
     public function __construct(
         TelegramUserServiceInterface $telegramUserService,
         MakeTelegramKeyboard $makeTelegramKeyboard,
         CurrencyAccountServiceInterface $currencyAccountService,
-        CurrencyRateServiceInterface $currencyRateService
+        CurrencyRateServiceInterface $currencyRateService,
+        TelegramUserSendRateServiceInterface $telegramUserSendRateService
     )
     {
         $this->telegramUserService = $telegramUserService;
         $this->makeTelegramKeyboard = $makeTelegramKeyboard;
         $this->currencyAccountService = $currencyAccountService;
         $this->currencyRateService = $currencyRateService;
+        $this->telegramUserSendRateService = $telegramUserSendRateService;
     }
 
     /**
@@ -167,7 +175,7 @@ class TelegramBotService implements TelegramBotServiceInterface
             if ($lastCurrencyRates = $this->currencyRateService->getLastTwoCurrencyRates($currencyName)) {
                 [$rateNew, $rateOld] = $lastCurrencyRates;
 
-                $rateChange[] = $this->getRateChange($rateOld, $rateNew);
+                $rateChange[] = $this->getRateChange($rateOld, $rateNew, $userId);
 
                 if (array_key_exists($currencyName, $userBalanceSum)) {
                     $accountChange[] = $this->getAccountChange($userBalanceSum[$currencyName], $currencyName, $rateNew->buy);
@@ -206,9 +214,10 @@ class TelegramBotService implements TelegramBotServiceInterface
     /**
      * @param Model $rateOld
      * @param Model $rateNew
+     * @param int $userId
      * @return string
      */
-    private function getRateChange(Model $rateOld, Model $rateNew): string
+    private function getRateChange(Model $rateOld, Model $rateNew, int $userId): string
     {
         $currencyName = mb_strtoupper($rateNew->currency);
 
@@ -217,7 +226,16 @@ class TelegramBotService implements TelegramBotServiceInterface
         $buyDiff = $this->getCurrencyDiff($rateOld->buy, $rateNew->buy, 5);
         $sellDiff = $this->getCurrencyDiff($rateOld->sell, $rateNew->sell, 5);
 
-        return "{$currencyName}: {$buy} / {$sell} (*{$buyDiff} / {$sellDiff}*)";
+        $rateBeenSent = $this->telegramUserSendRateService->checkIfRateChangeBeenSent($userId, $rateNew->id);
+
+        if ($rateBeenSent) {
+            $output = "{$currencyName}: {$buy} / {$sell}";
+        } else {
+            $output = "{$currencyName}: {$buy} / {$sell} (*{$buyDiff} / {$sellDiff}*)";
+            $this->telegramUserSendRateService->updateSendRate($userId, $rateNew->id, $currencyName);
+        }
+
+        return $output;
     }
 
     /**
