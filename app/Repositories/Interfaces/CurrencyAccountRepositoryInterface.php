@@ -26,6 +26,13 @@ interface CurrencyAccountRepositoryInterface
 
     /**
      * @param int $userId
+     * @param string $currency
+     * @return Model|null
+     */
+    public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?Model;
+
+    /**
+     * @param int $userId
      * @return array|null
      */
     public function getUserBalanceSum(int $userId): ?array;

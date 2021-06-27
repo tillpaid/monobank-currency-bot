@@ -68,6 +68,14 @@ class CurrencyAccountService implements CurrencyAccountServiceInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?Model
+    {
+        return $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($userId, $currency);
+    }
+
+    /**
      * @param int $userId
      * @param string $currency
      * @param float $currencySum
@@ -76,7 +84,7 @@ class CurrencyAccountService implements CurrencyAccountServiceInterface
     public function sellCurrency(int $userId, string $currency, float $currencySum): void
     {
         while ($currencySum > 0) {
-            if (!$currencyAccount = $this->getFirstUserCurrencyAccount($userId, $currency)) {
+            if (!$currencyAccount = $this->getLessProfitUserCurrencyAccount($userId, $currency)) {
                 break;
             }
 

@@ -54,6 +54,18 @@ class CurrencyAccountRepository implements CurrencyAccountRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?Model
+    {
+        return $this->model
+            ->where('telegram_user_id', $userId)
+            ->where('currency', $currency)
+            ->orderBy('purchase_rate', 'DESC')
+            ->first();
+    }
+
+    /**
      * @param int $userId
      * @return array|null
      */

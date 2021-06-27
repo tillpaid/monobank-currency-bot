@@ -36,6 +36,13 @@ interface CurrencyAccountServiceInterface
     /**
      * @param int $userId
      * @param string $currency
+     * @return Model|null
+     */
+    public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?Model;
+
+    /**
+     * @param int $userId
+     * @param string $currency
      * @param float $currencySum
      * @return void
      */
