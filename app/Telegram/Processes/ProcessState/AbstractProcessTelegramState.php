@@ -70,7 +70,9 @@ abstract class AbstractProcessTelegramState implements ProcessTelegramStateInter
      */
     final protected function buildBuyConfirmMessage(Model $user, ?float $currencyRate = null): string
     {
-        $currency = $user->state_additional['buy-currency'] ?? 'usd';
+        $currency = $user->state_additional['buy-currency']
+            ? mb_strtoupper($user->state_additional['buy-currency'])
+            : 'USD';
 
         if (is_null($currencyRate)) {
             $currencyRate = $this->currencyRateService->getLatestCurrencyRate($currency)->sell;
