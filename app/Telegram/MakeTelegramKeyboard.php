@@ -27,7 +27,7 @@ class MakeTelegramKeyboard
             case config('states.buy'):
             case config('states.sell'):
             case config('states.statistics-currency'):
-                $keyboard = [config('monobank.currencies'), [__('telegram_buttons.back')]];
+                $keyboard = [$this->getCurrencies(), [__('telegram_buttons.back')]];
                 break;
             case config('states.buy-sum'):
             case config('states.buy-rate-own'):
@@ -43,5 +43,10 @@ class MakeTelegramKeyboard
         }
 
         return $keyboard;
+    }
+
+    private function getCurrencies(): array
+    {
+        return array_map('mb_strtoupper', config('monobank.currencies'));
     }
 }

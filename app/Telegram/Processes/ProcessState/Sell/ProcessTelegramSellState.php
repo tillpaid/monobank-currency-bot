@@ -18,15 +18,17 @@ class ProcessTelegramSellState extends AbstractProcessTelegramState
      */
     public function process(Model $user, string $messageText): string
     {
+        $messageTextLower = mb_strtolower($messageText);
+
         switch (true) {
-            case in_array($messageText, config('monobank.currencies')):
-                $currencySum = $this->currencyAccountService->getUserCurrencySum($user->id, $messageText);
+            case in_array($messageTextLower, config('monobank.currencies')):
+                $currencySum = $this->currencyAccountService->getUserCurrencySum($user->id, $messageTextLower);
 
                 if ($currencySum > 0) {
-                    $this->updateUserState($user, config('states.sell-sum'), ['sell-currency' => $messageText, 'sell-currency-sum-all' => $currencySum]);
+                    $this->updateUserState($user, config('states.sell-sum'), ['sell-currency' => $messageTextLower, 'sell-currency-sum-all' => $currencySum]);
 
                     $currencySum = number_format($currencySum, 5, '.', ' ');
-                    $responseMessage = __('telegram.sellSum', ['currencySum' => $currencySum, 'currency' => $messageText]);
+                    $responseMessage = __('telegram.sellSum', ['currencySum' => $currencySum, 'currency' => $messageTextLower]);
                 } else {
                     $responseMessage = __('telegram.sellEmptySum');
                 }

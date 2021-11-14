@@ -18,9 +18,11 @@ class ProcessTelegramBuyState extends AbstractProcessTelegramState
      */
     public function process(Model $user, string $messageText): string
     {
+        $messageTextLower = mb_strtolower($messageText);
+
         switch (true) {
-            case in_array($messageText, config('monobank.currencies')):
-                $this->updateUserState($user, config('states.buy-sum'), ['buy-currency' => $messageText]);
+            case in_array($messageTextLower, config('monobank.currencies')):
+                $this->updateUserState($user, config('states.buy-sum'), ['buy-currency' => $messageTextLower]);
                 $responseMessage = __('telegram.buySum');
 
                 break;

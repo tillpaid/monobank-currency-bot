@@ -18,11 +18,13 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
      */
     public function process(Model $user, string $messageText): string
     {
+        $messageTextLower = mb_strtolower($messageText);
+
         switch (true) {
-            case in_array($messageText, config('monobank.currencies')):
+            case in_array($messageTextLower, config('monobank.currencies')):
                 $this->updateUserState($user, null);
 
-                $rates = $this->currencyRateService->getCurrencyRatesOfLastMonth($messageText);
+                $rates = $this->currencyRateService->getCurrencyRatesOfLastMonth($messageTextLower);
                 $ratesResponse = [];
 
                 $ratesMinMax = [
