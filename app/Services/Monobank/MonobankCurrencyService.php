@@ -128,7 +128,7 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
     {
         return
             is_null($rate) ||
-            $newRate['rateBuy'] != $rate->buy ||
-            $newRate['rateSell'] != $rate->sell;
+            round($newRate['rateBuy'], 5) != round($rate->buy, 5) ||
+            round($newRate['rateSell'], 5) != round($rate->sell, 5);
     }
 }
