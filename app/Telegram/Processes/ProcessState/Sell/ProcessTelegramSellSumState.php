@@ -24,6 +24,11 @@ class ProcessTelegramSellSumState extends AbstractProcessTelegramState
                 $responseMessage = __('telegram.chooseCurrencySell');
 
                 break;
+            case $messageText == __('telegram_buttons.backHome'):
+                $this->updateUserState($user, null);
+                $responseMessage = __('telegram.startMessage');
+
+                break;
             case $messageText == (string)(float)$messageText:
                 $currency = $user->state_additional['sell-currency'] ?? 'usd';
                 $currencySumAll = $user->state_additional['sell-currency-sum-all'] ?? 0;

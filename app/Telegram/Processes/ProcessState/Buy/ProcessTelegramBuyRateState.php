@@ -24,6 +24,11 @@ class ProcessTelegramBuyRateState extends AbstractProcessTelegramState
                 $responseMessage = __('telegram.buySum');
 
                 break;
+            case $messageText == __('telegram_buttons.backHome'):
+                $this->updateUserState($user, null);
+                $responseMessage = __('telegram.startMessage');
+
+                break;
             case __('telegram_buttons.confirm'):
                 $this->updateUserState($user, null);
                 $this->currencyAccountService->create(
