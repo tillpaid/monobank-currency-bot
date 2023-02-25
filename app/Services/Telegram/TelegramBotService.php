@@ -15,7 +15,7 @@ use Longman\TelegramBot\Telegram;
 
 class TelegramBotService implements TelegramBotServiceInterface
 {
-    private Telegram $bot;
+    private ?Telegram $bot;
     private TelegramUserServiceInterface $telegramUserService;
     private MakeTelegramKeyboard $makeTelegramKeyboard;
     private CurrencyAccountServiceInterface $currencyAccountService;
@@ -34,6 +34,8 @@ class TelegramBotService implements TelegramBotServiceInterface
         $this->currencyAccountService = $currencyAccountService;
         $this->currencyRateService = $currencyRateService;
         $this->telegramUserSendRateService = $telegramUserSendRateService;
+
+        $this->bot = null;
     }
 
     /**
