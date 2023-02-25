@@ -3,15 +3,14 @@
 namespace App\Services\Models;
 
 use App\Models\CurrencyAccount;
-use App\Repositories\Interfaces\CurrencyAccountRepositoryInterface;
-use App\Services\Interfaces\Models\CurrencyAccountServiceInterface;
+use App\Repositories\CurrencyAccountRepository;
 use Illuminate\Database\Eloquent\Model;
 
-class CurrencyAccountService implements CurrencyAccountServiceInterface
+class CurrencyAccountService
 {
-    private CurrencyAccountRepositoryInterface $currencyAccountRepository;
+    private CurrencyAccountRepository $currencyAccountRepository;
 
-    public function __construct(CurrencyAccountRepositoryInterface $currencyAccountRepository)
+    public function __construct(CurrencyAccountRepository $currencyAccountRepository)
     {
         $this->currencyAccountRepository = $currencyAccountRepository;
     }

@@ -3,11 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\CurrencyAccount;
-use App\Repositories\Interfaces\CurrencyAccountRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class CurrencyAccountRepository implements CurrencyAccountRepositoryInterface
+class CurrencyAccountRepository
 {
     private CurrencyAccount $model;
 

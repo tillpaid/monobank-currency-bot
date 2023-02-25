@@ -2,20 +2,19 @@
 
 namespace App\Services\Monobank;
 
-use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
-use App\Services\Interfaces\Monobank\MonobankCurrencyServiceInterface;
+use App\Services\Models\CurrencyRateService;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-class MonobankCurrencyService implements MonobankCurrencyServiceInterface
+class MonobankCurrencyService
 {
     private Client $client;
-    private CurrencyRateServiceInterface $currencyRateService;
+    private CurrencyRateService $currencyRateService;
     private int $uahCode;
     private array $currencyCodes;
 
-    public function __construct(Client $client, CurrencyRateServiceInterface $currencyRateService)
+    public function __construct(Client $client, CurrencyRateService $currencyRateService)
     {
         $this->client = $client;
         $this->currencyRateService = $currencyRateService;

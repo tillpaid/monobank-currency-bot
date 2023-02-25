@@ -3,12 +3,11 @@
 namespace App\Repositories;
 
 use App\Models\CurrencyRate;
-use App\Repositories\Interfaces\CurrencyRateRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class CurrencyRateRepository implements CurrencyRateRepositoryInterface
+class CurrencyRateRepository
 {
     private CurrencyRate $model;
     private Carbon $carbon;

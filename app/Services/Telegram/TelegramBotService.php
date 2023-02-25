@@ -2,32 +2,31 @@
 
 namespace App\Services\Telegram;
 
-use App\Services\Interfaces\Models\CurrencyAccountServiceInterface;
-use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
-use App\Services\Interfaces\Models\TelegramUserSendRateServiceInterface;
-use App\Services\Interfaces\Models\TelegramUserServiceInterface;
-use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
+use App\Services\Models\CurrencyAccountService;
+use App\Services\Models\CurrencyRateService;
+use App\Services\Models\TelegramUserSendRateService;
+use App\Services\Models\TelegramUserService;
 use App\Telegram\MakeTelegramKeyboard;
 use Illuminate\Database\Eloquent\Model;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 
-class TelegramBotService implements TelegramBotServiceInterface
+class TelegramBotService
 {
     private ?Telegram $bot;
-    private TelegramUserServiceInterface $telegramUserService;
+    private TelegramUserService $telegramUserService;
     private MakeTelegramKeyboard $makeTelegramKeyboard;
-    private CurrencyAccountServiceInterface $currencyAccountService;
-    private CurrencyRateServiceInterface $currencyRateService;
-    private TelegramUserSendRateServiceInterface $telegramUserSendRateService;
+    private CurrencyAccountService $currencyAccountService;
+    private CurrencyRateService $currencyRateService;
+    private TelegramUserSendRateService $telegramUserSendRateService;
 
     public function __construct(
-        TelegramUserServiceInterface $telegramUserService,
+        TelegramUserService $telegramUserService,
         MakeTelegramKeyboard $makeTelegramKeyboard,
-        CurrencyAccountServiceInterface $currencyAccountService,
-        CurrencyRateServiceInterface $currencyRateService,
-        TelegramUserSendRateServiceInterface $telegramUserSendRateService
+        CurrencyAccountService $currencyAccountService,
+        CurrencyRateService $currencyRateService,
+        TelegramUserSendRateService $telegramUserSendRateService
     ) {
         $this->telegramUserService = $telegramUserService;
         $this->makeTelegramKeyboard = $makeTelegramKeyboard;

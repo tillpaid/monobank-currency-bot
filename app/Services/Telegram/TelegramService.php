@@ -2,20 +2,18 @@
 
 namespace App\Services\Telegram;
 
-use App\Services\Interfaces\Models\TelegramUserServiceInterface;
-use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
-use App\Services\Interfaces\Telegram\TelegramServiceInterface;
+use App\Services\Models\TelegramUserService;
 use App\Telegram\ProcessTelegramRequest;
 
-class TelegramService implements TelegramServiceInterface
+class TelegramService
 {
-    private TelegramBotServiceInterface $telegramBotService;
-    private TelegramUserServiceInterface $telegramUserService;
+    private TelegramBotService $telegramBotService;
+    private TelegramUserService $telegramUserService;
     private ProcessTelegramRequest $processTelegramRequest;
 
     public function __construct(
-        TelegramBotServiceInterface $telegramBotService,
-        TelegramUserServiceInterface $telegramUserService,
+        TelegramBotService $telegramBotService,
+        TelegramUserService $telegramUserService,
         ProcessTelegramRequest $processTelegramRequest
     ) {
         $this->telegramBotService = $telegramBotService;

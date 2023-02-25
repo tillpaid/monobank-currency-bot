@@ -3,16 +3,15 @@
 namespace App\Services\Models;
 
 use App\Models\CurrencyRate;
-use App\Repositories\Interfaces\CurrencyRateRepositoryInterface;
-use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
+use App\Repositories\CurrencyRateRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class CurrencyRateService implements CurrencyRateServiceInterface
+class CurrencyRateService
 {
-    private CurrencyRateRepositoryInterface $currencyRateRepository;
+    private CurrencyRateRepository $currencyRateRepository;
 
-    public function __construct(CurrencyRateRepositoryInterface $currencyRateRepository)
+    public function __construct(CurrencyRateRepository $currencyRateRepository)
     {
         $this->currencyRateRepository = $currencyRateRepository;
     }

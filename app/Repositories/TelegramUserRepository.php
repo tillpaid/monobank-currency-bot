@@ -3,11 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\TelegramUser;
-use App\Repositories\Interfaces\TelegramUserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class TelegramUserRepository implements TelegramUserRepositoryInterface
+class TelegramUserRepository
 {
     private TelegramUser $model;
 

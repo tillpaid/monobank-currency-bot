@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Telegram;
 
-use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
+use App\Services\Telegram\TelegramBotService;
 use Illuminate\Console\Command;
 use Longman\TelegramBot\Exception\TelegramException;
 
@@ -11,9 +11,9 @@ class UnsetWebhook extends Command
     protected $signature = 'telegram:unset-webhook';
     protected $description = 'Telegram unset webhook';
 
-    private TelegramBotServiceInterface $telegramBotService;
+    private TelegramBotService $telegramBotService;
 
-    public function __construct(TelegramBotServiceInterface $telegramBotService)
+    public function __construct(TelegramBotService $telegramBotService)
     {
         parent::__construct();
 

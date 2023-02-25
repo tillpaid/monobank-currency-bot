@@ -3,14 +3,13 @@
 namespace App\Services\Models;
 
 use App\Models\TelegramUserSendRate;
-use App\Repositories\Interfaces\TelegramUserSendRateRepositoryInterface;
-use App\Services\Interfaces\Models\TelegramUserSendRateServiceInterface;
+use App\Repositories\TelegramUserSendRateRepository;
 
-class TelegramUserSendRateService implements TelegramUserSendRateServiceInterface
+class TelegramUserSendRateService
 {
-    private TelegramUserSendRateRepositoryInterface $telegramUserSendRateRepository;
+    private TelegramUserSendRateRepository $telegramUserSendRateRepository;
 
-    public function __construct(TelegramUserSendRateRepositoryInterface $telegramUserSendRateRepository)
+    public function __construct(TelegramUserSendRateRepository $telegramUserSendRateRepository)
     {
         $this->telegramUserSendRateRepository = $telegramUserSendRateRepository;
     }

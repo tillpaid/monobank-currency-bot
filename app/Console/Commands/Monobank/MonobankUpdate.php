@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\Monobank;
 
-use App\Services\Interfaces\Models\TelegramUserServiceInterface;
-use App\Services\Interfaces\Monobank\MonobankCurrencyServiceInterface;
-use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
+use App\Services\Models\TelegramUserService;
+use App\Services\Monobank\MonobankCurrencyService;
+use App\Services\Telegram\TelegramBotService;
 use Illuminate\Console\Command;
 
 class MonobankUpdate extends Command
@@ -12,14 +12,14 @@ class MonobankUpdate extends Command
     protected $signature = 'monobank:update';
     protected $description = 'Monobank update';
 
-    private MonobankCurrencyServiceInterface $monobankCurrencyService;
-    private TelegramUserServiceInterface $telegramUserService;
-    private TelegramBotServiceInterface $telegramBotService;
+    private MonobankCurrencyService $monobankCurrencyService;
+    private TelegramUserService $telegramUserService;
+    private TelegramBotService $telegramBotService;
 
     public function __construct(
-        MonobankCurrencyServiceInterface $monobankCurrencyService,
-        TelegramUserServiceInterface $telegramUserService,
-        TelegramBotServiceInterface $telegramBotService
+        MonobankCurrencyService $monobankCurrencyService,
+        TelegramUserService $telegramUserService,
+        TelegramBotService $telegramBotService
     ) {
         parent::__construct();
 

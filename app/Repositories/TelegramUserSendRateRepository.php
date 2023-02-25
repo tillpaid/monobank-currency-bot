@@ -3,10 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\TelegramUserSendRate;
-use App\Repositories\Interfaces\TelegramUserSendRateRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class TelegramUserSendRateRepository implements TelegramUserSendRateRepositoryInterface
+class TelegramUserSendRateRepository
 {
     private TelegramUserSendRate $model;
 

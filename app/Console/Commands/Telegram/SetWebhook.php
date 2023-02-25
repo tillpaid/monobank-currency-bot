@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\Telegram;
 
-use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
-use App\Services\Interfaces\Telegram\TelegramServiceInterface;
+use App\Services\Telegram\TelegramBotService;
+use App\Services\Telegram\TelegramService;
 use Illuminate\Console\Command;
 use Longman\TelegramBot\Exception\TelegramException;
 
@@ -12,12 +12,12 @@ class SetWebhook extends Command
     protected $signature = 'telegram:set-webhook';
     protected $description = 'Telegram set webhook';
 
-    private TelegramServiceInterface $telegramService;
-    private TelegramBotServiceInterface $telegramBotService;
+    private TelegramService $telegramService;
+    private TelegramBotService $telegramBotService;
 
     public function __construct(
-        TelegramServiceInterface $telegramService,
-        TelegramBotServiceInterface $telegramBotService
+        TelegramService $telegramService,
+        TelegramBotService $telegramBotService
     ) {
         parent::__construct();
 

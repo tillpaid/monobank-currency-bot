@@ -2,16 +2,15 @@
 
 namespace App\Services\Models;
 
-use App\Repositories\Interfaces\TelegramUserRepositoryInterface;
-use App\Services\Interfaces\Models\TelegramUserServiceInterface;
+use App\Repositories\TelegramUserRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class TelegramUserService implements TelegramUserServiceInterface
+class TelegramUserService
 {
-    private TelegramUserRepositoryInterface $telegramUserRepository;
+    private TelegramUserRepository $telegramUserRepository;
 
-    public function __construct(TelegramUserRepositoryInterface $telegramUserRepository)
+    public function __construct(TelegramUserRepository $telegramUserRepository)
     {
         $this->telegramUserRepository = $telegramUserRepository;
     }

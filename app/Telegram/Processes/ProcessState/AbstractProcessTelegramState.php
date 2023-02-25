@@ -2,31 +2,32 @@
 
 namespace App\Telegram\Processes\ProcessState;
 
-use App\Services\Interfaces\Models\CurrencyAccountServiceInterface;
-use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
-use App\Services\Interfaces\Models\TelegramUserServiceInterface;
-use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
-use App\Telegram\Processes\ProcessState\Interfaces\ProcessTelegramStateInterface;
+use App\Services\Models\CurrencyAccountService;
+use App\Services\Models\CurrencyRateService;
+use App\Services\Models\TelegramUserService;
+use App\Services\Telegram\TelegramBotService;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class AbstractProcessTelegramState implements ProcessTelegramStateInterface
+abstract class AbstractProcessTelegramState
 {
-    protected TelegramUserServiceInterface $telegramUserService;
-    protected CurrencyRateServiceInterface $currencyRateService;
-    protected CurrencyAccountServiceInterface $currencyAccountService;
-    protected TelegramBotServiceInterface $telegramBotService;
+    protected TelegramUserService $telegramUserService;
+    protected CurrencyRateService $currencyRateService;
+    protected CurrencyAccountService $currencyAccountService;
+    protected TelegramBotService $telegramBotService;
 
     public function __construct(
-        TelegramUserServiceInterface $telegramUserService,
-        CurrencyRateServiceInterface $currencyRateService,
-        CurrencyAccountServiceInterface $currencyAccountService,
-        TelegramBotServiceInterface $telegramBotService
+        TelegramUserService $telegramUserService,
+        CurrencyRateService $currencyRateService,
+        CurrencyAccountService $currencyAccountService,
+        TelegramBotService $telegramBotService
     ) {
         $this->telegramUserService = $telegramUserService;
         $this->currencyRateService = $currencyRateService;
         $this->currencyAccountService = $currencyAccountService;
         $this->telegramBotService = $telegramBotService;
     }
+
+    abstract public function process(Model $user, string $messageText): string;
 
     final protected function updateUserState(Model $user, ?string $state, ?array $stateAdditional = null): bool
     {

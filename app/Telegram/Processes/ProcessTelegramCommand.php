@@ -2,18 +2,18 @@
 
 namespace App\Telegram\Processes;
 
-use App\Services\Interfaces\Models\TelegramUserServiceInterface;
-use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
+use App\Services\Models\TelegramUserService;
+use App\Services\Telegram\TelegramBotService;
 use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramCommand
 {
-    protected TelegramUserServiceInterface $telegramUserService;
-    protected TelegramBotServiceInterface $telegramBotService;
+    protected TelegramUserService $telegramUserService;
+    protected TelegramBotService $telegramBotService;
 
     public function __construct(
-        TelegramUserServiceInterface $telegramUserService,
-        TelegramBotServiceInterface $telegramBotService
+        TelegramUserService $telegramUserService,
+        TelegramBotService $telegramBotService
     ) {
         $this->telegramUserService = $telegramUserService;
         $this->telegramBotService = $telegramBotService;
