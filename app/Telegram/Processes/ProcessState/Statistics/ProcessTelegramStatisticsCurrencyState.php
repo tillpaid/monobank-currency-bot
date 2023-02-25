@@ -5,17 +5,8 @@ namespace App\Telegram\Processes\ProcessState\Statistics;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class ProcessTelegramStatisticsCurrencyState
- * @package App\Telegram\Processes\ProcessState\Statistics
- */
 class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramState
 {
-    /**
-     * @param Model $user
-     * @param string $messageText
-     * @return string
-     */
     public function process(Model $user, string $messageText): string
     {
         $messageTextLower = mb_strtolower($messageText);
@@ -65,11 +56,6 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
         return $responseMessage;
     }
 
-    /**
-     * @param array $ratesMinMax
-     * @param Model $rate
-     * @param string $date
-     */
     private function processMinMaxRates(array &$ratesMinMax, Model $rate, string $date): void
     {
         $buyString = "{$date} - {$rate->buy}₴";

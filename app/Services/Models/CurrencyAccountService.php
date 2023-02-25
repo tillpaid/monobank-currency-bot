@@ -7,33 +7,15 @@ use App\Repositories\Interfaces\CurrencyAccountRepositoryInterface;
 use App\Services\Interfaces\Models\CurrencyAccountServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class CurrencyAccountService
- * @package App\Services\Models
- */
 class CurrencyAccountService implements CurrencyAccountServiceInterface
 {
-    /**
-     * @var CurrencyAccountRepositoryInterface
-     */
-    private $currencyAccountRepository;
+    private CurrencyAccountRepositoryInterface $currencyAccountRepository;
 
-    /**
-     * CurrencyAccountService constructor.
-     * @param CurrencyAccountRepositoryInterface $currencyAccountRepository
-     */
     public function __construct(CurrencyAccountRepositoryInterface $currencyAccountRepository)
     {
         $this->currencyAccountRepository = $currencyAccountRepository;
     }
 
-    /**
-     * @param int $userId
-     * @param string $currency
-     * @param float $uahValue
-     * @param float $purchaseRate
-     * @return bool
-     */
     public function create(int $userId, string $currency, float $uahValue, float $purchaseRate): bool
     {
         $currencyAccount = CurrencyAccount::create([
@@ -47,40 +29,21 @@ class CurrencyAccountService implements CurrencyAccountServiceInterface
         return isset($currencyAccount->id);
     }
 
-    /**
-     * @param int $userId
-     * @param string $currency
-     * @return float|null
-     */
     public function getUserCurrencySum(int $userId, string $currency): ?float
     {
         return $this->currencyAccountRepository->getUserCurrencySum($userId, $currency);
     }
 
-    /**
-     * @param int $userId
-     * @param string $currency
-     * @return Model|null
-     */
     public function getFirstUserCurrencyAccount(int $userId, string $currency): ?Model
     {
         return $this->currencyAccountRepository->getFirstUserCurrencyAccount($userId, $currency);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?Model
     {
         return $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($userId, $currency);
     }
 
-    /**
-     * @param int $userId
-     * @param string $currency
-     * @param float $currencySum
-     * @return void
-     */
     public function sellCurrency(int $userId, string $currency, float $currencySum): void
     {
         while ($currencySum > 0) {
@@ -101,10 +64,6 @@ class CurrencyAccountService implements CurrencyAccountServiceInterface
         }
     }
 
-    /**
-     * @param int $userId
-     * @return array|null
-     */
     public function getUserBalanceSum(int $userId): ?array
     {
         return $this->currencyAccountRepository->getUserBalanceSum($userId);

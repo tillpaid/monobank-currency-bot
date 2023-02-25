@@ -9,43 +9,23 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class SetWebhook extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'telegram:set-webhook';
-
-    private $telegramService;
-    private $telegramBotService;
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Telegram set webhook';
 
-    /**
-     * Create a new command instance.
-     * @param TelegramServiceInterface $telegramService
-     * @param TelegramBotServiceInterface $telegramBotService
-     * @return void
-     */
-    public function __construct(TelegramServiceInterface $telegramService, TelegramBotServiceInterface $telegramBotService)
-    {
+    private TelegramServiceInterface $telegramService;
+    private TelegramBotServiceInterface $telegramBotService;
+
+    public function __construct(
+        TelegramServiceInterface $telegramService,
+        TelegramBotServiceInterface $telegramBotService
+    ) {
         parent::__construct();
 
         $this->telegramService = $telegramService;
         $this->telegramBotService = $telegramBotService;
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    public function handle(): void
     {
         $url = config('telegram.botWebhookUrl');
         $telegram = $this->telegramBotService->getBot();

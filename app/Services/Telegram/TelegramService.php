@@ -7,46 +7,22 @@ use App\Services\Interfaces\Telegram\TelegramBotServiceInterface;
 use App\Services\Interfaces\Telegram\TelegramServiceInterface;
 use App\Telegram\ProcessTelegramRequest;
 
-/**
- * Class TelegramService
- * @package App\Services\Telegram
- */
 class TelegramService implements TelegramServiceInterface
 {
-    /**
-     * @var TelegramBotServiceInterface
-     */
-    private $telegramBotService;
-    /**
-     * @var TelegramUserServiceInterface
-     */
-    private $telegramUserService;
-    /**
-     * @var ProcessTelegramRequest
-     */
-    private $processTelegramRequest;
+    private TelegramBotServiceInterface $telegramBotService;
+    private TelegramUserServiceInterface $telegramUserService;
+    private ProcessTelegramRequest $processTelegramRequest;
 
-    /**
-     * TelegramService constructor.
-     * @param TelegramBotServiceInterface $telegramBotService
-     * @param TelegramUserServiceInterface $telegramUserService
-     * @param ProcessTelegramRequest $processTelegramRequest
-     */
     public function __construct(
         TelegramBotServiceInterface $telegramBotService,
         TelegramUserServiceInterface $telegramUserService,
         ProcessTelegramRequest $processTelegramRequest
-    )
-    {
+    ) {
         $this->telegramBotService = $telegramBotService;
         $this->telegramUserService = $telegramUserService;
         $this->processTelegramRequest = $processTelegramRequest;
     }
 
-    /**
-     * @param array $data
-     * @return void
-     */
     public function processWebhook(array $data): void
     {
         $message = array_key_exists('edited_message', $data)
@@ -60,9 +36,6 @@ class TelegramService implements TelegramServiceInterface
         $this->processMessage($chatId, $messageText);
     }
 
-    /**
-     * @return void
-     */
     public function sendMessageAboutChangeEnv(): void
     {
         $chatId = $this->telegramBotService->getMyId();
@@ -71,11 +44,6 @@ class TelegramService implements TelegramServiceInterface
         $this->telegramBotService->sendMessage($chatId, $message);
     }
 
-    /**
-     * @param $chatId
-     * @param $messageText
-     * @return void
-     */
     private function processMessage($chatId, $messageText): void
     {
         if (!$this->checkAuth($chatId)) {
@@ -89,10 +57,6 @@ class TelegramService implements TelegramServiceInterface
         $this->telegramBotService->sendMessage($chatId, $responseMessage);
     }
 
-    /**
-     * @param $chatId
-     * @return bool
-     */
     private function checkAuth($chatId): bool
     {
         return $chatId == $this->telegramBotService->getMyId();

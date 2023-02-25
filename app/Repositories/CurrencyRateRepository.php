@@ -8,37 +8,17 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class CurrencyRateRepository
- * @package App\Repositories
- */
 class CurrencyRateRepository implements CurrencyRateRepositoryInterface
 {
-    /**
-     * @var CurrencyRate
-     */
-    private $model;
+    private CurrencyRate $model;
+    private Carbon $carbon;
 
-    /**
-     * @var Carbon
-     */
-    private $carbon;
-
-    /**
-     * CurrencyRateRepository constructor.
-     * @param CurrencyRate $currencyRate
-     * @param Carbon $carbon
-     */
     public function __construct(CurrencyRate $currencyRate, Carbon $carbon)
     {
         $this->model = $currencyRate;
         $this->carbon = $carbon;
     }
 
-    /**
-     * @param string $currency
-     * @return Model|null
-     */
     public function getLatestCurrencyRate(string $currency): ?Model
     {
         return $this->model
@@ -47,10 +27,6 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
             ->first();
     }
 
-    /**
-     * @param string $currency
-     * @return Collection|null
-     */
     public function getLastTwoCurrencyRates(string $currency): ?Collection
     {
         $rates = $this->model
@@ -62,10 +38,6 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
         return $rates->count() == 2 ? $rates : null;
     }
 
-    /**
-     * @param string $currency
-     * @return Collection|null
-     */
     public function getCurrencyRatesOfLastMonth(string $currency): ?Collection
     {
         $startDate = $this->carbon->subMonth()->format('Y-m-d H:i:s');

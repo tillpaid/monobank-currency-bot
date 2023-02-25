@@ -6,29 +6,15 @@ use App\Models\TelegramUserSendRate;
 use App\Repositories\Interfaces\TelegramUserSendRateRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class TelegramUserSendRateRepository
- * @package App\Repositories
- */
 class TelegramUserSendRateRepository implements TelegramUserSendRateRepositoryInterface
 {
-    /**
-     * @var TelegramUserSendRate
-     */
-    private $model;
+    private TelegramUserSendRate $model;
 
-    /**
-     * TelegramUserSendRateRepository constructor.
-     * @param TelegramUserSendRate $telegramUserSendRate
-     */
     public function __construct(TelegramUserSendRate $telegramUserSendRate)
     {
         $this->model = $telegramUserSendRate;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function rowExists(int $telegramUserId, int $currencyRateId): bool
     {
         $count = $this->model
@@ -39,9 +25,6 @@ class TelegramUserSendRateRepository implements TelegramUserSendRateRepositoryIn
         return $count > 0;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getSendRate(int $telegramUserId, string $currency): ?Model
     {
         return $this->model

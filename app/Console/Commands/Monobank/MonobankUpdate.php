@@ -9,37 +9,18 @@ use Illuminate\Console\Command;
 
 class MonobankUpdate extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'monobank:update';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Monobank update';
 
-    private $monobankCurrencyService;
-    private $telegramUserService;
-    private $telegramBotService;
+    private MonobankCurrencyServiceInterface $monobankCurrencyService;
+    private TelegramUserServiceInterface $telegramUserService;
+    private TelegramBotServiceInterface $telegramBotService;
 
-    /**
-     * Create a new command instance.
-     * @param MonobankCurrencyServiceInterface$monobankCurrencyService
-     * @param TelegramUserServiceInterface $telegramUserService,
-     * @param TelegramBotServiceInterface $telegramBotService
-     * @return void
-     */
     public function __construct(
         MonobankCurrencyServiceInterface $monobankCurrencyService,
         TelegramUserServiceInterface $telegramUserService,
         TelegramBotServiceInterface $telegramBotService
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->monobankCurrencyService = $monobankCurrencyService;
@@ -47,12 +28,7 @@ class MonobankUpdate extends Command
         $this->telegramBotService = $telegramBotService;
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    public function handle(): void
     {
         if ($this->monobankCurrencyService->updateCurrencyRates()) {
             $users = $this->telegramUserService->all();

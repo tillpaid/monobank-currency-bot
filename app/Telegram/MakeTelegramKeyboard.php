@@ -2,16 +2,8 @@
 
 namespace App\Telegram;
 
-/**
- * Class MakeTelegramKeyboard
- * @package App\Telegram
- */
 class MakeTelegramKeyboard
 {
-    /**
-     * @param string|null $state
-     * @return array|array[]
-     */
     public function getKeyboard(?string $state): array
     {
         $keyboard = [];

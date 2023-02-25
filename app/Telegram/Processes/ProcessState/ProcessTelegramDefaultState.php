@@ -4,17 +4,8 @@ namespace App\Telegram\Processes\ProcessState;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class ProcessTelegramDefaultState
- * @package App\Telegram\Processes\ProcessState
- */
 class ProcessTelegramDefaultState extends AbstractProcessTelegramState
 {
-    /**
-     * @param Model $user
-     * @param string $messageText
-     * @return string
-     */
     public function process(Model $user, string $messageText): string
     {
         switch ($messageText) {

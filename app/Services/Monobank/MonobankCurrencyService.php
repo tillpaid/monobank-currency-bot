@@ -8,36 +8,13 @@ use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class MonobankCurrencyService
- * @package App\Services\Monobank
- */
 class MonobankCurrencyService implements MonobankCurrencyServiceInterface
 {
-    /**
-     * @var Client
-     */
-    private $client;
+    private Client $client;
+    private CurrencyRateServiceInterface $currencyRateService;
+    private int $uahCode;
+    private array $currencyCodes;
 
-    /**
-     * @var CurrencyRateServiceInterface
-     */
-    private $currencyRateService;
-
-    /**
-     * @var int
-     */
-    private $uahCode;
-    /**
-     * @var array
-     */
-    private $currencyCodes;
-
-    /**
-     * MonobankCurrencyService constructor.
-     * @param Client $client
-     * @param CurrencyRateServiceInterface $currencyRateService
-     */
     public function __construct(Client $client, CurrencyRateServiceInterface $currencyRateService)
     {
         $this->client = $client;
@@ -47,9 +24,6 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         $this->currencyCodes = config('monobank.currencyCodes');
     }
 
-    /**
-     * @return bool
-     */
     public function updateCurrencyRates(): bool
     {
         $newRates = $this->getCurrency();
@@ -58,9 +32,6 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         return $changed;
     }
 
-    /**
-     * @return array
-     */
     private function getCurrency(): array
     {
         $output = [];
@@ -79,10 +50,6 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         return $output;
     }
 
-    /**
-     * @param array $newRates
-     * @return bool
-     */
     private function processNewRates(array $newRates): bool
     {
         $changed = false;
@@ -102,10 +69,6 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         return $changed;
     }
 
-    /**
-     * @param array $newRate
-     * @return bool
-     */
     private function isItNeedleRate(array $newRate): bool
     {
         $needle = true;
@@ -119,11 +82,6 @@ class MonobankCurrencyService implements MonobankCurrencyServiceInterface
         return $needle;
     }
 
-    /**
-     * @param Model|null $rate
-     * @param array $newRate
-     * @return bool
-     */
     private function isRateDifferent(?Model $rate, array $newRate): bool
     {
         return

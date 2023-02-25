@@ -7,38 +7,19 @@ use App\Telegram\Processes\ProcessTelegramState;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class ProcessTelegramRequest
- * @package App\Telegram
- */
 class ProcessTelegramRequest
 {
-    /**
-     * @var ProcessTelegramCommand
-     */
-    private $processTelegramCommand;
-    /**
-     * @var ProcessTelegramState
-     */
-    private $processTelegramState;
+    private ProcessTelegramCommand $processTelegramCommand;
+    private ProcessTelegramState $processTelegramState;
 
-    /**
-     * ProcessTelegramRequest constructor.
-     * @param ProcessTelegramCommand $processTelegramCommand
-     * @param ProcessTelegramState $processTelegramState
-     * @return void
-     */
-    public function __construct(ProcessTelegramCommand $processTelegramCommand, ProcessTelegramState $processTelegramState)
-    {
+    public function __construct(
+        ProcessTelegramCommand $processTelegramCommand,
+        ProcessTelegramState $processTelegramState
+    ) {
         $this->processTelegramCommand = $processTelegramCommand;
         $this->processTelegramState = $processTelegramState;
     }
 
-    /**
-     * @param Model $user
-     * @param string $messageText
-     * @return string
-     */
     public function process(Model $user, string $messageText): string
     {
         try {
@@ -53,10 +34,6 @@ class ProcessTelegramRequest
         }
     }
 
-    /**
-     * @param string $messageText
-     * @return bool
-     */
     private function isCommand(string $messageText): bool
     {
         return substr($messageText, 0, 1) == '/';

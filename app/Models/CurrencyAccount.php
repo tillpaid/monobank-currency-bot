@@ -12,9 +12,6 @@ class CurrencyAccount extends Model
 
     protected $guarded = [];
 
-    /**
-     * @return BelongsTo
-     */
     public function telegramUser(): BelongsTo
     {
         return $this->belongsTo(TelegramUser::class);

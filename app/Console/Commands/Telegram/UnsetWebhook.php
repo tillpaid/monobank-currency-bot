@@ -8,27 +8,11 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class UnsetWebhook extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'telegram:unset-webhook';
-
-    private $telegramBotService;
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Telegram unset webhook';
 
-    /**
-     * Create a new command instance.
-     * @param TelegramBotServiceInterface $telegramBotService
-     * @return void
-     */
+    private TelegramBotServiceInterface $telegramBotService;
+
     public function __construct(TelegramBotServiceInterface $telegramBotService)
     {
         parent::__construct();
@@ -36,12 +20,7 @@ class UnsetWebhook extends Command
         $this->telegramBotService = $telegramBotService;
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    public function handle(): void
     {
         $telegram = $this->telegramBotService->getBot();
 
