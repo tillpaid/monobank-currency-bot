@@ -1,4 +1,4 @@
-FROM php:8.2
+FROM php:8.0
 WORKDIR /app
 
 EXPOSE ${APPLICATION_PORT}

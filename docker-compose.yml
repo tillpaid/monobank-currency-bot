@@ -19,6 +19,16 @@ services:
     entrypoint: ['php', '-S', '0.0.0.0:${APPLICATION_PORT}', 'public/index.php']
     networks:
       - app-network
+  composer:
+    image: composer:latest
+    container_name: monobank_currency_bot_composer
+    command:
+      - install
+    volumes:
+      - ./:/application/
+    working_dir: /application
+    depends_on:
+      - php
   db:
     image: mariadb
     container_name: monobank_currency_bot_db
