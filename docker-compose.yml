@@ -17,8 +17,8 @@ services:
     depends_on:
       - db
     entrypoint: ['php', '-S', '0.0.0.0:${APPLICATION_PORT}', 'public/index.php']
-    networks:
-      - app-network
+#    networks:
+#      - app-network
   composer:
     image: composer:latest
     container_name: monobank_currency_bot_composer
@@ -42,8 +42,8 @@ services:
       - ./docker/database:/var/lib/mysql
     ports:
       - ${DATABASE_EXTERNAL_PORT}:3306
-    networks:
-      - app-network
-networks:
-  app-network:
-    driver: bridge
+#    networks:
+#      - app-network
+#networks:
+#  app-network:
+#    driver: bridge
