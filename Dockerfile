@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     openssl \
     libcurl4 \
-    git
+    git \
+    vim
 RUN docker-php-ext-install bcmath pdo_mysql
 
 # Create user
@@ -28,3 +29,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Install dependencies
 # RUN su - app -c "cd /app && composer install"
+
+COPY docker/files/bashrc_part.txt /home/app/bashrc_part.txt
+RUN cat /home/app/bashrc_part.txt >> /home/app/.bashrc

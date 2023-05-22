@@ -13,5 +13,5 @@ npm-debug.log
 yarn-error.log
 .idea
 .DS_Store
-docker/
+docker/database
 !docker/database/.gitkeep
