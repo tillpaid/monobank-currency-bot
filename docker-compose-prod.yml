@@ -31,6 +31,8 @@ services:
     volumes:
       - ./:/app
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    links:
+      - app
     networks:
       - app-network
 
