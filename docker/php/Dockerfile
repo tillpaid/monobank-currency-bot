@@ -33,5 +33,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY docker/files/bashrc_part.txt /home/app/bashrc_part.txt
 RUN cat /home/app/bashrc_part.txt >> /home/app/.bashrc
 
-EXPOSE 9000
+EXPOSE 9100
 CMD ["php-fpm"]
