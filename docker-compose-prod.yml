@@ -30,10 +30,14 @@ services:
       - "8080:80"
     volumes:
       - ./:/app
-      - ../shared/env:/app/.env
       - ../shared/storage/:/app/storage/
-      - ../shared/public/robots.txt:/app/public/robots.txt
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - type: bind
+        source: ../shared/.env
+        target: /app/.env
+      - type: bind
+        source: ../shared/public/robots.txt
+        target: /app/public/robots.txt
     links:
       - app
     networks:
