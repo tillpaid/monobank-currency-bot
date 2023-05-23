@@ -1,7 +1,7 @@
 FROM php:8.0-fpm
 WORKDIR /app
 
-EXPOSE ${APPLICATION_PORT}
+#EXPOSE ${APPLICATION_PORT}
 
 # Install needle packages
 RUN apt-get update && apt-get install -y \
