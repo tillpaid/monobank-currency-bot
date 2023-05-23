@@ -14,8 +14,11 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install bcmath pdo_mysql
 
 # Create user
-RUN useradd -ms /bin/bash app
-RUN chown app:app /app
+#RUN useradd -ms /bin/bash app
+#RUN chown app:app /app
+
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy docker files
 # COPY docker/certs /certs
