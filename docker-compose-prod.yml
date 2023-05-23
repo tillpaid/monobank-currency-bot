@@ -32,12 +32,8 @@ services:
       - ./:/app
       - ../shared/storage/:/app/storage/
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-      - type: bind
-        source: ../shared/.env
-        target: /app/.env
-      - type: bind
-        source: ../shared/public/robots.txt
-        target: /app/public/robots.txt
+      - ../shared/.env:/app/.env
+      - ../shared/public/robots.txt:/app/public/robots.txt
     links:
       - app
     networks:
