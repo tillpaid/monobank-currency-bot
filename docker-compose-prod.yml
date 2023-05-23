@@ -32,7 +32,7 @@ services:
       - ./:/app
 #      - ../shared/storage/:/app/storage/
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-      - ../shared/.env:/app/.env
+#      - ../shared/.env:/app/.env
 #      - ../shared/public/robots.txt:/app/public/robots.txt
     links:
       - app
