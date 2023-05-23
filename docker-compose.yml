@@ -2,7 +2,9 @@ version: "3.1"
 
 services:
   php:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
     ports:
       - "${APPLICATION_PORT}:${APPLICATION_PORT}"
     container_name: monobank_currency_bot_php
@@ -19,16 +21,6 @@ services:
     entrypoint: ['php', '-S', '0.0.0.0:${APPLICATION_PORT}', 'public/index.php']
 #    networks:
 #      - app-network
-  composer:
-    image: composer:latest
-    container_name: monobank_currency_bot_composer
-    command:
-      - install
-    volumes:
-      - ./:/application/
-    working_dir: /application
-    depends_on:
-      - php
   db:
     image: mariadb
     container_name: monobank_currency_bot_db

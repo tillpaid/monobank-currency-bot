@@ -1,4 +1,4 @@
-FROM php:8.0
+FROM php:8.0-fpm
 WORKDIR /app
 
 EXPOSE ${APPLICATION_PORT}
@@ -32,3 +32,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY docker/files/bashrc_part.txt /home/app/bashrc_part.txt
 RUN cat /home/app/bashrc_part.txt >> /home/app/.bashrc
+
+EXPOSE 9000
+CMD ["php-fpm"]
