@@ -1,26 +1,44 @@
 version: "3.1"
 
 services:
-  php:
+  app:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    ports:
-      - "${APPLICATION_PORT}:${APPLICATION_PORT}"
-    container_name: monobank_currency_bot_php
+#    ports:
+#      - "${APPLICATION_PORT}:${APPLICATION_PORT}"
+    container_name: monobank_currency_bot_app
     environment:
       APPLICATION_PORT: ${APPLICATION_PORT}
+      USER_ID: ${USER_ID}
+      GROUP_ID: ${GROUP_ID}
+    working_dir: /app
     volumes:
       - $HOME/.composer:/home/app/.composer
       - ./:/app
-    user: app
+#    user: app
     links:
       - db
     depends_on:
       - db
-    entrypoint: ['php', '-S', '0.0.0.0:${APPLICATION_PORT}', 'public/index.php']
+#    entrypoint: ['php', '-S', '0.0.0.0:${APPLICATION_PORT}', 'public/index.php']
 #    networks:
 #      - app-network
+  webserver:
+    image: nginx:alpine
+    container_name: monobank_currency_bot_webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - ${APPLICATION_PORT}:80
+    volumes:
+      - ./:/app
+      #      - ../shared/storage/:/app/storage/
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    #      - ../shared/.env:/app/.env
+    #      - ../shared/public/robots.txt:/app/public/robots.txt
+    links:
+      - app
   db:
     image: mariadb
     container_name: monobank_currency_bot_db

@@ -3,6 +3,9 @@ WORKDIR /app
 
 #EXPOSE ${APPLICATION_PORT}
 
+ARG USER_ID
+ARG GROUP_ID
+
 # Install needle packages
 RUN apt-get update && apt-get install -y \
     zip \
@@ -14,11 +17,15 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install bcmath pdo_mysql
 
 # Create user
-#RUN useradd -ms /bin/bash app
-#RUN chown app:app /app
-
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
+
+#RUN addgroup --gid $GROUP_ID user
+#RUN adduser --disabled-password --gecos '' --uid $USER_ID -g user user
+#USER user
+
+#RUN addgroup -g ${GROUP_ID} --system php-user
+#RUN adduser -G php-user --system -D -s /bin/bash -u ${USER_ID} php-user
 
 # Copy docker files
 # COPY docker/certs /certs
