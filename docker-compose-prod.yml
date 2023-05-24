@@ -1,7 +1,5 @@
 version: '3'
 services:
-
-  #PHP Service
   app:
     build:
       context: .
@@ -35,16 +33,11 @@ services:
       - "8080:80"
     volumes:
       - ./:/app
-#      - ../shared/storage/:/app/storage/
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-#      - ../shared/.env:/app/.env
-#      - ../shared/public/robots.txt:/app/public/robots.txt
     links:
       - app
     networks:
       - app-network
-
-#Docker Networks
 networks:
   app-network:
     driver: bridge

@@ -8,8 +8,6 @@ services:
       args:
         USER_ID: ${USER_ID}
         GROUP_ID: ${GROUP_ID}
-    #    ports:
-#      - "${APPLICATION_PORT}:${APPLICATION_PORT}"
     container_name: monobank_currency_bot_app
     environment:
       APPLICATION_PORT: ${APPLICATION_PORT}
@@ -19,14 +17,10 @@ services:
     volumes:
       - $HOME/.composer:/home/app/.composer
       - ./:/app
-#    user: app
     links:
       - db
     depends_on:
       - db
-#    entrypoint: ['php', '-S', '0.0.0.0:${APPLICATION_PORT}', 'public/index.php']
-#    networks:
-#      - app-network
   webserver:
     image: nginx:alpine
     container_name: monobank_currency_bot_webserver
@@ -36,10 +30,7 @@ services:
       - ${APPLICATION_PORT}:80
     volumes:
       - ./:/app
-      #      - ../shared/storage/:/app/storage/
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-    #      - ../shared/.env:/app/.env
-    #      - ../shared/public/robots.txt:/app/public/robots.txt
     links:
       - app
   db:
@@ -55,8 +46,3 @@ services:
       - ./docker/database:/var/lib/mysql
     ports:
       - ${DATABASE_EXTERNAL_PORT}:3306
-#    networks:
-#      - app-network
-#networks:
-#  app-network:
-#    driver: bridge
