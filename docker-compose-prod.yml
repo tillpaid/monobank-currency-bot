@@ -6,12 +6,17 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+      args:
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
     container_name: monobank_currency_bot_app_prod
     restart: unless-stopped
     tty: true
     environment:
       SERVICE_NAME: app
       SERVICE_TAGS: dev
+      USER_ID: ${USER_ID}
+      GROUP_ID: ${GROUP_ID}
     working_dir: /app
     volumes:
       - $HOME/.composer:/home/app/.composer

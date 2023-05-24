@@ -17,8 +17,11 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install bcmath pdo_mysql
 
 # Create user
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+#RUN groupadd -g 1000 www
+#RUN useradd -u 1000 -ms /bin/bash -g www www
+
+RUN groupadd -g $GROUP_ID www
+RUN useradd -u $USER_ID -ms /bin/bash -g www www
 
 #RUN addgroup --gid $GROUP_ID user
 #RUN adduser --disabled-password --gecos '' --uid $USER_ID -g user user
@@ -40,8 +43,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Install dependencies
 # RUN su - app -c "cd /app && composer install"
 
-COPY docker/files/bashrc_part.txt /home/app/bashrc_part.txt
-RUN cat /home/app/bashrc_part.txt >> /home/app/.bashrc
+USER www
+
+COPY docker/files/bashrc_part.txt /home/www/bashrc_part.txt
+RUN cat /home/www/bashrc_part.txt >> /home/www/.bashrc
 
 EXPOSE 9000
 CMD ["php-fpm"]

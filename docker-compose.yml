@@ -5,7 +5,10 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-#    ports:
+      args:
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    #    ports:
 #      - "${APPLICATION_PORT}:${APPLICATION_PORT}"
     container_name: monobank_currency_bot_app
     environment:
