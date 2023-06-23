@@ -3,37 +3,25 @@
 namespace Tests\Unit\Services;
 
 use App\Models\CurrencyRate;
-use App\Services\Interfaces\Models\CurrencyRateServiceInterface;
+use App\Services\Models\CurrencyRateService;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Tests\TestCase;
 
-/**
- * Class CurrencyRateServiceTest
- * @package Tests\Unit\Services
- */
 class CurrencyRateServiceTest extends TestCase
 {
-    /**
-     * @var CurrencyRateServiceInterface
-     */
-    private $currencyRateService;
+    private CurrencyRateService $currencyRateService;
 
     /**
-     * @return void
      * @throws BindingResolutionException
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->currencyRateService = Container::getInstance()->make(CurrencyRateServiceInterface::class);
+        $this->currencyRateService = Container::getInstance()->make(CurrencyRateService::class);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testCreateCurrencyRate(): void
     {
         $currencies = config('monobank.currencies');
@@ -45,10 +33,6 @@ class CurrencyRateServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testGetLatestCurrencyRate(): void
     {
         $currencies = config('monobank.currencies');
@@ -75,10 +59,6 @@ class CurrencyRateServiceTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testGetLastTwoCurrencyRates(): void
     {
         $currencies = config('monobank.currencies');
@@ -110,10 +90,6 @@ class CurrencyRateServiceTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testGetCurrencyRatesOfLastMonth(): void
     {
         $currencies = config('monobank.currencies');

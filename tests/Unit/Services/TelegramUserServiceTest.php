@@ -3,21 +3,14 @@
 namespace Tests\Unit\Services;
 
 use App\Models\TelegramUser;
-use App\Services\Interfaces\Models\TelegramUserServiceInterface;
+use App\Services\Models\TelegramUserService;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Tests\TestCase;
 
-/**
- * Class TelegramUserServiceTest
- * @package Tests\Unit\Services
- */
 class TelegramUserServiceTest extends TestCase
 {
-    /**
-     * @var TelegramUserServiceInterface
-     */
-    private $telegramUserService;
+    private TelegramUserService $telegramUserService;
 
     /**
      * @throws BindingResolutionException
@@ -26,13 +19,9 @@ class TelegramUserServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->telegramUserService = Container::getInstance()->make(TelegramUserServiceInterface::class);
+        $this->telegramUserService = Container::getInstance()->make(TelegramUserService::class);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testGetByChatId(): void
     {
         $chatId = (string)rand(1000, 10000);
@@ -47,19 +36,11 @@ class TelegramUserServiceTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /**
-     * @param string $chatId
-     * @return int
-     */
     public function getCountByChatId(string $chatId): int
     {
         return TelegramUser::where('chat_id', $chatId)->count();
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testCreateIfNotExists(): void
     {
         $chatId = (string)rand(1000, 10000);
@@ -71,10 +52,6 @@ class TelegramUserServiceTest extends TestCase
         $this->assertEquals(1, $this->getCountByChatId($chatId));
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testUpdateState(): void
     {
         $state = 'value';
@@ -85,10 +62,6 @@ class TelegramUserServiceTest extends TestCase
         $this->assertEquals($state, $telegramUser->state);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testUpdateStateAdditional(): void
     {
         $telegramUser = TelegramUser::factory()->create();

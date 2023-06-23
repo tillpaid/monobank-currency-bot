@@ -4,37 +4,25 @@ namespace Tests\Unit\Services;
 
 use App\Models\CurrencyAccount;
 use App\Models\TelegramUser;
-use App\Services\Interfaces\Models\CurrencyAccountServiceInterface;
+use App\Services\Models\CurrencyAccountService;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Tests\TestCase;
 
-/**
- * Class CurrencyAccountServiceTest
- * @package Tests\Unit\Services
- */
 class CurrencyAccountServiceTest extends TestCase
 {
-    /**
-     * @var CurrencyAccountServiceInterface
-     */
-    private $currencyAccountService;
+    private CurrencyAccountService $currencyAccountService;
 
     /**
-     * @return void
      * @throws BindingResolutionException
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->currencyAccountService = Container::getInstance()->make(CurrencyAccountServiceInterface::class);
+        $this->currencyAccountService = Container::getInstance()->make(CurrencyAccountService::class);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testCreate(): void
     {
         $telegramUser = TelegramUser::factory(1)->create()->first();
@@ -45,10 +33,6 @@ class CurrencyAccountServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testGetUserCurrencySum(): void
     {
         $telegramUser = TelegramUser::factory(1)->create()->first();
@@ -75,10 +59,6 @@ class CurrencyAccountServiceTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testGetFirstUserCurrencyAccount(): void
     {
         $telegramUser = TelegramUser::factory(1)->hasCurrencyAccounts(20)->create()->first();
@@ -95,10 +75,6 @@ class CurrencyAccountServiceTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testSellCurrency(): void
     {
         $telegramUser = TelegramUser::factory(1)->hasCurrencyAccounts(20)->create()->first();
@@ -116,10 +92,6 @@ class CurrencyAccountServiceTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @return void
-     */
     public function testGetUserBalanceSum(): void
     {
         $telegramUser = TelegramUser::factory(1)->create()->first();
