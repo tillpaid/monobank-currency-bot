@@ -1,27 +1,23 @@
 version: "3.1"
 
 services:
-  app:
+  php:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-      args:
-        USER_ID: ${USER_ID}
-        GROUP_ID: ${GROUP_ID}
     container_name: monobank_currency_bot_app
-    environment:
-      APPLICATION_PORT: ${APPLICATION_PORT}
-      USER_ID: ${USER_ID}
-      GROUP_ID: ${GROUP_ID}
+    restart: unless-stopped
+    tty: true
     working_dir: /app
     volumes:
       - $HOME/.composer:/home/app/.composer
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./:/app
     links:
-      - db
+      - mariadb
     depends_on:
-      - db
-  webserver:
+      - mariadb
+  nginx:
     image: nginx:alpine
     container_name: monobank_currency_bot_webserver
     restart: unless-stopped
@@ -32,8 +28,8 @@ services:
       - ./:/app
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
     links:
-      - app
-  db:
+      - php
+  mariadb:
     image: mariadb
     container_name: monobank_currency_bot_db
     restart: always
