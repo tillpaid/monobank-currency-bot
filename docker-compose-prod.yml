@@ -13,6 +13,8 @@ services:
       - $HOME/.composer:/home/app/.composer
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./:/app
+    extra_hosts:
+      - "database:172.17.0.1"
     networks:
       - app-network
   nginx:
