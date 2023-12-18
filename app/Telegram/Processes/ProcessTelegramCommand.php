@@ -27,6 +27,9 @@ class ProcessTelegramCommand
                 $responseMessage = __('telegram.startMessage');
 
                 break;
+            case '/ping':
+                $responseMessage = __('telegram.pong');
+                break;
             case '/env':
                 $responseMessage = __('telegram.environment', ['env' => config('app.env')]);
                 break;
