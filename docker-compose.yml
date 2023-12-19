@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: monobank_currency_bot_app
+    container_name: monobank_php
     restart: unless-stopped
     tty: true
     working_dir: /app
@@ -19,7 +19,7 @@ services:
       - mariadb
   nginx:
     image: nginx:alpine
-    container_name: monobank_currency_bot_webserver
+    container_name: monobank_nginx
     restart: unless-stopped
     tty: true
     ports:
@@ -31,7 +31,7 @@ services:
       - php
   mariadb:
     image: mariadb
-    container_name: monobank_currency_bot_db
+    container_name: monobank_mariadb
     restart: always
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'

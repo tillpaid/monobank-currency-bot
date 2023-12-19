@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: monobank_currency_bot_app_prod
+    container_name: monobank_prod_php
     restart: unless-stopped
     tty: true
     working_dir: /app
@@ -19,7 +19,7 @@ services:
       - app-network
   nginx:
     image: nginx:alpine
-    container_name: monobank_currency_bot_webserver_prod
+    container_name: monobank_prod_nginx
     restart: unless-stopped
     tty: true
     ports:
