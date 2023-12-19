@@ -13,13 +13,13 @@ trait CreatesApplication
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
-        $this->clearCache();
+        $this->clear();
 
         return $app;
     }
 
-    private function clearCache(): void
+    private function clear(): void
     {
-        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
     }
 }
