@@ -1,5 +1,4 @@
 FROM php:8.0-fpm
-WORKDIR /app
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -7,7 +6,13 @@ RUN apt-get update && apt-get install -y \
     openssl libcurl4 \
     git \
     vim
+
+# Install additional PHP extensions
 RUN docker-php-ext-install bcmath pdo_mysql
+
+# Install Xdebug
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 # Create user
 RUN useradd -ms /bin/bash app
