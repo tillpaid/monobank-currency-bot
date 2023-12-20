@@ -5,18 +5,10 @@ RUN apt-get update && apt-get install -y \
     zip unzip \
     openssl libcurl4 \
     git \
-    vim \
-    npm
+    vim
 
 # Install additional PHP extensions
 RUN docker-php-ext-install bcmath pdo_mysql
-
-# Install Xdebug
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
-
-# Install nodemon
-RUN npm install -g nodemon
 
 # Create user
 RUN useradd -ms /bin/bash app

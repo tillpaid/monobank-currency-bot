@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\TelegramUserSendRate;
-use Illuminate\Database\Eloquent\Model;
 
 class TelegramUserSendRateRepository
 {
@@ -24,7 +23,7 @@ class TelegramUserSendRateRepository
         return $count > 0;
     }
 
-    public function getSendRate(int $telegramUserId, string $currency): ?Model
+    public function getSendRate(int $telegramUserId, string $currency): ?TelegramUserSendRate
     {
         return $this->model
             ->where('telegram_user_id', $telegramUserId)

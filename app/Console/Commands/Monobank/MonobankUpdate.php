@@ -16,20 +16,13 @@ class MonobankUpdate extends Command
     private TelegramUserService $telegramUserService;
     private TelegramBotService $telegramBotService;
 
-    public function __construct(
+    public function handle(
         MonobankCurrencyService $monobankCurrencyService,
         TelegramUserService $telegramUserService,
         TelegramBotService $telegramBotService
-    ) {
-        parent::__construct();
+    ): void {
+        $this->init($monobankCurrencyService, $telegramUserService, $telegramBotService);
 
-        $this->monobankCurrencyService = $monobankCurrencyService;
-        $this->telegramUserService = $telegramUserService;
-        $this->telegramBotService = $telegramBotService;
-    }
-
-    public function handle(): void
-    {
         if ($this->monobankCurrencyService->updateCurrencyRates()) {
             $users = $this->telegramUserService->all();
 
@@ -38,5 +31,15 @@ class MonobankUpdate extends Command
                 $this->telegramBotService->sendMessage($user->chat_id, $report);
             }
         }
+    }
+
+    private function init(
+        MonobankCurrencyService $monobankCurrencyService,
+        TelegramUserService $telegramUserService,
+        TelegramBotService $telegramBotService
+    ): void {
+        $this->monobankCurrencyService = $monobankCurrencyService;
+        $this->telegramUserService = $telegramUserService;
+        $this->telegramBotService = $telegramBotService;
     }
 }

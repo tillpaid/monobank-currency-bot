@@ -4,14 +4,13 @@ services:
   php:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile
+      dockerfile: docker/php/DockerfileProd
     container_name: monobank_prod_php
     restart: unless-stopped
     tty: true
     working_dir: /app
     volumes:
       - $HOME/.composer:/home/app/.composer
-      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./:/app
     extra_hosts:
       - "database:172.17.0.1"

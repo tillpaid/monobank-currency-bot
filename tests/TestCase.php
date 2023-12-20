@@ -7,6 +7,7 @@ use Faker\Generator;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\Helpers\FixturesHelper;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -14,6 +15,7 @@ abstract class TestCase extends BaseTestCase
     use DatabaseTransactions;
     use DatabaseMigrations;
 
+    protected FixturesHelper $fixturesHelper;
     protected Generator $faker;
     protected Carbon $carbon;
 
@@ -21,7 +23,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->seed();
+        $this->fixturesHelper = new FixturesHelper();
         $this->faker = new Generator();
         $this->carbon = new Carbon();
     }

@@ -15,18 +15,10 @@ class SetWebhook extends Command
     private TelegramService $telegramService;
     private TelegramBotService $telegramBotService;
 
-    public function __construct(
-        TelegramService $telegramService,
-        TelegramBotService $telegramBotService
-    ) {
-        parent::__construct();
-
-        $this->telegramService = $telegramService;
-        $this->telegramBotService = $telegramBotService;
-    }
-
-    public function handle(): void
+    public function handle(TelegramService $telegramService, TelegramBotService $telegramBotService): void
     {
+        $this->init($telegramService, $telegramBotService);
+
         $url = config('telegram.botWebhookUrl');
         $telegram = $this->telegramBotService->getBot();
 
@@ -34,11 +26,17 @@ class SetWebhook extends Command
             $result = $telegram->setWebhook($url);
 
             if ($result->isOk()) {
-                echo $result->getDescription() . PHP_EOL;
+                $this->output->writeln($result->getDescription());
                 $this->telegramService->sendMessageAboutChangeEnv();
             }
         } catch (TelegramException $exception) {
-            echo $exception->getMessage() . PHP_EOL;
+            $this->output->writeln($exception->getMessage());
         }
+    }
+
+    private function init(TelegramService $telegramService, TelegramBotService $telegramBotService): void
+    {
+        $this->telegramService = $telegramService;
+        $this->telegramBotService = $telegramBotService;
     }
 }

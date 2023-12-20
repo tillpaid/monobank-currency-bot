@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\TelegramUser;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class TelegramUserRepository
 {
@@ -15,7 +14,7 @@ class TelegramUserRepository
         $this->model = $telegramUser;
     }
 
-    public function getByChatId(string $chatId): ?Model
+    public function getByChatId(string $chatId): ?TelegramUser
     {
         return $this->model->where('chat_id', $chatId)->first();
     }
@@ -27,7 +26,10 @@ class TelegramUserRepository
         }
     }
 
-    public function all(): ?Collection
+    /**
+     * @return Collection|TelegramUser[]|null
+     */
+    public function all(): Collection|array|null
     {
         return $this->model->all();
     }

@@ -23,7 +23,7 @@ class CurrencyAccountRepository
             ->sum('currency_value');
     }
 
-    public function getFirstUserCurrencyAccount(int $userId, string $currency): ?Model
+    public function getFirstUserCurrencyAccount(int $userId, string $currency): ?CurrencyAccount
     {
         return $this->model
             ->where('telegram_user_id', $userId)
@@ -31,7 +31,7 @@ class CurrencyAccountRepository
             ->first();
     }
 
-    public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?Model
+    public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?CurrencyAccount
     {
         return $this->model
             ->where('telegram_user_id', $userId)

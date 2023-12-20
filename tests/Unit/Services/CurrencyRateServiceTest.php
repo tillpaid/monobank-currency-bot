@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services;
 
 use App\Models\CurrencyRate;
+use App\Repositories\CurrencyRateRepository;
 use App\Services\Models\CurrencyRateService;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -10,6 +11,7 @@ use Tests\TestCase;
 
 class CurrencyRateServiceTest extends TestCase
 {
+    private CurrencyRateRepository $currencyRateRepository;
     private CurrencyRateService $currencyRateService;
 
     /**
@@ -19,18 +21,23 @@ class CurrencyRateServiceTest extends TestCase
     {
         parent::setUp();
 
+        $this->currencyRateRepository = Container::getInstance()->make(CurrencyRateRepository::class);
         $this->currencyRateService = Container::getInstance()->make(CurrencyRateService::class);
     }
 
     public function testCreateCurrencyRate(): void
     {
-        $currencies = config('monobank.currencies');
-        $currencyName = array_shift($currencies);
-        $sell = $this->faker->randomFloat(5, 10, 100);
-        $buy = $this->faker->randomFloat(5, 10, 100);
+        $currency = 'EUR';
+        $sell = 39.12;
+        $buy = 41.38;
 
-        $result = $this->currencyRateService->createCurrencyRate($currencyName, $sell, $buy);
+        $result = $this->currencyRateService->createCurrencyRate($currency, $sell, $buy);
         $this->assertTrue($result);
+
+        $currencyRate = $this->currencyRateRepository->getLatestCurrencyRate($currency);
+        $this->assertEquals($currency, $currencyRate->currency);
+        $this->assertEquals($sell, $currencyRate->sell);
+        $this->assertEquals($buy, $currencyRate->buy);
     }
 
     public function testGetLatestCurrencyRate(): void

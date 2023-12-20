@@ -13,25 +13,25 @@ class UnsetWebhook extends Command
 
     private TelegramBotService $telegramBotService;
 
-    public function __construct(TelegramBotService $telegramBotService)
+    public function handle(TelegramBotService $telegramBotService): void
     {
-        parent::__construct();
+        $this->init($telegramBotService);
 
-        $this->telegramBotService = $telegramBotService;
-    }
-
-    public function handle(): void
-    {
         $telegram = $this->telegramBotService->getBot();
 
         try {
             $result = $telegram->deleteWebhook();
 
             if ($result->isOk()) {
-                echo $result->getDescription() . PHP_EOL;
+                $this->output->writeln($result->getDescription());
             }
         } catch (TelegramException $exception) {
-            echo $exception->getMessage() . PHP_EOL;
+            $this->output->writeln($exception->getMessage());
         }
+    }
+
+    private function init(TelegramBotService $telegramBotService): void
+    {
+        $this->telegramBotService = $telegramBotService;
     }
 }
