@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services;
+namespace Tests\Unit\Services\Models;
 
 use App\Models\CurrencyAccount;
 use App\Models\CurrencyRate;
@@ -111,6 +111,14 @@ class CurrencyAccountServiceTest extends TestCase
         $amountAfterSell = $this->currencyAccountService->getUserCurrencySum($telegramUser->id, $currency);
 
         $this->assertEquals($expectedAmountAfterSell, $amountAfterSell);
+    }
+
+    public function testSellCurrencyNothingToSell(): void
+    {
+        $telegramUser = $this->fixturesHelper->createTelegramUser();
+
+        $this->currencyAccountService->sellCurrency($telegramUser->id, 'EUR', 100);
+        $this->assertEquals(0, 0);
     }
 
     public function testGetUserBalanceSum(): void

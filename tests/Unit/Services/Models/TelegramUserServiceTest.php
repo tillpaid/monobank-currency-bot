@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services;
+namespace Tests\Unit\Services\Models;
 
 use App\Models\TelegramUser;
 use App\Services\Models\TelegramUserService;
@@ -60,6 +60,19 @@ class TelegramUserServiceTest extends TestCase
         $this->assertEquals(null, $telegramUser->state);
         $this->telegramUserService->updateState($telegramUser, $state, []);
         $this->assertEquals($state, $telegramUser->state);
+    }
+
+    public function testUpdateStateWithStateAdditional(): void
+    {
+        $state = 'value';
+        $stateAdditional = ['key' => 'value'];
+        $telegramUser = TelegramUser::factory()->create();
+
+        $this->assertEquals(null, $telegramUser->state);
+        $this->assertEquals(null, $telegramUser->state_additional);
+        $this->telegramUserService->updateState($telegramUser, $state, $stateAdditional);
+        $this->assertEquals($state, $telegramUser->state);
+        $this->assertEquals($stateAdditional, $telegramUser->state_additional);
     }
 
     public function testUpdateStateAdditional(): void
