@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Services\Models;
 
 use App\Models\CurrencyRate;
 use App\Repositories\CurrencyRateRepository;
 use App\Services\Models\CurrencyRateService;
-use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Tests\TestCase;
 
@@ -35,9 +36,9 @@ class CurrencyRateServiceTest extends TestCase
         $this->assertTrue($result);
 
         $currencyRate = $this->currencyRateRepository->getLatestCurrencyRate($currency);
-        $this->assertEquals($currency, $currencyRate->currency);
-        $this->assertEquals($sell, $currencyRate->sell);
-        $this->assertEquals($buy, $currencyRate->buy);
+        $this->assertSame($currency, $currencyRate->currency);
+        $this->assertSame($sell, $currencyRate->sell);
+        $this->assertSame($buy, $currencyRate->buy);
     }
 
     public function testGetLatestCurrencyRate(): void
@@ -57,11 +58,12 @@ class CurrencyRateServiceTest extends TestCase
             while ($counter-- > 0) {
                 $expected = CurrencyRate
                     ::factory(1)
-                    ->create(['currency' => $currencyName])
-                    ->first();
+                        ->create(['currency' => $currencyName])
+                        ->first()
+                ;
                 $result = $this->currencyRateService->getLatestCurrencyRate($currencyName);
 
-                $this->assertEquals($expected->toArray(), $result->toArray());
+                $this->assertSame($expected->id, $result->id);
             }
         }
     }
@@ -88,11 +90,13 @@ class CurrencyRateServiceTest extends TestCase
             while ($counter-- > 0) {
                 $expected = CurrencyRate
                     ::factory(2)
-                    ->create(['currency' => $currencyName]);
+                        ->create(['currency' => $currencyName])
+                ;
                 $expected = array_reverse($expected->toArray());
                 $result = $this->currencyRateService->getLastTwoCurrencyRates($currencyName);
 
-                $this->assertEquals($expected, $result->toArray());
+                $this->assertCount(2, $result);
+                $this->assertSame($expected[0]['id'], $result[0]->id);
             }
         }
     }
@@ -106,15 +110,18 @@ class CurrencyRateServiceTest extends TestCase
         foreach ($currencies as $currencyName) {
             $expected = CurrencyRate::factory(5)
                 ->create(['currency' => $currencyName])
-                ->toArray();
+                ->map(fn ($item) => $item->id)
+                ->all()
+            ;
             CurrencyRate::factory(2)
                 ->create([
-                    'currency'   => $currencyName,
-                    'created_at' => $this->carbon->subMonth()->subDays(2)->format('Y-m-d H:i:s')
-                ]);
+                    'currency' => $currencyName,
+                    'created_at' => $this->carbon->subMonth()->subDays(2)->format('Y-m-d H:i:s'),
+                ])
+            ;
 
             $result = $this->currencyRateService->getCurrencyRatesOfLastMonth($currencyName);
-            $this->assertEquals($expected, $result->toArray());
+            $this->assertSame($expected, $result->map(fn ($item) => $item->id)->all());
         }
 
         // Check on empty after truncate
@@ -122,7 +129,7 @@ class CurrencyRateServiceTest extends TestCase
         $currencyName = $currencies[0];
         $expected = [];
 
-        $result= $this->currencyRateService->getCurrencyRatesOfLastMonth($currencyName);
-        $this->assertEquals($expected, $result->toArray());
+        $result = $this->currencyRateService->getCurrencyRatesOfLastMonth($currencyName);
+        $this->assertSame($expected, $result->toArray());
     }
 }

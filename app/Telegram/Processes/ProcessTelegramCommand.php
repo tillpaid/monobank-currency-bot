@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram\Processes;
 
 use App\Services\Models\TelegramUserService;
@@ -27,15 +29,22 @@ class ProcessTelegramCommand
                 $responseMessage = __('telegram.startMessage');
 
                 break;
+
             case '/ping':
                 $responseMessage = __('telegram.pong');
+
                 break;
+
             case '/env':
                 $responseMessage = __('telegram.environment', ['env' => config('app.env')]);
+
                 break;
+
             case '/report':
                 $responseMessage = $this->telegramBotService->buildUserReport($user->id);
+
                 break;
+
             default:
                 $responseMessage = __('telegram.commandNotFound');
         }

@@ -33,7 +33,7 @@ class TelegramUserSendRateRepositoryTest extends TestCase
         }
 
         $result = $this->telegramUserSendRateRepository->rowExists($telegramUserId, $currencyRateId);
-        $this->assertEquals($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
     public function rowExistsDataProvider(): array
@@ -67,7 +67,7 @@ class TelegramUserSendRateRepositoryTest extends TestCase
         $sendRate = $this->fixturesHelper->createTelegramUserSendRate($telegramUser->id, $currencyRate->id);
 
         $result = $this->telegramUserSendRateRepository->getSendRate($telegramUser->id, $currencyRate->currency);
-        $this->assertEquals($sendRate->id, $result->id);
+        $this->assertSame($sendRate->id, $result->id);
     }
 
     public function testGetSendRateNotExists(): void

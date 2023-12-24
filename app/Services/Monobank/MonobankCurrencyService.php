@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Monobank;
 
 use App\Services\Models\CurrencyRateService;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -26,9 +29,8 @@ class MonobankCurrencyService
     public function updateCurrencyRates(): bool
     {
         $newRates = $this->getCurrency();
-        $changed = $this->processNewRates($newRates);
 
-        return $changed;
+        return $this->processNewRates($newRates);
     }
 
     private function getCurrency(): array
@@ -38,10 +40,10 @@ class MonobankCurrencyService
         try {
             $response = $this->client->get(config('monobank.monobank_currency_url'));
 
-            if ($response->getStatusCode() == 200 && $response->getBody()) {
+            if (200 === $response->getStatusCode() && $response->getBody()) {
                 $output = json_decode($response->getBody()->getContents(), true);
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::error('Monobank update process error');
             Log::error($exception);
         }
@@ -54,13 +56,15 @@ class MonobankCurrencyService
         $changed = false;
 
         foreach ($newRates as $newRate) {
-            if (!$this->isItNeedleRate($newRate)) continue;
+            if (!$this->isItNeedleRate($newRate)) {
+                continue;
+            }
 
             $currencyName = $this->currencyCodes[$newRate['currencyCodeA']] ?? null;
             $rate = $this->currencyRateService->getLatestCurrencyRate($currencyName);
 
             if ($this->isRateDifferent($rate, $newRate)) {
-                $this->currencyRateService->createCurrencyRate($currencyName, $newRate['rateSell'], $newRate['rateBuy']);
+                $this->currencyRateService->createCurrencyRate($currencyName, (float) $newRate['rateSell'], (float) $newRate['rateBuy']);
                 $changed = true;
             }
         }
@@ -72,9 +76,9 @@ class MonobankCurrencyService
     {
         $needle = true;
 
-        if ($newRate['currencyCodeB'] != $this->uahCode) {
+        if ($newRate['currencyCodeB'] !== $this->uahCode) {
             $needle = false;
-        } else if (!in_array($newRate['currencyCodeA'], array_keys($this->currencyCodes))) {
+        } elseif (!in_array($newRate['currencyCodeA'], array_keys($this->currencyCodes), true)) {
             $needle = false;
         }
 
@@ -84,8 +88,8 @@ class MonobankCurrencyService
     private function isRateDifferent(?Model $rate, array $newRate): bool
     {
         return
-            is_null($rate) ||
-            round($newRate['rateBuy'], 5) != round($rate->buy, 5) ||
-            round($newRate['rateSell'], 5) != round($rate->sell, 5);
+            null === $rate
+            || round($newRate['rateBuy'], 5) !== round($rate->buy, 5)
+            || round($newRate['rateSell'], 5) !== round($rate->sell, 5);
     }
 }

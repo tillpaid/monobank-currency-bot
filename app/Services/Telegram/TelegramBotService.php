@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Telegram;
 
 use App\Services\Models\CurrencyAccountService;
@@ -46,14 +48,14 @@ class TelegramBotService
         $keyboard = $this->makeTelegramKeyboard->getKeyboard($user->state ?? null);
 
         $sendData = [
-            'chat_id'      => $chatId,
-            'text'         => $message,
-            'parse_mode'   => 'markdown',
+            'chat_id' => $chatId,
+            'text' => $message,
+            'parse_mode' => 'markdown',
             'reply_markup' => [
                 'remove_keyboard' => true,
                 'resize_keyboard' => true,
-                'keyboard'        => $keyboard
-            ]
+                'keyboard' => $keyboard,
+            ],
         ];
 
         // Need for Request sendMessage code
@@ -66,7 +68,7 @@ class TelegramBotService
      */
     public function getBot(): Telegram
     {
-        if (is_null($this->bot)) {
+        if (null === $this->bot) {
             $botUserName = config('telegram.botUserName');
             $botApiKey = config('telegram.botApiToken');
 
@@ -123,8 +125,8 @@ class TelegramBotService
         $rateChange = [];
         $accountChange = [];
         $totalSum = [
-            'value'    => 0,
-            'newValue' => 0
+            'value' => 0,
+            'newValue' => 0,
         ];
 
         foreach ($currencies as $currencyName) {
@@ -141,30 +143,49 @@ class TelegramBotService
             }
         }
 
-        $rateChange = join("\n", $rateChange);
-        $accountChange = join("\n", $accountChange);
+        $rateChange = implode("\n", $rateChange);
+        $accountChange = implode("\n", $accountChange);
 
         $totalDiff = $this->getCurrencyDiff($totalSum['value'], $totalSum['newValue']);
         $percentProfit = 0;
 
-        if (($totalSum['value'] / 100) != 0) {
+        if (($totalSum['value'] / 100) !== 0) {
             $percentProfit = $this->format(($totalSum['newValue'] - $totalSum['value']) / ($totalSum['value'] / 100));
         }
 
         $sumMessage = __('telegram.userBalanceSumTotal', [
-            'uah'           => $this->format($totalSum['value']),
-            'newUah'        => $this->format($totalSum['newValue']),
-            'diff'          => $totalDiff,
+            'uah' => $this->format($totalSum['value']),
+            'newUah' => $this->format($totalSum['newValue']),
+            'diff' => $totalDiff,
             'percentProfit' => $percentProfit,
         ]);
 
         // Generate output message
         $reportMessage = __('telegram.userReport');
-        if ($rateChange) $reportMessage .= __('telegram.userReportRate', compact('rateChange'));
-        if ($accountChange) $reportMessage .= __('telegram.userReportAccount', compact('accountChange'));
-        if ($totalSum['value']) $reportMessage .= $sumMessage;
+        if ($rateChange) {
+            $reportMessage .= __('telegram.userReportRate', compact('rateChange'));
+        }
+        if ($accountChange) {
+            $reportMessage .= __('telegram.userReportAccount', compact('accountChange'));
+        }
+        if ($totalSum['value']) {
+            $reportMessage .= $sumMessage;
+        }
 
         return $reportMessage;
+    }
+
+    public function format($number, $decimals = 2, $trim = true): string
+    {
+        // TODO: Avoid cast to float here
+        $output = number_format((float) $number, $decimals, '.', ' ');
+
+        if ($trim) {
+            $output = rtrim($output, '0');
+            $output = rtrim($output, '.');
+        }
+
+        return $output;
     }
 
     private function getRateChange(Model $rateOld, Model $rateNew, int $userId): string
@@ -199,18 +220,18 @@ class TelegramBotService
         $avg = $uah / $currency;
         $percentProfit = 0;
 
-        if (($uah / 100) != 0) {
+        if (($uah / 100) !== 0) {
             $percentProfit = $this->format(($newUah - $uah) / ($uah / 100));
         }
 
         return __('telegram.userBalanceSumItem', [
             'currencyNameUpper' => $currencyNameUpper,
-            'currency'          => $this->format($currency),
-            'uah'               => $this->format($uah),
-            'avg'               => $this->format($avg),
-            'newUah'            => $this->format($newUah),
-            'diff'              => $diff,
-            'percentProfit'     => $percentProfit,
+            'currency' => $this->format($currency),
+            'uah' => $this->format($uah),
+            'avg' => $this->format($avg),
+            'newUah' => $this->format($newUah),
+            'diff' => $diff,
+            'percentProfit' => $percentProfit,
         ]);
     }
 
@@ -228,18 +249,7 @@ class TelegramBotService
     {
         $diff = $new - $old;
         $formattedDiff = $this->format($diff, $decimals);
-        return $diff >= 0 ? "+$formattedDiff" : "$formattedDiff";
-    }
 
-    public function format($number, $decimals = 2, $trim = true): string
-    {
-        $output = number_format($number, $decimals, '.', ' ');
-
-        if ($trim) {
-            $output = rtrim($output, '0');
-            $output = rtrim($output, '.');
-        }
-
-        return $output;
+        return $diff >= 0 ? "+{$formattedDiff}" : "{$formattedDiff}";
     }
 }

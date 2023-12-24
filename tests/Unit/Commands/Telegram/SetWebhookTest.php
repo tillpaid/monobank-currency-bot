@@ -36,16 +36,19 @@ class SetWebhookTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('setWebhook')
             ->once()
-            ->andReturn(new ServerResponse(['ok' => true, 'description' => $resultDescription]));
+            ->andReturn(new ServerResponse(['ok' => true, 'description' => $resultDescription]))
+        ;
 
         $this->telegramService
             ->shouldReceive('sendMessageAboutChangeEnv')
-            ->once();
+            ->once()
+        ;
 
         $this->runCommand([$resultDescription]);
     }
@@ -57,16 +60,19 @@ class SetWebhookTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('setWebhook')
             ->once()
-            ->andReturn(new ServerResponse(['ok' => false, 'description' => $resultDescription]));
+            ->andReturn(new ServerResponse(['ok' => false, 'description' => $resultDescription]))
+        ;
 
         $this->telegramService
             ->shouldReceive('sendMessageAboutChangeEnv')
-            ->never();
+            ->never()
+        ;
 
         $this->runCommand([$resultDescription], false);
     }
@@ -78,16 +84,19 @@ class SetWebhookTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('setWebhook')
             ->once()
-            ->andThrow(new TelegramException($exceptionMessage));
+            ->andThrow(new TelegramException($exceptionMessage))
+        ;
 
         $this->telegramService
             ->shouldReceive('sendMessageAboutChangeEnv')
-            ->never();
+            ->never()
+        ;
 
         $this->runCommand([$exceptionMessage]);
     }
@@ -100,24 +109,26 @@ class SetWebhookTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('setWebhook')
             ->once()
-            ->andReturn(new ServerResponse(['ok' => true, 'description' => $resultDescription]));
+            ->andReturn(new ServerResponse(['ok' => true, 'description' => $resultDescription]))
+        ;
 
         $this->telegramService
             ->shouldReceive('sendMessageAboutChangeEnv')
             ->once()
-            ->andThrow(new TelegramException($exceptionMessage));
+            ->andThrow(new TelegramException($exceptionMessage))
+        ;
 
         $this->runCommand([$resultDescription, $exceptionMessage]);
     }
 
     /**
      * @param string[] $expectedOutput
-     * @param bool $expect
      */
     private function runCommand(array $expectedOutput, bool $expect = true): void
     {

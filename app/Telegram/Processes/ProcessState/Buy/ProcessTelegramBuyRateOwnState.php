@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram\Processes\ProcessState\Buy;
 
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
@@ -10,25 +12,30 @@ class ProcessTelegramBuyRateOwnState extends AbstractProcessTelegramState
     public function process(Model $user, string $messageText): string
     {
         switch (true) {
-            case $messageText == __('telegram_buttons.back'):
+            case $messageText === __('telegram_buttons.back'):
                 $this->updateUserState($user, config('states.buy-rate'));
                 $responseMessage = $this->buildBuyConfirmMessage($user);
 
                 break;
-            case $messageText == __('telegram_buttons.backHome'):
+
+            case $messageText === __('telegram_buttons.backHome'):
                 $this->updateUserState($user, null);
                 $responseMessage = __('telegram.startMessage');
 
                 break;
-            case $messageText == (string)(float)$messageText:
+
+            case is_numeric($messageText):
+                $messageText = (float) $messageText;
+
                 if ($messageText > 0) {
                     $this->updateUserState($user, config('states.buy-rate'));
-                    $responseMessage = $this->buildBuyConfirmMessage($user, $messageText);
+                    $responseMessage = $this->buildBuyConfirmMessage($user, (float) $messageText);
                 } else {
                     $responseMessage = __('telegram.numberMustBeGreaterThanZero');
                 }
 
                 break;
+
             default:
                 $responseMessage = __('telegram.occurredError');
         }

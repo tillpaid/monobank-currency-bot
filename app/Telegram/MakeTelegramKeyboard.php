@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram;
 
 class MakeTelegramKeyboard
@@ -15,7 +17,9 @@ class MakeTelegramKeyboard
                     [__('telegram_buttons.balance'), __('telegram_buttons.report')],
                     [__('telegram_buttons.statisticsCurrency')],
                 ];
+
                 break;
+
             case config('states.buy'):
             case config('states.sell'):
             case config('states.statistics-currency'):
@@ -23,26 +27,33 @@ class MakeTelegramKeyboard
                     $this->getCurrencies(),
                     [__('telegram_buttons.back')],
                 ];
+
                 break;
+
             case config('states.buy-sum'):
             case config('states.buy-rate-own'):
             case config('states.sell-sum'):
                 $keyboard = [
                     [__('telegram_buttons.back'), __('telegram_buttons.backHome')],
                 ];
+
                 break;
+
             case config('states.buy-rate'):
                 $keyboard = [
                     [__('telegram_buttons.editRate')],
                     [__('telegram_buttons.confirm')],
                     [__('telegram_buttons.back'), __('telegram_buttons.backHome')],
                 ];
+
                 break;
+
             case config('states.sell-confirm'):
                 $keyboard = [
                     [__('telegram_buttons.confirm')],
                     [__('telegram_buttons.back'), __('telegram_buttons.backHome')],
                 ];
+
                 break;
         }
 

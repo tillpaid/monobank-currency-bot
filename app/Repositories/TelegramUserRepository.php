@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\Models\TelegramUser;
@@ -27,9 +29,9 @@ class TelegramUserRepository
     }
 
     /**
-     * @return Collection|TelegramUser[]|null
+     * @return null|Collection|TelegramUser[]
      */
-    public function all(): Collection|array|null
+    public function all(): null|Collection|array
     {
         return $this->model->all();
     }

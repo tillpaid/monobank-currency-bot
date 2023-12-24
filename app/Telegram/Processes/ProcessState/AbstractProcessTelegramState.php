@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram\Processes\ProcessState;
 
 use App\Services\Models\CurrencyAccountService;
@@ -41,7 +43,7 @@ abstract class AbstractProcessTelegramState
             : 'USD';
         $currencyLower = mb_strtolower($currency);
 
-        if (is_null($currencyRate)) {
+        if (null === $currencyRate) {
             $currencyRate = $this->currencyRateService->getLatestCurrencyRate($currencyLower)->sell;
         }
 

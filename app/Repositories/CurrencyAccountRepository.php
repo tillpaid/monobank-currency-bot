@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\Models\CurrencyAccount;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class CurrencyAccountRepository
@@ -15,12 +16,14 @@ class CurrencyAccountRepository
         $this->model = $currencyAccount;
     }
 
+    // TODO: Is it possible to have nullable return type here?
     public function getUserCurrencySum(int $userId, string $currency): ?float
     {
-        return $this->model
+        return (float) $this->model
             ->where('telegram_user_id', $userId)
             ->where('currency', $currency)
-            ->sum('currency_value');
+            ->sum('currency_value')
+        ;
     }
 
     public function getFirstUserCurrencyAccount(int $userId, string $currency): ?CurrencyAccount
@@ -28,7 +31,8 @@ class CurrencyAccountRepository
         return $this->model
             ->where('telegram_user_id', $userId)
             ->where('currency', $currency)
-            ->first();
+            ->first()
+        ;
     }
 
     public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?CurrencyAccount
@@ -37,7 +41,8 @@ class CurrencyAccountRepository
             ->where('telegram_user_id', $userId)
             ->where('currency', $currency)
             ->orderBy('purchase_rate', 'DESC')
-            ->first();
+            ->first()
+        ;
     }
 
     public function getUserBalanceSum(int $userId): ?array
@@ -51,12 +56,13 @@ class CurrencyAccountRepository
             )
             ->where('telegram_user_id', $userId)
             ->groupBy('currency')
-            ->get();
+            ->get()
+        ;
 
         foreach ($collection as $item) {
             $output[$item->currency] = [
                 'currency_value' => $item->currency_value,
-                'uah_value'      => $item->uah_value,
+                'uah_value' => $item->uah_value,
             ];
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Services\Models;
 
 use App\Models\CurrencyAccount;
@@ -7,7 +9,6 @@ use App\Models\CurrencyRate;
 use App\Models\TelegramUser;
 use App\Repositories\CurrencyAccountRepository;
 use App\Services\Models\CurrencyAccountService;
-use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Tests\TestCase;
 
@@ -30,8 +31,8 @@ class CurrencyAccountServiceTest extends TestCase
     public function testCreate(): void
     {
         $currency = 'EUR';
-        $uahValue = 10_000;
-        $purchaseRate = 41;
+        $uahValue = 10_000.0;
+        $purchaseRate = 41.0;
         $currencyValue = round($uahValue / $purchaseRate, 5);
 
         $telegramUser = $this->fixturesHelper->createTelegramUser();
@@ -39,11 +40,11 @@ class CurrencyAccountServiceTest extends TestCase
         $this->assertTrue($result);
 
         $currencyAccount = $this->currencyAccountRepository->getFirstUserCurrencyAccount($telegramUser->id, $currency);
-        $this->assertEquals($telegramUser->id, $currencyAccount->telegramUser->id);
-        $this->assertEquals($currency, $currencyAccount->currency);
-        $this->assertEquals($uahValue, $currencyAccount->uah_value);
-        $this->assertEquals($purchaseRate, $currencyAccount->purchase_rate);
-        $this->assertEquals($currencyValue, $currencyAccount->currency_value);
+        $this->assertSame($telegramUser->id, $currencyAccount->telegramUser->id);
+        $this->assertSame($currency, $currencyAccount->currency);
+        $this->assertSame($uahValue, $currencyAccount->uah_value);
+        $this->assertSame($purchaseRate, $currencyAccount->purchase_rate);
+        $this->assertSame($currencyValue, $currencyAccount->currency_value);
     }
 
     public function testGetUserCurrencySum(): void
@@ -68,7 +69,7 @@ class CurrencyAccountServiceTest extends TestCase
 
         foreach ($expectedResults as $currencyName => $expected) {
             $result = $this->currencyAccountService->getUserCurrencySum($telegramUser->id, $currencyName);
-            $this->assertEquals($expected, $result);
+            $this->assertSame($expected, $result);
         }
     }
 
@@ -81,11 +82,16 @@ class CurrencyAccountServiceTest extends TestCase
         foreach ($currencies as $currencyName) {
             $expected = CurrencyAccount
                 ::where('telegram_user_id', $telegramUser->id)
-                ->where('currency', $currencyName)
-                ->first();
+                    ->where('currency', $currencyName)
+                    ->first()
+            ;
             $result = $this->currencyAccountService->getFirstUserCurrencyAccount($telegramUser->id, $currencyName);
 
-            $this->assertEquals($expected, $result);
+            if (null === $expected) {
+                $this->assertNull($result);
+            } else {
+                $this->assertSame($expected->id, $result->id);
+            }
         }
     }
 
@@ -96,7 +102,7 @@ class CurrencyAccountServiceTest extends TestCase
         $this->fixturesHelper->createCurrencyRate($currency);
         $telegramUser = $this->fixturesHelper->createTelegramUser();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $uahValue = $this->faker->randomFloat(2, 100, 100_000);
             $purchaseRate = $this->faker->randomFloat(5, 10, 100);
 
@@ -110,7 +116,7 @@ class CurrencyAccountServiceTest extends TestCase
         $this->currencyAccountService->sellCurrency($telegramUser->id, $currency, $amountToSell);
         $amountAfterSell = $this->currencyAccountService->getUserCurrencySum($telegramUser->id, $currency);
 
-        $this->assertEquals($expectedAmountAfterSell, $amountAfterSell);
+        $this->assertSame($expectedAmountAfterSell, $amountAfterSell);
     }
 
     public function testSellCurrencyNothingToSell(): void
@@ -118,7 +124,7 @@ class CurrencyAccountServiceTest extends TestCase
         $telegramUser = $this->fixturesHelper->createTelegramUser();
 
         $this->currencyAccountService->sellCurrency($telegramUser->id, 'EUR', 100);
-        $this->assertEquals(0, 0);
+        $this->assertSame(0, 0);
     }
 
     public function testGetUserBalanceSum(): void
@@ -151,6 +157,6 @@ class CurrencyAccountServiceTest extends TestCase
         asort($expected);
         asort($result);
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 }

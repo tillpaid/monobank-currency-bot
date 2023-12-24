@@ -50,16 +50,17 @@ class MonobankCurrencyServiceTest extends TestCase
         $this->client
             ->shouldReceive('get')
             ->once()
-            ->andReturn(new Response(200, [], json_encode($clientResponse)));
+            ->andReturn(new Response(200, [], json_encode($clientResponse)))
+        ;
 
         $result = $this->monobankCurrencyService->updateCurrencyRates();
-        $this->assertEquals($expectedOutput, $result);
+        $this->assertSame($expectedOutput, $result);
 
         $currencyRates = CurrencyRate::all();
-        $this->assertEquals(count($expectedRates), $currencyRates->count());
+        $this->assertSame(count($expectedRates), $currencyRates->count());
 
         $rates = array_map(
-            fn(CurrencyRate $currencyRate) => [
+            fn (CurrencyRate $currencyRate) => [
                 'currency' => $currencyRate->currency,
                 'rateSell' => $currencyRate->sell,
                 'rateBuy' => $currencyRate->buy,
@@ -67,7 +68,7 @@ class MonobankCurrencyServiceTest extends TestCase
             $currencyRates->all()
         );
 
-        $this->assertEquals($expectedRates, $rates);
+        $this->assertSame($expectedRates, $rates);
     }
 
     public function updateCurrencyRatesDataProvider(): array
@@ -137,13 +138,14 @@ class MonobankCurrencyServiceTest extends TestCase
         $this->client
             ->shouldReceive('get')
             ->once()
-            ->andThrow(new Exception());
+            ->andThrow(new Exception())
+        ;
 
         $result = $this->monobankCurrencyService->updateCurrencyRates();
         $this->assertFalse($result);
 
         $currencyRates = CurrencyRate::all();
-        $this->assertEquals(0, $currencyRates->count());
+        $this->assertSame(0, $currencyRates->count());
     }
 
     public function testUpdateCurrencyRatesBadResponseCode(): void
@@ -151,12 +153,13 @@ class MonobankCurrencyServiceTest extends TestCase
         $this->client
             ->shouldReceive('get')
             ->once()
-            ->andReturn(new Response(500));
+            ->andReturn(new Response(500))
+        ;
 
         $result = $this->monobankCurrencyService->updateCurrencyRates();
         $this->assertFalse($result);
 
         $currencyRates = CurrencyRate::all();
-        $this->assertEquals(0, $currencyRates->count());
+        $this->assertSame(0, $currencyRates->count());
     }
 }

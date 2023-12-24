@@ -35,8 +35,8 @@ class CurrencyRateRepositoryTest extends TestCase
         $resultUsd = $this->currencyRateRepository->getLatestCurrencyRate($currencyUsd);
         $resultEur = $this->currencyRateRepository->getLatestCurrencyRate($currencyEur);
 
-        $this->assertEquals($secondUsd->id, $resultUsd->id);
-        $this->assertEquals($secondEur->id, $resultEur->id);
+        $this->assertSame($secondUsd->id, $resultUsd->id);
+        $this->assertSame($secondEur->id, $resultEur->id);
     }
 
     public function testGetLastTwoCurrencyRatesExists(): void
@@ -50,8 +50,8 @@ class CurrencyRateRepositoryTest extends TestCase
         $result = $this->currencyRateRepository->getLastTwoCurrencyRates($currency);
 
         $this->assertCount(2, $result);
-        $this->assertEquals($third->id, $result[0]->id);
-        $this->assertEquals($second->id, $result[1]->id);
+        $this->assertSame($third->id, $result[0]->id);
+        $this->assertSame($second->id, $result[1]->id);
     }
 
     public function testGetLastTwoCurrencyRatesOnlyOneExists(): void

@@ -42,7 +42,7 @@ class CurrencyAccountRepositoryTest extends TestCase
 
         foreach ($expectedSums as $currency => $sum) {
             $result = $this->currencyAccountRepository->getUserCurrencySum($telegramUser->id, $currency);
-            $this->assertEquals($sum, $result);
+            $this->assertSame($sum, $result);
         }
     }
 
@@ -58,10 +58,10 @@ class CurrencyAccountRepositoryTest extends TestCase
         $this->fixturesHelper->createCurrencyAccount($telegramUser, $currencyEur);
 
         $resultUsd = $this->currencyAccountRepository->getFirstUserCurrencyAccount($telegramUser->id, $currencyUsd);
-        $this->assertEquals($firstUsdAccount->id, $resultUsd->id);
+        $this->assertSame($firstUsdAccount->id, $resultUsd->id);
 
         $resultEur = $this->currencyAccountRepository->getFirstUserCurrencyAccount($telegramUser->id, $currencyEur);
-        $this->assertEquals($firstEurAccount->id, $resultEur->id);
+        $this->assertSame($firstEurAccount->id, $resultEur->id);
     }
 
     public function testGetLessProfitUserCurrencyAccount(): void
@@ -72,7 +72,7 @@ class CurrencyAccountRepositoryTest extends TestCase
         $second = $this->fixturesHelper->createCurrencyAccount($telegramUser, 'EUR', 200, 200);
 
         $result = $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($telegramUser->id, 'EUR');
-        $this->assertEquals($second->id, $result->id);
+        $this->assertSame($second->id, $result->id);
 
         $result = $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($telegramUser->id, 'USD');
         $this->assertNull($result);
@@ -82,18 +82,18 @@ class CurrencyAccountRepositoryTest extends TestCase
     {
         $rates = ['USD' => 37, 'EUR' => 41];
         $currencyAccounts = [
-            'USD' => [100.12, 200.23, 300.34, 400.45, 500.56, 600.67, 700.78, 800.89, 900.90],
             'EUR' => [1000.123, 2000.234, 3000.345, 4000.456, 5000.567, 6000.678, 7000.789, 8000.890, 9000.901],
+            'USD' => [100.12, 200.23, 300.34, 400.45, 500.56, 600.67, 700.78, 800.89, 900.90],
         ];
 
         $expectedSums = [];
         foreach ($currencyAccounts as $currency => $currencyValues) {
             $expectedSums[$currency] = [
-                'currency_value' => (string)array_sum($currencyValues),
-                'uah_value'      => (string)array_sum(array_map(
-                    fn($value) => $value * $rates[$currency],
+                'currency_value' => array_sum($currencyValues),
+                'uah_value' => round(array_sum(array_map(
+                    fn ($value) => round($value * $rates[$currency], 5),
                     $currencyValues
-                )),
+                )), 5),
             ];
         }
 
@@ -105,6 +105,6 @@ class CurrencyAccountRepositoryTest extends TestCase
         }
 
         $result = $this->currencyAccountRepository->getUserBalanceSum($telegramUser->id);
-        $this->assertEquals($expectedSums, $result);
+        $this->assertSame($expectedSums, $result);
     }
 }

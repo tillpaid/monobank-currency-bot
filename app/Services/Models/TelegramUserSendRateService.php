@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Models;
 
 use App\Models\TelegramUserSendRate;
@@ -27,7 +29,7 @@ class TelegramUserSendRateService
         } else {
             TelegramUserSendRate::create([
                 'telegram_user_id' => $telegramUserId,
-                'currency'         => $currency,
+                'currency' => $currency,
                 'currency_rate_id' => $currencyRateId,
             ]);
         }

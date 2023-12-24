@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Models;
 
 use App\Models\CurrencyAccount;
 use App\Repositories\CurrencyAccountRepository;
-use Illuminate\Database\Eloquent\Model;
 
 class CurrencyAccountService
 {
@@ -19,10 +20,10 @@ class CurrencyAccountService
     {
         $currencyAccount = CurrencyAccount::create([
             'telegram_user_id' => $userId,
-            'currency'         => $currency,
-            'uah_value'        => $uahValue,
-            'purchase_rate'    => $purchaseRate,
-            'currency_value'   => round($uahValue / $purchaseRate, 5),
+            'currency' => $currency,
+            'uah_value' => $uahValue,
+            'purchase_rate' => $purchaseRate,
+            'currency_value' => round($uahValue / $purchaseRate, 5),
         ]);
 
         return isset($currencyAccount->id);
@@ -33,12 +34,12 @@ class CurrencyAccountService
         return $this->currencyAccountRepository->getUserCurrencySum($userId, $currency);
     }
 
-    public function getFirstUserCurrencyAccount(int $userId, string $currency): ?Model
+    public function getFirstUserCurrencyAccount(int $userId, string $currency): ?CurrencyAccount
     {
         return $this->currencyAccountRepository->getFirstUserCurrencyAccount($userId, $currency);
     }
 
-    public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?Model
+    public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?CurrencyAccount
     {
         return $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($userId, $currency);
     }
@@ -58,10 +59,10 @@ class CurrencyAccountService
                 $currencyAccount->save();
 
                 break;
-            } else {
-                $currencySum -= $currencyAccount->currency_value;
-                $currencyAccount->delete();
             }
+
+            $currencySum -= $currencyAccount->currency_value;
+            $currencyAccount->delete();
         }
     }
 

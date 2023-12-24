@@ -29,12 +29,12 @@ class MonobankUpdateTest extends TestCase
     {
         $telegramUsersCount = 5;
         $telegramUsers = array_map(
-            fn(int $i) => $this->fixturesHelper->createTelegramUser((string)$i),
+            fn (int $i) => $this->fixturesHelper->createTelegramUser((string) $i),
             range(1, $telegramUsersCount)
         );
 
         $expectedSendMessageCalls = array_map(
-            fn(TelegramUser $telegramUser) => [
+            fn (TelegramUser $telegramUser) => [
                 'chat_id' => $telegramUser->chat_id,
                 'message' => sprintf('Report for user %d', $telegramUser->id),
             ],
@@ -44,20 +44,23 @@ class MonobankUpdateTest extends TestCase
         $this->monobankCurrencyService
             ->shouldReceive('updateCurrencyRates')
             ->times(1)
-            ->andReturn(true);
+            ->andReturn(true)
+        ;
 
         $this->telegramBotService
             ->shouldReceive('buildUserReport')
             ->times($telegramUsersCount)
-            ->andReturnUsing(fn(int $userId) => sprintf('Report for user %d', $userId));
+            ->andReturnUsing(fn (int $userId) => sprintf('Report for user %d', $userId))
+        ;
 
         $sendMessageCalls = [];
         $this->telegramBotService
             ->shouldReceive('sendMessage')
             ->times($telegramUsersCount)
-            ->andReturnUsing(function (string $chatId, string $message) use (&$sendMessageCalls) {
+            ->andReturnUsing(function (string $chatId, string $message) use (&$sendMessageCalls): void {
                 $sendMessageCalls[] = ['chat_id' => $chatId, 'message' => $message];
-            });
+            })
+        ;
 
         $this->runCommand();
         $this->assertSame($expectedSendMessageCalls, $sendMessageCalls);
@@ -70,15 +73,18 @@ class MonobankUpdateTest extends TestCase
         $this->monobankCurrencyService
             ->shouldReceive('updateCurrencyRates')
             ->times(1)
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         $this->telegramBotService
             ->shouldReceive('buildUserReport')
-            ->never();
+            ->never()
+        ;
 
         $this->telegramBotService
             ->shouldReceive('sendMessage')
-            ->never();
+            ->never()
+        ;
 
         $this->runCommand();
     }

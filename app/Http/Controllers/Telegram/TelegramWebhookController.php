@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Telegram;
 
 use App\Http\Controllers\Controller;
@@ -30,7 +32,7 @@ class TelegramWebhookController extends Controller
         } catch (TelegramException $exception) {
             return [
                 'success' => false,
-                'error'   => $exception->getMessage()
+                'error' => $exception->getMessage(),
             ];
         }
 

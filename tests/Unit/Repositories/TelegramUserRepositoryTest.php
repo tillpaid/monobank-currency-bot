@@ -29,7 +29,7 @@ class TelegramUserRepositoryTest extends TestCase
         $telegramUser = $this->fixturesHelper->createTelegramUser($chatId);
         $result = $this->telegramUserRepository->getByChatId($chatId);
 
-        $this->assertEquals($telegramUser->id, $result->id);
+        $this->assertSame($telegramUser->id, $result->id);
     }
 
     public function testGetByChatIdNotExists(): void
@@ -47,7 +47,7 @@ class TelegramUserRepositoryTest extends TestCase
 
         $result = $this->telegramUserRepository->all();
         $this->assertCount(1, $result);
-        $this->assertEquals($chatId, $result->first()->chat_id);
+        $this->assertSame($chatId, $result->first()->chat_id);
     }
 
     public function testCreateIfNotExistsNotExists(): void
@@ -58,7 +58,7 @@ class TelegramUserRepositoryTest extends TestCase
 
         $result = $this->telegramUserRepository->all();
         $this->assertCount(1, $result);
-        $this->assertEquals($chatId, $result->first()->chat_id);
+        $this->assertSame($chatId, $result->first()->chat_id);
     }
 
     public function testAll(): void
@@ -73,8 +73,8 @@ class TelegramUserRepositoryTest extends TestCase
 
         $result = $this->telegramUserRepository->all();
         $this->assertCount(3, $result);
-        $this->assertEquals($chatIdOne, $result[0]->chat_id);
-        $this->assertEquals($chatIdTwo, $result[1]->chat_id);
-        $this->assertEquals($chatIdThree, $result[2]->chat_id);
+        $this->assertSame($chatIdOne, $result[0]->chat_id);
+        $this->assertSame($chatIdTwo, $result[1]->chat_id);
+        $this->assertSame($chatIdThree, $result[2]->chat_id);
     }
 }

@@ -33,12 +33,14 @@ class UnsetWebhookTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('deleteWebhook')
             ->once()
-            ->andReturn(new ServerResponse(['ok' => true, 'description' => $resultDescription]));
+            ->andReturn(new ServerResponse(['ok' => true, 'description' => $resultDescription]))
+        ;
 
         $this->runCommand($resultDescription);
     }
@@ -50,12 +52,14 @@ class UnsetWebhookTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('deleteWebhook')
             ->once()
-            ->andReturn(new ServerResponse(['ok' => false, 'description' => $resultDescription]));
+            ->andReturn(new ServerResponse(['ok' => false, 'description' => $resultDescription]))
+        ;
 
         $this->runCommand($resultDescription, false);
     }
@@ -67,12 +71,14 @@ class UnsetWebhookTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('deleteWebhook')
             ->once()
-            ->andThrow(new TelegramException($exceptionMessage));
+            ->andThrow(new TelegramException($exceptionMessage))
+        ;
 
         $this->runCommand($exceptionMessage);
     }

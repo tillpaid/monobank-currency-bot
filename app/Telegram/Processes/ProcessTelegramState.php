@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram\Processes;
 
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
@@ -32,13 +34,13 @@ class ProcessTelegramState
     ) {
         $this->processTelegramDefaultState = $processTelegramDefaultState;
         $this->processors = [
-            config('states.buy')                 => $processTelegramBuyState,
-            config('states.buy-sum')             => $processTelegramBuySumState,
-            config('states.buy-rate')            => $processTelegramBuyRateState,
-            config('states.buy-rate-own')        => $processTelegramBuyRateOwnState,
-            config('states.sell')                => $processTelegramSellState,
-            config('states.sell-sum')            => $processTelegramSellSumState,
-            config('states.sell-confirm')        => $processTelegramSellConfirmState,
+            config('states.buy') => $processTelegramBuyState,
+            config('states.buy-sum') => $processTelegramBuySumState,
+            config('states.buy-rate') => $processTelegramBuyRateState,
+            config('states.buy-rate-own') => $processTelegramBuyRateOwnState,
+            config('states.sell') => $processTelegramSellState,
+            config('states.sell-sum') => $processTelegramSellSumState,
+            config('states.sell-confirm') => $processTelegramSellConfirmState,
             config('states.statistics-currency') => $processTelegramStatisticsCurrencyState,
         ];
     }
@@ -46,6 +48,7 @@ class ProcessTelegramState
     public function process(Model $user, string $messageText): string
     {
         $processor = $this->getProcessor($user);
+
         return $processor->process($user, $messageText);
     }
 

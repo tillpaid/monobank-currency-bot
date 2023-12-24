@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Telegram;
 
 use App\Services\Models\TelegramUserService;
@@ -46,6 +48,7 @@ class TelegramService
     {
         if (!$this->checkAuth($chatId)) {
             $this->telegramBotService->sendMessage($chatId, __('telegram.notAuth'));
+
             return;
         }
 
@@ -57,6 +60,6 @@ class TelegramService
 
     private function checkAuth($chatId): bool
     {
-        return $chatId == $this->telegramBotService->getMyId();
+        return $chatId === $this->telegramBotService->getMyId();
     }
 }

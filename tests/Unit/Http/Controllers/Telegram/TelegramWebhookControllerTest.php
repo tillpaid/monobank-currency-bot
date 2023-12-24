@@ -33,21 +33,25 @@ class TelegramWebhookControllerTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('useGetUpdatesWithoutDatabase')
-            ->once();
+            ->once()
+        ;
 
         $this->telegram
             ->shouldReceive('handle')
             ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+        ;
 
         $this->telegramService
             ->shouldReceive('processWebhook')
             ->once()
-            ->with($requestData);
+            ->with($requestData)
+        ;
 
         $response = $this->postJson('/telegram-webhook', $requestData);
         $response->assertJson(['success' => true]);
@@ -58,20 +62,24 @@ class TelegramWebhookControllerTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('useGetUpdatesWithoutDatabase')
-            ->once();
+            ->once()
+        ;
 
         $this->telegram
             ->shouldReceive('handle')
             ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         $this->telegramService
             ->shouldReceive('processWebhook')
-            ->never();
+            ->never()
+        ;
 
         $response = $this->postJson('/telegram-webhook');
         $response->assertJson(['success' => true]);
@@ -84,20 +92,24 @@ class TelegramWebhookControllerTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('getBot')
             ->once()
-            ->andReturn($this->telegram);
+            ->andReturn($this->telegram)
+        ;
 
         $this->telegram
             ->shouldReceive('useGetUpdatesWithoutDatabase')
-            ->once();
+            ->once()
+        ;
 
         $this->telegram
             ->shouldReceive('handle')
             ->once()
-            ->andThrow(new TelegramException($exceptionMessage));
+            ->andThrow(new TelegramException($exceptionMessage))
+        ;
 
         $this->telegramService
             ->shouldReceive('processWebhook')
-            ->never();
+            ->never()
+        ;
 
         $response = $this->postJson('/telegram-webhook');
         $response->assertJson(['success' => false, 'error' => $exceptionMessage]);

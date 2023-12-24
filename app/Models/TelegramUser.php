@@ -10,13 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $id
- * @property string $chat_id
- * @property string|null $state
- * @property array|null $state_additional
- * @property string|null $created_at
- * @property string|null $updated_at
- * @property CurrencyAccount[]|Collection $currencyAccounts
+ * @property int                          $id
+ * @property string                       $chat_id
+ * @property null|string                  $state
+ * @property null|array                   $state_additional
+ * @property null|string                  $created_at
+ * @property null|string                  $updated_at
+ * @property Collection|CurrencyAccount[] $currencyAccounts
  */
 class TelegramUser extends Model
 {
@@ -25,7 +25,7 @@ class TelegramUser extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'state_additional' => 'array'
+        'state_additional' => 'array',
     ];
 
     public function currencyAccounts(): HasMany

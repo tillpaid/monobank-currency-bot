@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram\Processes\ProcessState\Sell;
 
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
@@ -19,11 +21,13 @@ class ProcessTelegramSellConfirmState extends AbstractProcessTelegramState
                 $responseMessage = __('telegram.sellSum', ['currencySum' => $currencySum, 'currency' => mb_strtoupper($currency)]);
 
                 break;
-            case $messageText == __('telegram_buttons.backHome'):
+
+            case $messageText === __('telegram_buttons.backHome'):
                 $this->updateUserState($user, null);
                 $responseMessage = __('telegram.startMessage');
 
                 break;
+
             case __('telegram_buttons.confirm'):
                 $currency = $user->state_additional['sell-currency'] ?? 'usd';
                 $currencySum = $user->state_additional['sell-currency-sum'] ?? 0;
@@ -36,6 +40,7 @@ class ProcessTelegramSellConfirmState extends AbstractProcessTelegramState
                 $responseMessage .= $this->telegramBotService->buildUserBalanceMessage($user->id);
 
                 break;
+
             default:
                 $responseMessage = __('telegram.occurredError');
         }

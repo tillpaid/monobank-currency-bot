@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\Models\TelegramUserSendRate;
@@ -18,7 +20,8 @@ class TelegramUserSendRateRepository
         $count = $this->model
             ->where('telegram_user_id', $telegramUserId)
             ->where('currency_rate_id', $currencyRateId)
-            ->count();
+            ->count()
+        ;
 
         return $count > 0;
     }
@@ -28,6 +31,7 @@ class TelegramUserSendRateRepository
         return $this->model
             ->where('telegram_user_id', $telegramUserId)
             ->where('currency', $currency)
-            ->first();
+            ->first()
+        ;
     }
 }

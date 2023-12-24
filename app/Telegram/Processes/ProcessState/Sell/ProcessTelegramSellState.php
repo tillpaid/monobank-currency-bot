@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram\Processes\ProcessState\Sell;
 
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
@@ -12,7 +14,7 @@ class ProcessTelegramSellState extends AbstractProcessTelegramState
         $messageTextLower = mb_strtolower($messageText);
 
         switch (true) {
-            case in_array($messageTextLower, config('monobank.currencies')):
+            case in_array($messageTextLower, config('monobank.currencies'), true):
                 $currencySum = $this->currencyAccountService->getUserCurrencySum($user->id, $messageTextLower);
 
                 if ($currencySum > 0) {
@@ -25,11 +27,13 @@ class ProcessTelegramSellState extends AbstractProcessTelegramState
                 }
 
                 break;
-            case $messageText == __('telegram_buttons.back'):
+
+            case $messageText === __('telegram_buttons.back'):
                 $this->updateUserState($user, null);
                 $responseMessage = __('telegram.startMessage');
 
                 break;
+
             default:
                 $responseMessage = __('telegram.currencyNotSupported');
         }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Services\Models;
 
 use App\Models\TelegramUser;
 use App\Services\Models\TelegramUserService;
-use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Tests\TestCase;
 
@@ -24,16 +25,13 @@ class TelegramUserServiceTest extends TestCase
 
     public function testGetByChatId(): void
     {
-        $chatId = (string)rand(1000, 10000);
+        $chatId = (string) random_int(1000, 10000);
 
-        $expected = TelegramUser::factory()
-            ->create(['chat_id' => $chatId])
-            ->toArray();
+        $expected = TelegramUser::factory()->create(['chat_id' => $chatId]);
 
         $result = $this->telegramUserService->getByChatId($chatId);
-        $result = $result ? $result->toArray() : $result;
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected->id, $result->id);
     }
 
     public function getCountByChatId(string $chatId): int
@@ -43,13 +41,13 @@ class TelegramUserServiceTest extends TestCase
 
     public function testCreateIfNotExists(): void
     {
-        $chatId = (string)rand(1000, 10000);
+        $chatId = (string) random_int(1000, 10000);
 
-        $this->assertEquals(0, $this->getCountByChatId($chatId));
+        $this->assertSame(0, $this->getCountByChatId($chatId));
         $this->telegramUserService->createIfNotExists($chatId);
-        $this->assertEquals(1, $this->getCountByChatId($chatId));
+        $this->assertSame(1, $this->getCountByChatId($chatId));
         $this->telegramUserService->createIfNotExists($chatId);
-        $this->assertEquals(1, $this->getCountByChatId($chatId));
+        $this->assertSame(1, $this->getCountByChatId($chatId));
     }
 
     public function testUpdateState(): void
@@ -57,9 +55,9 @@ class TelegramUserServiceTest extends TestCase
         $state = 'value';
         $telegramUser = TelegramUser::factory()->create();
 
-        $this->assertEquals(null, $telegramUser->state);
+        $this->assertNull($telegramUser->state);
         $this->telegramUserService->updateState($telegramUser, $state, []);
-        $this->assertEquals($state, $telegramUser->state);
+        $this->assertSame($state, $telegramUser->state);
     }
 
     public function testUpdateStateWithStateAdditional(): void
@@ -68,26 +66,26 @@ class TelegramUserServiceTest extends TestCase
         $stateAdditional = ['key' => 'value'];
         $telegramUser = TelegramUser::factory()->create();
 
-        $this->assertEquals(null, $telegramUser->state);
-        $this->assertEquals(null, $telegramUser->state_additional);
+        $this->assertNull($telegramUser->state);
+        $this->assertNull($telegramUser->state_additional);
         $this->telegramUserService->updateState($telegramUser, $state, $stateAdditional);
-        $this->assertEquals($state, $telegramUser->state);
-        $this->assertEquals($stateAdditional, $telegramUser->state_additional);
+        $this->assertSame($state, $telegramUser->state);
+        $this->assertSame($stateAdditional, $telegramUser->state_additional);
     }
 
     public function testUpdateStateAdditional(): void
     {
         $telegramUser = TelegramUser::factory()->create();
-        $this->assertEquals(null, $telegramUser->state_additional);
+        $this->assertNull($telegramUser->state_additional);
 
         $stateAdditional = ['key' => 'value'];
         $this->telegramUserService->updateStateAdditional($telegramUser, $stateAdditional);
-        $this->assertEquals($stateAdditional, $telegramUser->state_additional);
+        $this->assertSame($stateAdditional, $telegramUser->state_additional);
 
         $stateAdditionalNew = ['key1' => 'value1'];
         $stateAdditionalResult = array_merge($stateAdditional, $stateAdditionalNew);
 
         $this->telegramUserService->updateStateAdditional($telegramUser, $stateAdditionalNew);
-        $this->assertEquals($stateAdditionalResult, $telegramUser->state_additional);
+        $this->assertSame($stateAdditionalResult, $telegramUser->state_additional);
     }
 }

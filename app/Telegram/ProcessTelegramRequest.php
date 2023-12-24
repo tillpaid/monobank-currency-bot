@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram;
 
 use App\Telegram\Processes\ProcessTelegramCommand;
 use App\Telegram\Processes\ProcessTelegramState;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
@@ -26,8 +29,8 @@ class ProcessTelegramRequest
             return $this->isCommand($messageText)
                 ? $this->processTelegramCommand->process($user, $messageText)
                 : $this->processTelegramState->process($user, $messageText);
-        } catch (\Exception $exception) {
-            Log::error("Telegram request error: ");
+        } catch (Exception $exception) {
+            Log::error('Telegram request error: ');
             Log::error($exception);
 
             return __('telegram.internalError');
@@ -36,6 +39,6 @@ class ProcessTelegramRequest
 
     private function isCommand(string $messageText): bool
     {
-        return substr($messageText, 0, 1) == '/';
+        return '/' === substr($messageText, 0, 1);
     }
 }

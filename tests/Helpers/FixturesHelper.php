@@ -16,7 +16,7 @@ class FixturesHelper
     public function createTelegramUser(
         string $chatId = '1',
         string $state = null,
-        array  $stateAdditional = null,
+        array $stateAdditional = null,
     ): TelegramUser {
         $telegramUser = new TelegramUser();
         $telegramUser->chat_id = $chatId;
@@ -29,9 +29,9 @@ class FixturesHelper
 
     public function createCurrencyAccount(
         TelegramUser $telegramUser,
-        string       $currency = self::EUR,
-        float        $currencyValue = 100,
-        float        $purchaseRate = 37,
+        string $currency = self::EUR,
+        float $currencyValue = 100,
+        float $purchaseRate = 37,
     ): CurrencyAccount {
         $currencyAccount = new CurrencyAccount();
         $currencyAccount->currency = $currency;
@@ -46,8 +46,8 @@ class FixturesHelper
 
     public function createCurrencyRate(
         string $currency = self::EUR,
-        float  $sell = 40.7,
-        float  $buy = 41.39,
+        float $sell = 40.7,
+        float $buy = 41.39,
     ): CurrencyRate {
         $currencyRate = new CurrencyRate();
         $currencyRate->currency = $currency;
@@ -59,8 +59,8 @@ class FixturesHelper
     }
 
     public function createTelegramUserSendRate(
-        int    $telegramUserId,
-        int    $currencyRateId,
+        int $telegramUserId,
+        int $currencyRateId,
         string $currency = self::EUR,
     ): TelegramUserSendRate {
         $telegramUserSendRate = new TelegramUserSendRate();

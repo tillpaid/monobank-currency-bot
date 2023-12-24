@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\Models\CurrencyRate;
@@ -22,33 +24,36 @@ class CurrencyRateRepository
         return $this->model
             ->where('currency', $currency)
             ->latest('id')
-            ->first();
+            ->first()
+        ;
     }
 
     /**
-     * @return CurrencyRate[]|Collection|null
+     * @return null|Collection|CurrencyRate[]
      */
-    public function getLastTwoCurrencyRates(string $currency): Collection|array|null
+    public function getLastTwoCurrencyRates(string $currency): null|Collection|array
     {
         $rates = $this->model
             ->where('currency', $currency)
             ->orderBy('id', 'DESC')
             ->take(2)
-            ->get();
+            ->get()
+        ;
 
-        return $rates->count() == 2 ? $rates : null;
+        return 2 === $rates->count() ? $rates : null;
     }
 
     /**
-     * @return CurrencyRate[]|Collection|null
+     * @return null|Collection|CurrencyRate[]
      */
-    public function getCurrencyRatesOfLastMonth(string $currency): Collection|array|null
+    public function getCurrencyRatesOfLastMonth(string $currency): null|Collection|array
     {
         $startDate = $this->carbon->subMonth()->format('Y-m-d H:i:s');
 
         return $this->model
             ->where('currency', $currency)
             ->where('created_at', '>=', $startDate)
-            ->get();
+            ->get()
+        ;
     }
 }

@@ -11,9 +11,9 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Tests\Mocks\TelegramBotServiceMock;
 use Tests\TestCase;
 
-class TelegramServiceTest extends TestCase
+final class TelegramServiceTest extends TestCase
 {
-    private const FILES_PATH = __DIR__ . '/Resources/';
+    private const FILES_PATH = __DIR__.'/Resources/';
     private const TEST_FILES = [
         '1-buy-success-flow.csv',
         '2-buy-success-flow-custom-rate.csv',
@@ -48,7 +48,7 @@ class TelegramServiceTest extends TestCase
     public function testFilesStepsValid(): void
     {
         foreach (self::TEST_FILES as $testFile) {
-            $csvFile = fopen(self::FILES_PATH . $testFile, 'r');
+            $csvFile = fopen(self::FILES_PATH.$testFile, 'r');
             $actualStep = 0;
 
             while ($step = fgetcsv($csvFile)) {
@@ -56,10 +56,10 @@ class TelegramServiceTest extends TestCase
                 $stepRequest = $step[1] ?? '';
                 $stepResponse = $step[2] ?? '';
 
-                $actualStep++;
+                ++$actualStep;
                 $expectedNumber = sprintf('Step %d', $actualStep);
 
-                $this->assertEquals($expectedNumber, $stepNumber, sprintf('Wrong step number %s in file %s', $stepNumber, $testFile));
+                $this->assertSame($expectedNumber, $stepNumber, sprintf('Wrong step number %s in file %s', $stepNumber, $testFile));
                 $this->assertNotEmpty($stepRequest, sprintf('Empty request in %s in file %s', $stepNumber, $testFile));
                 $this->assertNotEmpty($stepResponse, sprintf('Empty response in %s in file %s', $stepNumber, $testFile));
             }
@@ -91,7 +91,7 @@ class TelegramServiceTest extends TestCase
                 $response = $this->sendMessageAndGetResponse($stepRequest);
                 $expectedResponse = $this->resolveExpectedResponseFromStepData($stepResponse);
 
-                $this->assertEquals($expectedResponse, $response, sprintf('Wrong response in %s in file %s', $stepNumber, $testFile));
+                $this->assertSame($expectedResponse, $response, sprintf('Wrong response in %s in file %s', $stepNumber, $testFile));
             }
 
             fclose($csvFile);
@@ -106,12 +106,13 @@ class TelegramServiceTest extends TestCase
         foreach ($lines as $line) {
             if (str_starts_with($line, ' ')) {
                 $spacesCount = strlen($line) - strlen(ltrim($line));
+
                 break;
             }
         }
 
         $lines = array_map(function ($line) use ($spacesCount) {
-            if (trim(substr($line, 0, $spacesCount)) === '') {
+            if ('' === trim(substr($line, 0, $spacesCount))) {
                 $line = substr($line, $spacesCount);
             }
 
@@ -136,7 +137,7 @@ class TelegramServiceTest extends TestCase
         $this->telegramService->processWebhook($data);
         $messages = $this->telegramBotService->getAndResetMyMessages();
 
-        if (count($messages) !== 1) {
+        if (1 !== count($messages)) {
             throw new Exception(sprintf('Expected 1 message, got %d', count($messages)));
         }
 
