@@ -19,7 +19,7 @@ class TelegramUserServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->telegramUserService = Container::getInstance()->make(TelegramUserService::class);
+        $this->telegramUserService = $this->app->make(TelegramUserService::class);
     }
 
     public function testGetByChatId(): void

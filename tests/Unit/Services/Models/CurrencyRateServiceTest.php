@@ -21,8 +21,8 @@ class CurrencyRateServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->currencyRateRepository = Container::getInstance()->make(CurrencyRateRepository::class);
-        $this->currencyRateService = Container::getInstance()->make(CurrencyRateService::class);
+        $this->currencyRateRepository = $this->app->make(CurrencyRateRepository::class);
+        $this->currencyRateService = $this->app->make(CurrencyRateService::class);
     }
 
     public function testCreateCurrencyRate(): void

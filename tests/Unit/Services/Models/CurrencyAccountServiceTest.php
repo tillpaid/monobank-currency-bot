@@ -23,8 +23,8 @@ class CurrencyAccountServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->currencyAccountRepository = Container::getInstance()->make(CurrencyAccountRepository::class);
-        $this->currencyAccountService = Container::getInstance()->make(CurrencyAccountService::class);
+        $this->currencyAccountRepository = $this->app->make(CurrencyAccountRepository::class);
+        $this->currencyAccountService = $this->app->make(CurrencyAccountService::class);
     }
 
     public function testCreate(): void
