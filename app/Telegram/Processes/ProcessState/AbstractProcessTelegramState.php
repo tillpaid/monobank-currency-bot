@@ -39,9 +39,10 @@ abstract class AbstractProcessTelegramState
         $currency = $user->state_additional['buy-currency']
             ? mb_strtoupper($user->state_additional['buy-currency'])
             : 'USD';
+        $currencyLower = mb_strtolower($currency);
 
         if (is_null($currencyRate)) {
-            $currencyRate = $this->currencyRateService->getLatestCurrencyRate($currency)->sell;
+            $currencyRate = $this->currencyRateService->getLatestCurrencyRate($currencyLower)->sell;
         }
 
         $this->telegramUserService->updateStateAdditional($user, ['buy-currency-rate' => $currencyRate]);

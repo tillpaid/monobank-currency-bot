@@ -104,8 +104,8 @@ class CurrencyAccountServiceTest extends TestCase
         }
 
         $currentSum = $this->currencyAccountService->getUserCurrencySum($telegramUser->id, $currency);
-        $expectedAmountAfterSell = $currentSum * 0.85;
-        $amountToSell = $currentSum * 0.15;
+        $expectedAmountAfterSell = round($currentSum * 0.85, 5);
+        $amountToSell = round($currentSum * 0.15, 5);
 
         $this->currencyAccountService->sellCurrency($telegramUser->id, $currency, $amountToSell);
         $amountAfterSell = $this->currencyAccountService->getUserCurrencySum($telegramUser->id, $currency);

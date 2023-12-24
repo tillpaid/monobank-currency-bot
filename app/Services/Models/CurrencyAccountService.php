@@ -46,6 +46,8 @@ class CurrencyAccountService
     public function sellCurrency(int $userId, string $currency, float $currencySum): void
     {
         while ($currencySum > 0) {
+            $currencySum = round($currencySum, 5);
+
             if (!$currencyAccount = $this->getLessProfitUserCurrencyAccount($userId, $currency)) {
                 break;
             }
