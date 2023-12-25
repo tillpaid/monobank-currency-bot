@@ -26,8 +26,7 @@ class TelegramUserServiceTest extends TestCase
     public function testGetByChatId(): void
     {
         $chatId = (string) random_int(1000, 10000);
-
-        $expected = TelegramUser::factory()->create(['chat_id' => $chatId]);
+        $expected = $this->fixturesHelper->createTelegramUser($chatId);
 
         $result = $this->telegramUserService->getByChatId($chatId);
 
@@ -36,7 +35,7 @@ class TelegramUserServiceTest extends TestCase
 
     public function getCountByChatId(string $chatId): int
     {
-        return TelegramUser::where('chat_id', $chatId)->count();
+        return TelegramUser::query()->where('chat_id', $chatId)->count();
     }
 
     public function testCreateIfNotExists(): void

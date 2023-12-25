@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Telegram\Processes;
 
+use App\Models\TelegramUser;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuyRateOwnState;
 use App\Telegram\Processes\ProcessState\Buy\ProcessTelegramBuyRateState;
@@ -45,17 +46,17 @@ class ProcessTelegramState
         ];
     }
 
-    public function process(Model $user, string $messageText): string
+    public function process(TelegramUser $telegramUser, string $messageText): string
     {
-        $processor = $this->getProcessor($user);
+        $processor = $this->getProcessor($telegramUser);
 
-        return $processor->process($user, $messageText);
+        return $processor->process($telegramUser, $messageText);
     }
 
-    private function getProcessor(Model $user): AbstractProcessTelegramState
+    private function getProcessor(TelegramUser $telegramUser): AbstractProcessTelegramState
     {
-        if ($user->state && array_key_exists($user->state, $this->processors)) {
-            $output = $this->processors[$user->state];
+        if ($telegramUser->state && array_key_exists($telegramUser->state, $this->processors)) {
+            $output = $this->processors[$telegramUser->state];
         } else {
             $output = $this->processTelegramDefaultState;
         }

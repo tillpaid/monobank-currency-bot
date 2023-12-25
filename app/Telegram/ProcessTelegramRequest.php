@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Telegram;
 
+use App\Models\TelegramUser;
 use App\Telegram\Processes\ProcessTelegramCommand;
 use App\Telegram\Processes\ProcessTelegramState;
 use Exception;
@@ -23,12 +24,12 @@ class ProcessTelegramRequest
         $this->processTelegramState = $processTelegramState;
     }
 
-    public function process(Model $user, string $messageText): string
+    public function process(TelegramUser $telegramUser, string $messageText): string
     {
         try {
             return $this->isCommand($messageText)
-                ? $this->processTelegramCommand->process($user, $messageText)
-                : $this->processTelegramState->process($user, $messageText);
+                ? $this->processTelegramCommand->process($telegramUser, $messageText)
+                : $this->processTelegramState->process($telegramUser, $messageText);
         } catch (Exception $exception) {
             Log::error('Telegram request error: ');
             Log::error($exception);

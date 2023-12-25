@@ -46,7 +46,7 @@ class CurrencyRateServiceTest extends TestCase
         $currencies = config('monobank.currencies');
 
         // Check on null
-        CurrencyRate::truncate();
+        CurrencyRate::query()->truncate();
         $currencyName = $currencies[0];
         $result = $this->currencyRateService->getLatestCurrencyRate($currencyName);
         $this->assertNull($result);
@@ -74,7 +74,7 @@ class CurrencyRateServiceTest extends TestCase
         $currencyName = $currencies[0];
 
         // Check on null after truncate
-        CurrencyRate::truncate();
+        CurrencyRate::query()->truncate();
         $result = $this->currencyRateService->getLastTwoCurrencyRates($currencyName);
         $this->assertNull($result);
 
@@ -104,7 +104,7 @@ class CurrencyRateServiceTest extends TestCase
     public function testGetCurrencyRatesOfLastMonth(): void
     {
         $currencies = config('monobank.currencies');
-        CurrencyRate::truncate();
+        CurrencyRate::query()->truncate();
 
         // Check when result is Collection
         foreach ($currencies as $currencyName) {
@@ -125,7 +125,7 @@ class CurrencyRateServiceTest extends TestCase
         }
 
         // Check on empty after truncate
-        CurrencyRate::truncate();
+        CurrencyRate::query()->truncate();
         $currencyName = $currencies[0];
         $expected = [];
 

@@ -18,15 +18,14 @@ class CurrencyAccountService
 
     public function create(int $userId, string $currency, float $uahValue, float $purchaseRate): bool
     {
-        $currencyAccount = CurrencyAccount::create([
-            'telegram_user_id' => $userId,
-            'currency' => $currency,
-            'uah_value' => $uahValue,
-            'purchase_rate' => $purchaseRate,
-            'currency_value' => round($uahValue / $purchaseRate, 5),
-        ]);
+        $currencyAccount = new CurrencyAccount();
+        $currencyAccount->telegram_user_id = $userId;
+        $currencyAccount->currency = $currency;
+        $currencyAccount->uah_value = $uahValue;
+        $currencyAccount->purchase_rate = $purchaseRate;
+        $currencyAccount->currency_value = round($uahValue / $purchaseRate, 5);
 
-        return isset($currencyAccount->id);
+        return $currencyAccount->save();
     }
 
     public function getUserCurrencySum(int $userId, string $currency): ?float

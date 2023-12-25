@@ -19,13 +19,12 @@ class CurrencyRateService
 
     public function createCurrencyRate(string $currencyName, float $sell, float $buy): bool
     {
-        $currency = CurrencyRate::create([
-            'currency' => $currencyName,
-            'sell' => $sell,
-            'buy' => $buy,
-        ]);
+        $currencyRate = new CurrencyRate();
+        $currencyRate->currency = $currencyName;
+        $currencyRate->sell = $sell;
+        $currencyRate->buy = $buy;
 
-        return isset($currency->id);
+        return $currencyRate->save();
     }
 
     public function getLatestCurrencyRate(string $currency): ?CurrencyRate

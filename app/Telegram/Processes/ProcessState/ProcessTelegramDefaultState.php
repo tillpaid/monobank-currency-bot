@@ -4,37 +4,38 @@ declare(strict_types=1);
 
 namespace App\Telegram\Processes\ProcessState;
 
+use App\Models\TelegramUser;
 use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramDefaultState extends AbstractProcessTelegramState
 {
-    public function process(Model $user, string $messageText): string
+    public function process(TelegramUser $telegramUser, string $messageText): string
     {
         switch ($messageText) {
             case __('telegram_buttons.buy'):
-                $this->updateUserState($user, config('states.buy'));
+                $this->updateUserState($telegramUser, config('states.buy'));
                 $responseMessage = __('telegram.chooseCurrencyBuy');
 
                 break;
 
             case __('telegram_buttons.sell'):
-                $this->updateUserState($user, config('states.sell'));
+                $this->updateUserState($telegramUser, config('states.sell'));
                 $responseMessage = __('telegram.chooseCurrencySell');
 
                 break;
 
             case __('telegram_buttons.balance'):
-                $responseMessage = $this->telegramBotService->buildUserBalanceMessage($user->id);
+                $responseMessage = $this->telegramBotService->buildUserBalanceMessage($telegramUser->id);
 
                 break;
 
             case __('telegram_buttons.report'):
-                $responseMessage = $this->telegramBotService->buildUserReport($user->id);
+                $responseMessage = $this->telegramBotService->buildUserReport($telegramUser->id);
 
                 break;
 
             case __('telegram_buttons.statisticsCurrency'):
-                $this->updateUserState($user, config('states.statistics-currency'));
+                $this->updateUserState($telegramUser, config('states.statistics-currency'));
                 $responseMessage = __('telegram.chooseCurrency');
 
                 break;

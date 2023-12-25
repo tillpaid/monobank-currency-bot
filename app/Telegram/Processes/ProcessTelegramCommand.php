@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Telegram\Processes;
 
+use App\Models\TelegramUser;
 use App\Services\Models\TelegramUserService;
 use App\Services\Telegram\TelegramBotService;
 use Illuminate\Database\Eloquent\Model;
@@ -21,11 +22,11 @@ class ProcessTelegramCommand
         $this->telegramBotService = $telegramBotService;
     }
 
-    public function process(Model $user, string $messageText): string
+    public function process(TelegramUser $telegramUser, string $messageText): string
     {
         switch ($messageText) {
             case '/start':
-                $this->updateUserState($user, null);
+                $this->updateUserState($telegramUser, null);
                 $responseMessage = __('telegram.startMessage');
 
                 break;
@@ -41,7 +42,7 @@ class ProcessTelegramCommand
                 break;
 
             case '/report':
-                $responseMessage = $this->telegramBotService->buildUserReport($user->id);
+                $responseMessage = $this->telegramBotService->buildUserReport($telegramUser->id);
 
                 break;
 
@@ -52,8 +53,8 @@ class ProcessTelegramCommand
         return $responseMessage;
     }
 
-    private function updateUserState(Model $user, ?string $state, ?array $stateAdditional = null): bool
+    private function updateUserState(TelegramUser $telegramUser, ?string $state, ?array $stateAdditional = null): bool
     {
-        return $this->telegramUserService->updateState($user, $state, $stateAdditional);
+        return $this->telegramUserService->updateState($telegramUser, $state, $stateAdditional);
     }
 }

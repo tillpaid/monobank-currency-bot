@@ -9,22 +9,22 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TelegramUserRepository
 {
-    private TelegramUser $model;
+    private TelegramUser $telegramUser;
 
     public function __construct(TelegramUser $telegramUser)
     {
-        $this->model = $telegramUser;
+        $this->telegramUser = $telegramUser;
     }
 
     public function getByChatId(string $chatId): ?TelegramUser
     {
-        return $this->model->where('chat_id', $chatId)->first();
+        return $this->telegramUser->newQuery()->where('chat_id', $chatId)->get()->first();
     }
 
     public function createIfNotExists(string $chatId): void
     {
-        if (!$this->model->where('chat_id', $chatId)->count()) {
-            $this->model->create(['chat_id' => $chatId]);
+        if (!$this->telegramUser->newQuery()->where('chat_id', $chatId)->count()) {
+            $this->telegramUser->newQuery()->create(['chat_id' => $chatId]);
         }
     }
 
@@ -33,6 +33,6 @@ class TelegramUserRepository
      */
     public function all(): null|Collection|array
     {
-        return $this->model->all();
+        return $this->telegramUser->all();
     }
 }

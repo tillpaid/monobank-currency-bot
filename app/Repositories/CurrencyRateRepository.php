@@ -10,20 +10,22 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CurrencyRateRepository
 {
-    private CurrencyRate $model;
+    private CurrencyRate $currencyRate;
     private Carbon $carbon;
 
     public function __construct(CurrencyRate $currencyRate, Carbon $carbon)
     {
-        $this->model = $currencyRate;
+        $this->currencyRate = $currencyRate;
         $this->carbon = $carbon;
     }
 
     public function getLatestCurrencyRate(string $currency): ?CurrencyRate
     {
-        return $this->model
+        return $this->currencyRate
+            ->newQuery()
             ->where('currency', $currency)
             ->latest('id')
+            ->get()
             ->first()
         ;
     }
@@ -33,7 +35,8 @@ class CurrencyRateRepository
      */
     public function getLastTwoCurrencyRates(string $currency): null|Collection|array
     {
-        $rates = $this->model
+        $rates = $this->currencyRate
+            ->newQuery()
             ->where('currency', $currency)
             ->orderBy('id', 'DESC')
             ->take(2)
@@ -50,7 +53,8 @@ class CurrencyRateRepository
     {
         $startDate = $this->carbon->subMonth()->format('Y-m-d H:i:s');
 
-        return $this->model
+        return $this->currencyRate
+            ->newQuery()
             ->where('currency', $currency)
             ->where('created_at', '>=', $startDate)
             ->get()

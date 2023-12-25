@@ -48,11 +48,17 @@ class FixturesHelper
         string $currency = self::EUR,
         float $sell = 40.7,
         float $buy = 41.39,
+        string $createdAt = null,
     ): CurrencyRate {
         $currencyRate = new CurrencyRate();
         $currencyRate->currency = $currency;
         $currencyRate->sell = $sell;
         $currencyRate->buy = $buy;
+
+        if ($createdAt) {
+            $currencyRate->created_at = $createdAt;
+        }
+
         $currencyRate->save();
 
         return $currencyRate;

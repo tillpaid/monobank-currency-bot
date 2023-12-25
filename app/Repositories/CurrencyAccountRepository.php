@@ -9,17 +9,18 @@ use Illuminate\Support\Facades\DB;
 
 class CurrencyAccountRepository
 {
-    private CurrencyAccount $model;
+    private CurrencyAccount $currencyAccount;
 
     public function __construct(CurrencyAccount $currencyAccount)
     {
-        $this->model = $currencyAccount;
+        $this->currencyAccount = $currencyAccount;
     }
 
     // TODO: Is it possible to have nullable return type here?
     public function getUserCurrencySum(int $userId, string $currency): ?float
     {
-        return (float) $this->model
+        return (float) $this->currencyAccount
+            ->newQuery()
             ->where('telegram_user_id', $userId)
             ->where('currency', $currency)
             ->sum('currency_value')
@@ -28,19 +29,23 @@ class CurrencyAccountRepository
 
     public function getFirstUserCurrencyAccount(int $userId, string $currency): ?CurrencyAccount
     {
-        return $this->model
+        return $this->currencyAccount
+            ->newQuery()
             ->where('telegram_user_id', $userId)
             ->where('currency', $currency)
+            ->get()
             ->first()
         ;
     }
 
     public function getLessProfitUserCurrencyAccount(int $userId, string $currency): ?CurrencyAccount
     {
-        return $this->model
+        return $this->currencyAccount
+            ->newQuery()
             ->where('telegram_user_id', $userId)
             ->where('currency', $currency)
             ->orderBy('purchase_rate', 'DESC')
+            ->get()
             ->first()
         ;
     }
@@ -48,7 +53,8 @@ class CurrencyAccountRepository
     public function getUserBalanceSum(int $userId): ?array
     {
         $output = [];
-        $collection = $this->model
+        $collection = $this->currencyAccount
+            ->newQuery()
             ->select(
                 'currency',
                 DB::raw('SUM(currency_value) as currency_value'),

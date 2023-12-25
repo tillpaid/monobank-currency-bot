@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Telegram;
 
+use App\Models\CurrencyRate;
 use App\Services\Models\CurrencyAccountService;
 use App\Services\Models\CurrencyRateService;
 use App\Services\Models\TelegramUserSendRateService;
@@ -188,7 +189,7 @@ class TelegramBotService
         return $output;
     }
 
-    private function getRateChange(Model $rateOld, Model $rateNew, int $userId): string
+    private function getRateChange(CurrencyRate $rateOld, CurrencyRate $rateNew, int $userId): string
     {
         $currencyName = mb_strtoupper($rateNew->currency);
 
@@ -235,7 +236,7 @@ class TelegramBotService
         ]);
     }
 
-    private function getAccountSum(array $userBalanceSum, Model $rateNew, array &$totalSum): void
+    private function getAccountSum(array $userBalanceSum, CurrencyRate $rateNew, array &$totalSum): void
     {
         if (array_key_exists($rateNew->currency, $userBalanceSum)) {
             $balance = $userBalanceSum[$rateNew->currency];

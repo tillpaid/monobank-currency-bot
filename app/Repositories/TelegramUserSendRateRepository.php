@@ -8,16 +8,17 @@ use App\Models\TelegramUserSendRate;
 
 class TelegramUserSendRateRepository
 {
-    private TelegramUserSendRate $model;
+    private TelegramUserSendRate $telegramUserSendRate;
 
     public function __construct(TelegramUserSendRate $telegramUserSendRate)
     {
-        $this->model = $telegramUserSendRate;
+        $this->telegramUserSendRate = $telegramUserSendRate;
     }
 
     public function rowExists(int $telegramUserId, int $currencyRateId): bool
     {
-        $count = $this->model
+        $count = $this->telegramUserSendRate
+            ->newQuery()
             ->where('telegram_user_id', $telegramUserId)
             ->where('currency_rate_id', $currencyRateId)
             ->count()
@@ -28,9 +29,11 @@ class TelegramUserSendRateRepository
 
     public function getSendRate(int $telegramUserId, string $currency): ?TelegramUserSendRate
     {
-        return $this->model
+        return $this->telegramUserSendRate
+            ->newQuery()
             ->where('telegram_user_id', $telegramUserId)
             ->where('currency', $currency)
+            ->get()
             ->first()
         ;
     }

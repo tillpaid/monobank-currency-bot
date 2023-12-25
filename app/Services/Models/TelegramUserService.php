@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Models;
 
+use App\Models\TelegramUser;
 use App\Repositories\TelegramUserRepository;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class TelegramUserService
 {
@@ -17,7 +17,7 @@ class TelegramUserService
         $this->telegramUserRepository = $telegramUserRepository;
     }
 
-    public function getByChatId(string $chatId): ?Model
+    public function getByChatId(string $chatId): ?TelegramUser
     {
         return $this->telegramUserRepository->getByChatId($chatId);
     }
@@ -27,7 +27,7 @@ class TelegramUserService
         $this->telegramUserRepository->createIfNotExists($chatId);
     }
 
-    public function updateState(Model $telegramUser, ?string $state, ?array $stateAdditional): bool
+    public function updateState(TelegramUser $telegramUser, ?string $state, ?array $stateAdditional): bool
     {
         $telegramUser->state = $state;
 
@@ -38,7 +38,7 @@ class TelegramUserService
         return $telegramUser->save();
     }
 
-    public function updateStateAdditional(Model $telegramUser, ?array $stateAdditional): bool
+    public function updateStateAdditional(TelegramUser $telegramUser, ?array $stateAdditional): bool
     {
         if ($telegramUser->state_additional) {
             $telegramUser->state_additional = array_merge($telegramUser->state_additional, $stateAdditional);

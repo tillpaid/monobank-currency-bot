@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Monobank;
 
+use App\Models\CurrencyRate;
 use App\Services\Models\CurrencyRateService;
 use Exception;
 use GuzzleHttp\Client;
@@ -85,7 +86,7 @@ class MonobankCurrencyService
         return $needle;
     }
 
-    private function isRateDifferent(?Model $rate, array $newRate): bool
+    private function isRateDifferent(?CurrencyRate $rate, array $newRate): bool
     {
         return
             null === $rate

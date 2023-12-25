@@ -52,8 +52,8 @@ class TelegramService
             return;
         }
 
-        $user = $this->telegramUserService->getByChatId($chatId);
-        $responseMessage = $this->processTelegramRequest->process($user, $messageText);
+        $telegramUser = $this->telegramUserService->getByChatId($chatId);
+        $responseMessage = $this->processTelegramRequest->process($telegramUser, $messageText);
 
         $this->telegramBotService->sendMessage($chatId, $responseMessage);
     }

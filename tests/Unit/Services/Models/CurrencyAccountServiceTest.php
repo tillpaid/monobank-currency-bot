@@ -75,15 +75,22 @@ class CurrencyAccountServiceTest extends TestCase
 
     public function testGetFirstUserCurrencyAccount(): void
     {
-        CurrencyRate::factory(1)->create();
-        $telegramUser = TelegramUser::factory(1)->hasCurrencyAccounts(20)->create()->first();
         $currencies = config('monobank.currencies');
 
+        $this->fixturesHelper->createCurrencyRate('USD');
+        $this->fixturesHelper->createCurrencyRate('EUR');
+        $telegramUser = $this->fixturesHelper->createTelegramUser();
+        for ($i = 0; $i < 10; ++$i) {
+            $this->fixturesHelper->createCurrencyAccount($telegramUser, 'USD');
+            $this->fixturesHelper->createCurrencyAccount($telegramUser, 'EUR');
+        }
+
+
         foreach ($currencies as $currencyName) {
-            $expected = CurrencyAccount
-                ::where('telegram_user_id', $telegramUser->id)
-                    ->where('currency', $currencyName)
-                    ->first()
+            $expected = CurrencyAccount::query()
+                ->where('telegram_user_id', $telegramUser->id)
+                ->where('currency', $currencyName)
+                ->first()
             ;
             $result = $this->currencyAccountService->getFirstUserCurrencyAccount($telegramUser->id, $currencyName);
 

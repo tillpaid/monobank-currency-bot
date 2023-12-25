@@ -27,11 +27,11 @@ class TelegramUserSendRateService
             $sendRate->currency_rate_id = $currencyRateId;
             $sendRate->save();
         } else {
-            TelegramUserSendRate::create([
-                'telegram_user_id' => $telegramUserId,
-                'currency' => $currency,
-                'currency_rate_id' => $currencyRateId,
-            ]);
+            $telegramUserSendRate = new TelegramUserSendRate();
+            $telegramUserSendRate->telegram_user_id = $telegramUserId;
+            $telegramUserSendRate->currency = $currency;
+            $telegramUserSendRate->currency_rate_id = $currencyRateId;
+            $telegramUserSendRate->save();
         }
     }
 }

@@ -73,11 +73,11 @@ final class TelegramServiceTest extends TestCase
      */
     public function testFirstAttempt(): void
     {
-        $this->fixturesHelper->createCurrencyRate('usd', 37.4, 36.35);
-        $this->fixturesHelper->createCurrencyRate('usd', 38.5, 37.5);
+        $this->fixturesHelper->createCurrencyRate('usd', 37.4, 36.35, '2023-12-24 00:00:00');
+        $this->fixturesHelper->createCurrencyRate('usd', 38.5, 37.5, '2023-12-24 00:01:00');
 
-        $this->fixturesHelper->createCurrencyRate('eur', 41.4, 40.35);
-        $this->fixturesHelper->createCurrencyRate('eur', 42.5, 41.5);
+        $this->fixturesHelper->createCurrencyRate('eur', 41.4, 40.35, '2023-12-24 00:00:00');
+        $this->fixturesHelper->createCurrencyRate('eur', 42.5, 41.5, '2023-12-24 00:01:00');
 
         foreach (self::TEST_FILES as $testFile) {
             $csvFilePath = sprintf('%s/Resources/%s', __DIR__, $testFile);

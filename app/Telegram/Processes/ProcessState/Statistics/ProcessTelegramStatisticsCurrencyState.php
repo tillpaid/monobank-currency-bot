@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace App\Telegram\Processes\ProcessState\Statistics;
 
+use App\Models\CurrencyRate;
+use App\Models\TelegramUser;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramState
 {
-    public function process(Model $user, string $messageText): string
+    public function process(TelegramUser $telegramUser, string $messageText): string
     {
         $messageTextLower = mb_strtolower($messageText);
 
         switch (true) {
             case in_array($messageTextLower, config('monobank.currencies'), true):
-                $this->updateUserState($user, null);
+                $this->updateUserState($telegramUser, null);
 
                 $rates = $this->currencyRateService->getCurrencyRatesOfLastMonth($messageTextLower);
                 $ratesResponse = [];
@@ -48,7 +50,7 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
                 break;
 
             case $messageText === __('telegram_buttons.back'):
-                $this->updateUserState($user, null);
+                $this->updateUserState($telegramUser, null);
                 $responseMessage = __('telegram.startMessage');
 
                 break;
@@ -60,7 +62,7 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
         return $responseMessage;
     }
 
-    private function processMinMaxRates(array &$ratesMinMax, Model $rate, string $date): void
+    private function processMinMaxRates(array &$ratesMinMax, CurrencyRate $rate, string $date): void
     {
         $buyString = "{$date} - {$rate->buy}₴";
         $sellString = "{$date} - {$rate->sell}₴";

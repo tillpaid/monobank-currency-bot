@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Telegram\Processes\ProcessState;
 
+use App\Models\TelegramUser;
 use App\Services\Models\CurrencyAccountService;
 use App\Services\Models\CurrencyRateService;
 use App\Services\Models\TelegramUserService;
@@ -29,17 +30,17 @@ abstract class AbstractProcessTelegramState
         $this->telegramBotService = $telegramBotService;
     }
 
-    abstract public function process(Model $user, string $messageText): string;
+    abstract public function process(TelegramUser $telegramUser, string $messageText): string;
 
-    final protected function updateUserState(Model $user, ?string $state, ?array $stateAdditional = null): bool
+    final protected function updateUserState(TelegramUser $telegramUser, ?string $state, ?array $stateAdditional = null): bool
     {
-        return $this->telegramUserService->updateState($user, $state, $stateAdditional);
+        return $this->telegramUserService->updateState($telegramUser, $state, $stateAdditional);
     }
 
-    final protected function buildBuyConfirmMessage(Model $user, ?float $currencyRate = null): string
+    final protected function buildBuyConfirmMessage(TelegramUser $telegramUser, ?float $currencyRate = null): string
     {
-        $currency = $user->state_additional['buy-currency']
-            ? mb_strtoupper($user->state_additional['buy-currency'])
+        $currency = $telegramUser->state_additional['buy-currency']
+            ? mb_strtoupper($telegramUser->state_additional['buy-currency'])
             : 'USD';
         $currencyLower = mb_strtolower($currency);
 
@@ -47,9 +48,9 @@ abstract class AbstractProcessTelegramState
             $currencyRate = $this->currencyRateService->getLatestCurrencyRate($currencyLower)->sell;
         }
 
-        $this->telegramUserService->updateStateAdditional($user, ['buy-currency-rate' => $currencyRate]);
+        $this->telegramUserService->updateStateAdditional($telegramUser, ['buy-currency-rate' => $currencyRate]);
 
-        $sumUah = $user->state_additional['buy-currency-sum'] ?? 0;
+        $sumUah = $telegramUser->state_additional['buy-currency-sum'] ?? 0;
         $sumUahFormat = $this->telegramBotService->format($sumUah, 5);
         $uahToCurrency = $this->telegramBotService->format($sumUah / $currencyRate, 2);
 
