@@ -40,7 +40,8 @@ class MonobankCurrencyService
         try {
             $response = $this->client->get(config('monobank.monobank_currency_url'));
 
-            if (200 === $response->getStatusCode() && $response->getBody()) {
+            if (200 === $response->getStatusCode()) {
+                // TODO: Validate that we have a valid JSON
                 $output = json_decode($response->getBody()->getContents(), true);
             }
         } catch (Exception $exception) {
