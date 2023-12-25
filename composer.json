@@ -24,6 +24,7 @@
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-mockery": "^1.1",
+        "phpstan/phpstan-phpunit": "^1.3",
         "phpunit/phpunit": "^9.3.3"
     },
     "autoload": {
@@ -59,7 +60,7 @@
             "@php ./bin/php-cs-fixer fix --diff --dry-run"
         ],
         "stan": [
-            "@php ./bin/phpstan analyse app tests --level=5"
+            "@php ./bin/phpstan analyse app tests --level=6"
         ],
         "full-test": [
             "@composer test",

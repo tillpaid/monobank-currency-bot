@@ -23,13 +23,16 @@ class TelegramService
         $this->processTelegramRequest = $processTelegramRequest;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function processWebhook(array $data): void
     {
         $message = array_key_exists('edited_message', $data)
             ? $data['edited_message']
             : $data['message'];
 
-        $chatId = $message['chat']['id'];
+        $chatId = (string) $message['chat']['id'];
         $messageText = $message['text'];
 
         $this->telegramUserService->createIfNotExists($chatId);
@@ -44,7 +47,7 @@ class TelegramService
         $this->telegramBotService->sendMessage($chatId, $message);
     }
 
-    private function processMessage($chatId, $messageText): void
+    private function processMessage(string $chatId, string $messageText): void
     {
         if (!$this->checkAuth($chatId)) {
             $this->telegramBotService->sendMessage($chatId, __('telegram.notAuth'));
@@ -58,7 +61,7 @@ class TelegramService
         $this->telegramBotService->sendMessage($chatId, $responseMessage);
     }
 
-    private function checkAuth($chatId): bool
+    private function checkAuth(string $chatId): bool
     {
         return $chatId === $this->telegramBotService->getMyId();
     }

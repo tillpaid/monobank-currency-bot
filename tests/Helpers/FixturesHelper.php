@@ -15,6 +15,9 @@ class FixturesHelper
 {
     private const EUR = 'EUR';
 
+    /**
+     * @param null|array<string, float|string> $stateAdditional
+     */
     public function createTelegramUser(
         string $chatId = '1',
         string $state = null,

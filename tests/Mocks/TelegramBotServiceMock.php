@@ -8,6 +8,9 @@ use App\Services\Telegram\TelegramBotService;
 
 class TelegramBotServiceMock extends TelegramBotService
 {
+    /**
+     * @var array<string, string[]>
+     */
     private array $sentMessages = [];
 
     public function sendMessage(string $chatId, string $message): void

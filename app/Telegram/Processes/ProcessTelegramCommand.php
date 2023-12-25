@@ -52,6 +52,9 @@ class ProcessTelegramCommand
         return $responseMessage;
     }
 
+    /**
+     * @param null|array<string, float|string> $stateAdditional
+     */
     private function updateUserState(TelegramUser $telegramUser, ?string $state, ?array $stateAdditional = null): bool
     {
         return $this->telegramUserService->updateState($telegramUser, $state, $stateAdditional);

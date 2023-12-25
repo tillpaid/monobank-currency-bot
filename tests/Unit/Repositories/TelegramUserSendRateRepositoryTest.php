@@ -36,6 +36,9 @@ class TelegramUserSendRateRepositoryTest extends TestCase
         $this->assertSame($expectedResult, $result);
     }
 
+    /**
+     * @return array<array<string, bool|int>>
+     */
     public function rowExistsDataProvider(): array
     {
         return [

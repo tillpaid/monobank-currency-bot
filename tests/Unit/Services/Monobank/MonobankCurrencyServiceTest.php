@@ -29,7 +29,14 @@ class MonobankCurrencyServiceTest extends TestCase
         $this->monobankCurrencyService = $this->app->make(MonobankCurrencyService::class);
     }
 
-    /** @dataProvider updateCurrencyRatesDataProvider */
+    /**
+     * @dataProvider updateCurrencyRatesDataProvider
+     *
+     * @param array<array<string, float|string>> $expectedRates
+     * @param array<array<string, float|string>> $existingRates
+     *
+     * @throws Exception
+     */
     public function testUpdateCurrencyRates(bool $expectedOutput, array $expectedRates, array $existingRates): void
     {
         foreach ($existingRates as $existingRate) {
@@ -71,6 +78,9 @@ class MonobankCurrencyServiceTest extends TestCase
         $this->assertSame($expectedRates, $rates);
     }
 
+    /**
+     * @return array<array<string, mixed>>
+     */
     public function updateCurrencyRatesDataProvider(): array
     {
         return [

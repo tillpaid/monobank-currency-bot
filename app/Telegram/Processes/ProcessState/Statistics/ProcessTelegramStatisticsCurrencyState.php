@@ -61,6 +61,9 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
         return $responseMessage;
     }
 
+    /**
+     * @param array<string, array<string, array<string, null|int>>> $ratesMinMax
+     */
     private function processMinMaxRates(array &$ratesMinMax, CurrencyRate $rate, string $date): void
     {
         $buyString = "{$date} - {$rate->buy}₴";

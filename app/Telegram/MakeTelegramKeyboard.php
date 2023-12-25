@@ -6,6 +6,9 @@ namespace App\Telegram;
 
 class MakeTelegramKeyboard
 {
+    /**
+     * @return string[][]
+     */
     public function getKeyboard(?string $state): array
     {
         $keyboard = [];
@@ -60,6 +63,9 @@ class MakeTelegramKeyboard
         return $keyboard;
     }
 
+    /**
+     * @return string[]
+     */
     private function getCurrencies(): array
     {
         return array_map('mb_strtoupper', config('monobank.currencies'));

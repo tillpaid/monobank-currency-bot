@@ -31,6 +31,9 @@ abstract class AbstractProcessTelegramState
 
     abstract public function process(TelegramUser $telegramUser, string $messageText): string;
 
+    /**
+     * @param null|array<string, float|string> $stateAdditional
+     */
     final protected function updateUserState(TelegramUser $telegramUser, ?string $state, ?array $stateAdditional = null): bool
     {
         return $this->telegramUserService->updateState($telegramUser, $state, $stateAdditional);

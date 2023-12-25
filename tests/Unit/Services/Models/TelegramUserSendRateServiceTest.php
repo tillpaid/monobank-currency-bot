@@ -36,6 +36,9 @@ class TelegramUserSendRateServiceTest extends TestCase
         $this->assertSame($exists, $result);
     }
 
+    /**
+     * @return array<array<string, bool>>
+     */
     public function checkIfRateChangeBeenSentDataProvider(): array
     {
         return [
