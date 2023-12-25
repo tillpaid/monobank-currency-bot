@@ -6,7 +6,6 @@ namespace App\Services\Models;
 
 use App\Models\TelegramUser;
 use App\Repositories\TelegramUserRepository;
-use Illuminate\Database\Eloquent\Collection;
 
 class TelegramUserService
 {
@@ -49,7 +48,10 @@ class TelegramUserService
         return $telegramUser->save();
     }
 
-    public function all(): ?Collection
+    /**
+     * @return TelegramUser[]
+     */
+    public function all(): array
     {
         return $this->telegramUserRepository->all();
     }

@@ -6,7 +6,6 @@ namespace App\Services\Models;
 
 use App\Models\CurrencyRate;
 use App\Repositories\CurrencyRateRepository;
-use Illuminate\Database\Eloquent\Collection;
 
 class CurrencyRateService
 {
@@ -32,12 +31,18 @@ class CurrencyRateService
         return $this->currencyRateRepository->getLatestCurrencyRate($currency);
     }
 
-    public function getLastTwoCurrencyRates(string $currency): ?Collection
+    /**
+     * @return null|CurrencyRate[]
+     */
+    public function getLastTwoCurrencyRates(string $currency): ?array
     {
         return $this->currencyRateRepository->getLastTwoCurrencyRates($currency);
     }
 
-    public function getCurrencyRatesOfLastMonth(string $currency): ?Collection
+    /**
+     * @return CurrencyRate[]
+     */
+    public function getCurrencyRatesOfLastMonth(string $currency): array
     {
         return $this->currencyRateRepository->getCurrencyRatesOfLastMonth($currency);
     }

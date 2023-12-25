@@ -121,7 +121,8 @@ class CurrencyRateServiceTest extends TestCase
             ;
 
             $result = $this->currencyRateService->getCurrencyRatesOfLastMonth($currencyName);
-            $this->assertSame($expected, $result->map(fn ($item) => $item->id)->all());
+            $mappedResult = array_map(fn ($item) => $item->id, $result);
+            $this->assertSame($expected, $mappedResult);
         }
 
         // Check on empty after truncate
@@ -130,6 +131,6 @@ class CurrencyRateServiceTest extends TestCase
         $expected = [];
 
         $result = $this->currencyRateService->getCurrencyRatesOfLastMonth($currencyName);
-        $this->assertSame($expected, $result->toArray());
+        $this->assertSame($expected, $result);
     }
 }

@@ -8,6 +8,8 @@ use App\Models\CurrencyAccount;
 use App\Models\CurrencyRate;
 use App\Models\TelegramUser;
 use App\Models\TelegramUserSendRate;
+use DateTime;
+use Exception;
 
 class FixturesHelper
 {
@@ -44,6 +46,9 @@ class FixturesHelper
         return $currencyAccount;
     }
 
+    /**
+     * @throws Exception
+     */
     public function createCurrencyRate(
         string $currency = self::EUR,
         float $sell = 40.7,
@@ -56,7 +61,7 @@ class FixturesHelper
         $currencyRate->buy = $buy;
 
         if ($createdAt) {
-            $currencyRate->created_at = $createdAt;
+            $currencyRate->created_at = new DateTime($createdAt);
         }
 
         $currencyRate->save();

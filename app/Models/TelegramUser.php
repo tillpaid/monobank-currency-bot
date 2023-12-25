@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string                       $chat_id
  * @property null|string                  $state
  * @property null|array                   $state_additional
- * @property null|string                  $created_at
- * @property null|string                  $updated_at
+ * @property null|DateTime                $created_at
+ * @property null|DateTime                $updated_at
  * @property Collection|CurrencyAccount[] $currencyAccounts
  */
 class TelegramUser extends Model
@@ -26,6 +27,8 @@ class TelegramUser extends Model
 
     protected $casts = [
         'state_additional' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function currencyAccounts(): HasMany

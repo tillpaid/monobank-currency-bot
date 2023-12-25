@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Models\TelegramUser;
-use Illuminate\Database\Eloquent\Collection;
 
 class TelegramUserRepository
 {
@@ -29,10 +28,10 @@ class TelegramUserRepository
     }
 
     /**
-     * @return null|Collection|TelegramUser[]
+     * @return TelegramUser[]
      */
-    public function all(): null|Collection|array
+    public function all(): array
     {
-        return $this->telegramUser->all();
+        return $this->telegramUser->all()->all();
     }
 }

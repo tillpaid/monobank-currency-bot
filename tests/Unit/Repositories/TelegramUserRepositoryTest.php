@@ -47,7 +47,7 @@ class TelegramUserRepositoryTest extends TestCase
 
         $result = $this->telegramUserRepository->all();
         $this->assertCount(1, $result);
-        $this->assertSame($chatId, $result->first()->chat_id);
+        $this->assertSame($chatId, $result[0]->chat_id);
     }
 
     public function testCreateIfNotExistsNotExists(): void
@@ -58,7 +58,7 @@ class TelegramUserRepositoryTest extends TestCase
 
         $result = $this->telegramUserRepository->all();
         $this->assertCount(1, $result);
-        $this->assertSame($chatId, $result->first()->chat_id);
+        $this->assertSame($chatId, $result[0]->chat_id);
     }
 
     public function testAll(): void

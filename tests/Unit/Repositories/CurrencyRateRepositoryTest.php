@@ -77,7 +77,7 @@ class CurrencyRateRepositoryTest extends TestCase
 
         // Older than a month
         $currencyRate = $this->fixturesHelper->createCurrencyRate($currency);
-        $currencyRate->created_at = $this->carbon->subMonths(2)->format('Y-m-d H:i:s');
+        $currencyRate->created_at = $this->carbon->subMonths(2);
         $currencyRate->save();
 
         // Newer than a month

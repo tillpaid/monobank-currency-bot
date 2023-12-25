@@ -50,7 +50,21 @@
             "@php artisan key:generate --ansi"
         ],
         "test": [
-            "@php ./vendor/bin/phpunit"
+            "@php ./bin/phpunit"
+        ],
+        "fixer-fix": [
+            "@php ./bin/php-cs-fixer fix"
+        ],
+        "fixer": [
+            "@php ./bin/php-cs-fixer fix --diff --dry-run"
+        ],
+        "stan": [
+            "@php ./bin/phpstan analyse app tests --level=3"
+        ],
+        "full-test": [
+            "@composer test",
+            "@composer fixer",
+            "@composer stan"
         ]
     },
     "extra": {
