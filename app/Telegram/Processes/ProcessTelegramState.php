@@ -15,7 +15,6 @@ use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellConfirmState;
 use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellState;
 use App\Telegram\Processes\ProcessState\Sell\ProcessTelegramSellSumState;
 use App\Telegram\Processes\ProcessState\Statistics\ProcessTelegramStatisticsCurrencyState;
-use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramState
 {

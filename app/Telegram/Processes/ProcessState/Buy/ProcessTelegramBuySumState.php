@@ -6,7 +6,6 @@ namespace App\Telegram\Processes\ProcessState\Buy;
 
 use App\Models\TelegramUser;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
-use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramBuySumState extends AbstractProcessTelegramState
 {

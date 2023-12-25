@@ -10,7 +10,6 @@ use App\Services\Models\CurrencyRateService;
 use App\Services\Models\TelegramUserSendRateService;
 use App\Services\Models\TelegramUserService;
 use App\Telegram\MakeTelegramKeyboard;
-use Illuminate\Database\Eloquent\Model;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;

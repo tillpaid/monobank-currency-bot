@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Telegram\Processes\ProcessState;
 
 use App\Models\TelegramUser;
-use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramDefaultState extends AbstractProcessTelegramState
 {

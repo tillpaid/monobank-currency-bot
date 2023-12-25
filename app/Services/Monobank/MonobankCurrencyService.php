@@ -8,7 +8,6 @@ use App\Models\CurrencyRate;
 use App\Services\Models\CurrencyRateService;
 use Exception;
 use GuzzleHttp\Client;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 class MonobankCurrencyService

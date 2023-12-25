@@ -7,7 +7,6 @@ namespace App\Telegram\Processes\ProcessState\Statistics;
 use App\Models\CurrencyRate;
 use App\Models\TelegramUser;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
-use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramState
 {

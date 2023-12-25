@@ -6,7 +6,6 @@ namespace App\Telegram\Processes\ProcessState\Sell;
 
 use App\Models\TelegramUser;
 use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
-use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramSellConfirmState extends AbstractProcessTelegramState
 {

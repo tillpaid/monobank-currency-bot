@@ -9,7 +9,6 @@ use App\Services\Models\CurrencyAccountService;
 use App\Services\Models\CurrencyRateService;
 use App\Services\Models\TelegramUserService;
 use App\Services\Telegram\TelegramBotService;
-use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractProcessTelegramState
 {

@@ -7,7 +7,6 @@ namespace App\Telegram\Processes;
 use App\Models\TelegramUser;
 use App\Services\Models\TelegramUserService;
 use App\Services\Telegram\TelegramBotService;
-use Illuminate\Database\Eloquent\Model;
 
 class ProcessTelegramCommand
 {

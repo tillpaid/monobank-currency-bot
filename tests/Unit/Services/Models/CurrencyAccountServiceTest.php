@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Services\Models;
 
 use App\Models\CurrencyAccount;
-use App\Models\CurrencyRate;
 use App\Models\TelegramUser;
 use App\Repositories\CurrencyAccountRepository;
 use App\Services\Models\CurrencyAccountService;
@@ -84,7 +83,6 @@ class CurrencyAccountServiceTest extends TestCase
             $this->fixturesHelper->createCurrencyAccount($telegramUser, 'USD');
             $this->fixturesHelper->createCurrencyAccount($telegramUser, 'EUR');
         }
-
 
         foreach ($currencies as $currencyName) {
             $expected = CurrencyAccount::query()

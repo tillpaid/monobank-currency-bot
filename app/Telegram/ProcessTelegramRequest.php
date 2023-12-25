@@ -8,7 +8,6 @@ use App\Models\TelegramUser;
 use App\Telegram\Processes\ProcessTelegramCommand;
 use App\Telegram\Processes\ProcessTelegramState;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 class ProcessTelegramRequest
