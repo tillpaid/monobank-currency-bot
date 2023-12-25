@@ -30,8 +30,7 @@ class ProcessTelegramRequest
                 ? $this->processTelegramCommand->process($telegramUser, $messageText)
                 : $this->processTelegramState->process($telegramUser, $messageText);
         } catch (Exception $exception) {
-            Log::error('Telegram request error: ');
-            Log::error($exception);
+            Log::error(sprintf('Telegram request exception: %s', $exception->getMessage()), [$exception]);
 
             return __('telegram.internalError');
         }

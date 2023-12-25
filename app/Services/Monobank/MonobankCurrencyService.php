@@ -45,8 +45,7 @@ class MonobankCurrencyService
                 $output = json_decode($response->getBody()->getContents(), true);
             }
         } catch (Exception $exception) {
-            Log::error('Monobank update process error');
-            Log::error($exception);
+            Log::error(sprintf('Monobank update process error: %s', $exception->getMessage()), [$exception]);
         }
 
         return $output;
