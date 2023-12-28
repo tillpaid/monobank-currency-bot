@@ -29,7 +29,7 @@ class TelegramUserRepositoryTest extends TestCase
         $telegramUser = $this->fixturesHelper->createTelegramUser($chatId);
         $result = $this->telegramUserRepository->getByChatId($chatId);
 
-        $this->assertSame($telegramUser->id, $result->id);
+        $this->assertSame($telegramUser->getId(), $result->getId());
     }
 
     public function testGetByChatIdNotExists(): void
@@ -45,9 +45,9 @@ class TelegramUserRepositoryTest extends TestCase
         $this->fixturesHelper->createTelegramUser($chatId);
         $this->telegramUserRepository->createIfNotExists($chatId);
 
-        $result = $this->telegramUserRepository->all();
+        $result = $this->telegramUserRepository->findAll();
         $this->assertCount(1, $result);
-        $this->assertSame($chatId, $result[0]->chat_id);
+        $this->assertSame($chatId, $result[0]->getChatId());
     }
 
     public function testCreateIfNotExistsNotExists(): void
@@ -56,9 +56,9 @@ class TelegramUserRepositoryTest extends TestCase
 
         $this->telegramUserRepository->createIfNotExists($chatId);
 
-        $result = $this->telegramUserRepository->all();
+        $result = $this->telegramUserRepository->findAll();
         $this->assertCount(1, $result);
-        $this->assertSame($chatId, $result[0]->chat_id);
+        $this->assertSame($chatId, $result[0]->getChatId());
     }
 
     public function testAll(): void
@@ -71,10 +71,10 @@ class TelegramUserRepositoryTest extends TestCase
         $this->fixturesHelper->createTelegramUser($chatIdTwo);
         $this->fixturesHelper->createTelegramUser($chatIdThree);
 
-        $result = $this->telegramUserRepository->all();
+        $result = $this->telegramUserRepository->findAll();
         $this->assertCount(3, $result);
-        $this->assertSame($chatIdOne, $result[0]->chat_id);
-        $this->assertSame($chatIdTwo, $result[1]->chat_id);
-        $this->assertSame($chatIdThree, $result[2]->chat_id);
+        $this->assertSame($chatIdOne, $result[0]->getChatId());
+        $this->assertSame($chatIdTwo, $result[1]->getChatId());
+        $this->assertSame($chatIdThree, $result[2]->getChatId());
     }
 }

@@ -39,6 +39,7 @@ class TelegramWebhookControllerTest extends TestCase
         $this->telegram
             ->shouldReceive('useGetUpdatesWithoutDatabase')
             ->once()
+            ->andReturn($this->telegram)
         ;
 
         $this->telegram
@@ -68,6 +69,7 @@ class TelegramWebhookControllerTest extends TestCase
         $this->telegram
             ->shouldReceive('useGetUpdatesWithoutDatabase')
             ->once()
+            ->andReturn($this->telegram)
         ;
 
         $this->telegram
@@ -87,6 +89,7 @@ class TelegramWebhookControllerTest extends TestCase
 
     public function testException(): void
     {
+        $expectedExceptionMessage = 'Internal server error';
         $exceptionMessage = 'Test exception message';
 
         $this->telegramBotService
@@ -98,6 +101,7 @@ class TelegramWebhookControllerTest extends TestCase
         $this->telegram
             ->shouldReceive('useGetUpdatesWithoutDatabase')
             ->once()
+            ->andReturn($this->telegram)
         ;
 
         $this->telegram
@@ -112,6 +116,6 @@ class TelegramWebhookControllerTest extends TestCase
         ;
 
         $response = $this->postJson('/telegram-webhook');
-        $response->assertJson(['success' => false, 'error' => $exceptionMessage]);
+        $response->assertJson(['success' => false, 'error' => $expectedExceptionMessage]);
     }
 }

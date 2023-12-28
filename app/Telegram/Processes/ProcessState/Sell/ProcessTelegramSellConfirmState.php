@@ -13,8 +13,8 @@ class ProcessTelegramSellConfirmState extends AbstractProcessTelegramState
     {
         switch ($messageText) {
             case __('telegram_buttons.back'):
-                $currency = $telegramUser->state_additional['sell-currency'] ?? 'usd';
-                $currencySum = $telegramUser->state_additional['sell-currency-sum-all'] ?? 0;
+                $currency = $telegramUser->getStateAdditional()['sell-currency'] ?? 'usd';
+                $currencySum = $telegramUser->getStateAdditional()['sell-currency-sum-all'] ?? 0;
                 $currencySum = number_format($currencySum, 5, '.', ' ');
 
                 $this->updateUserState($telegramUser, config('states.sell-sum'));
@@ -29,15 +29,15 @@ class ProcessTelegramSellConfirmState extends AbstractProcessTelegramState
                 break;
 
             case __('telegram_buttons.confirm'):
-                $currency = $telegramUser->state_additional['sell-currency'] ?? 'usd';
-                $currencySum = $telegramUser->state_additional['sell-currency-sum'] ?? 0;
+                $currency = $telegramUser->getStateAdditional()['sell-currency'] ?? 'usd';
+                $currencySum = $telegramUser->getStateAdditional()['sell-currency-sum'] ?? 0;
 
-                $this->currencyAccountService->sellCurrency($telegramUser->id, $currency, $currencySum);
+                $this->currencyAccountService->sellCurrency($telegramUser->getId(), $currency, $currencySum);
                 $this->updateUserState($telegramUser, null);
 
                 $responseMessage = __('telegram.sellSuccessMessage');
                 $responseMessage .= __('telegram.delimiter');
-                $responseMessage .= $this->telegramBotService->buildUserBalanceMessage($telegramUser->id);
+                $responseMessage .= $this->telegramBotService->buildUserBalanceMessage($telegramUser->getId());
 
                 break;
 

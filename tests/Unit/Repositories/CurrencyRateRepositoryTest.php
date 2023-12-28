@@ -35,8 +35,8 @@ class CurrencyRateRepositoryTest extends TestCase
         $resultUsd = $this->currencyRateRepository->getLatestCurrencyRate($currencyUsd);
         $resultEur = $this->currencyRateRepository->getLatestCurrencyRate($currencyEur);
 
-        $this->assertSame($secondUsd->id, $resultUsd->id);
-        $this->assertSame($secondEur->id, $resultEur->id);
+        $this->assertSame($secondUsd->getId(), $resultUsd->getId());
+        $this->assertSame($secondEur->getId(), $resultEur->getId());
     }
 
     public function testGetLastTwoCurrencyRatesExists(): void
@@ -50,8 +50,8 @@ class CurrencyRateRepositoryTest extends TestCase
         $result = $this->currencyRateRepository->getLastTwoCurrencyRates($currency);
 
         $this->assertCount(2, $result);
-        $this->assertSame($third->id, $result[0]->id);
-        $this->assertSame($second->id, $result[1]->id);
+        $this->assertSame($third->getId(), $result[0]->getId());
+        $this->assertSame($second->getId(), $result[1]->getId());
     }
 
     public function testGetLastTwoCurrencyRatesOnlyOneExists(): void
@@ -77,7 +77,7 @@ class CurrencyRateRepositoryTest extends TestCase
 
         // Older than a month
         $currencyRate = $this->fixturesHelper->createCurrencyRate($currency);
-        $currencyRate->created_at = $this->carbon->subMonths(2);
+        $currencyRate->setCreatedAt($this->carbon->subMonths(2));
         $currencyRate->save();
 
         // Newer than a month

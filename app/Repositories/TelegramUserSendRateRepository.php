@@ -15,7 +15,7 @@ class TelegramUserSendRateRepository
         $this->telegramUserSendRate = $telegramUserSendRate;
     }
 
-    public function rowExists(int $telegramUserId, int $currencyRateId): bool
+    public function findByTelegramUserAndCurrencyRate(int $telegramUserId, int $currencyRateId): bool
     {
         $count = $this->telegramUserSendRate
             ->newQuery()

@@ -23,30 +23,9 @@ class TelegramUserServiceTest extends TestCase
         $this->telegramUserService = $this->app->make(TelegramUserService::class);
     }
 
-    public function testGetByChatId(): void
-    {
-        $chatId = (string) random_int(1000, 10000);
-        $expected = $this->fixturesHelper->createTelegramUser($chatId);
-
-        $result = $this->telegramUserService->getByChatId($chatId);
-
-        $this->assertSame($expected->id, $result->id);
-    }
-
     public function getCountByChatId(string $chatId): int
     {
         return TelegramUser::query()->where('chat_id', $chatId)->count();
-    }
-
-    public function testCreateIfNotExists(): void
-    {
-        $chatId = (string) random_int(1000, 10000);
-
-        $this->assertSame(0, $this->getCountByChatId($chatId));
-        $this->telegramUserService->createIfNotExists($chatId);
-        $this->assertSame(1, $this->getCountByChatId($chatId));
-        $this->telegramUserService->createIfNotExists($chatId);
-        $this->assertSame(1, $this->getCountByChatId($chatId));
     }
 
     public function testUpdateState(): void
@@ -54,9 +33,9 @@ class TelegramUserServiceTest extends TestCase
         $state = 'value';
         $telegramUser = TelegramUser::factory()->create();
 
-        $this->assertNull($telegramUser->state);
+        $this->assertNull($telegramUser->getState());
         $this->telegramUserService->updateState($telegramUser, $state, []);
-        $this->assertSame($state, $telegramUser->state);
+        $this->assertSame($state, $telegramUser->getState());
     }
 
     public function testUpdateStateWithStateAdditional(): void
@@ -65,26 +44,26 @@ class TelegramUserServiceTest extends TestCase
         $stateAdditional = ['key' => 'value'];
         $telegramUser = TelegramUser::factory()->create();
 
-        $this->assertNull($telegramUser->state);
-        $this->assertNull($telegramUser->state_additional);
+        $this->assertNull($telegramUser->getState());
+        $this->assertNull($telegramUser->getStateAdditional());
         $this->telegramUserService->updateState($telegramUser, $state, $stateAdditional);
-        $this->assertSame($state, $telegramUser->state);
-        $this->assertSame($stateAdditional, $telegramUser->state_additional);
+        $this->assertSame($state, $telegramUser->getState());
+        $this->assertSame($stateAdditional, $telegramUser->getStateAdditional());
     }
 
     public function testUpdateStateAdditional(): void
     {
         $telegramUser = TelegramUser::factory()->create();
-        $this->assertNull($telegramUser->state_additional);
+        $this->assertNull($telegramUser->getStateAdditional());
 
         $stateAdditional = ['key' => 'value'];
         $this->telegramUserService->updateStateAdditional($telegramUser, $stateAdditional);
-        $this->assertSame($stateAdditional, $telegramUser->state_additional);
+        $this->assertSame($stateAdditional, $telegramUser->getStateAdditional());
 
         $stateAdditionalNew = ['key1' => 'value1'];
         $stateAdditionalResult = array_merge($stateAdditional, $stateAdditionalNew);
 
         $this->telegramUserService->updateStateAdditional($telegramUser, $stateAdditionalNew);
-        $this->assertSame($stateAdditionalResult, $telegramUser->state_additional);
+        $this->assertSame($stateAdditionalResult, $telegramUser->getStateAdditional());
     }
 }

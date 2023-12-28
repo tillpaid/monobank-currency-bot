@@ -27,8 +27,8 @@ class ProcessTelegramSellSumState extends AbstractProcessTelegramState
             case is_numeric($messageText):
                 $messageText = (float) $messageText;
 
-                $currency = $telegramUser->state_additional['sell-currency'] ?? 'usd';
-                $currencySumAll = $telegramUser->state_additional['sell-currency-sum-all'] ?? 0;
+                $currency = $telegramUser->getStateAdditional()['sell-currency'] ?? 'usd';
+                $currencySumAll = $telegramUser->getStateAdditional()['sell-currency-sum-all'] ?? 0;
 
                 if ($messageText > 0) {
                     if ($currencySumAll >= $messageText) {

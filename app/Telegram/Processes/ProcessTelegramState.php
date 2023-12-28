@@ -55,8 +55,8 @@ class ProcessTelegramState
 
     private function getProcessor(TelegramUser $telegramUser): AbstractProcessTelegramState
     {
-        if ($telegramUser->state && array_key_exists($telegramUser->state, $this->processors)) {
-            $output = $this->processors[$telegramUser->state];
+        if ($telegramUser->getState() && array_key_exists($telegramUser->getState(), $this->processors)) {
+            $output = $this->processors[$telegramUser->getState()];
         } else {
             $output = $this->processTelegramDefaultState;
         }

@@ -41,7 +41,7 @@ class CurrencyAccountRepositoryTest extends TestCase
         }
 
         foreach ($expectedSums as $currency => $sum) {
-            $result = $this->currencyAccountRepository->getUserCurrencySum($telegramUser->id, $currency);
+            $result = $this->currencyAccountRepository->getUserCurrencySum($telegramUser->getId(), $currency);
             $this->assertSame($sum, $result);
         }
     }
@@ -57,11 +57,11 @@ class CurrencyAccountRepositoryTest extends TestCase
         $this->fixturesHelper->createCurrencyAccount($telegramUser, $currencyUsd);
         $this->fixturesHelper->createCurrencyAccount($telegramUser, $currencyEur);
 
-        $resultUsd = $this->currencyAccountRepository->getFirstUserCurrencyAccount($telegramUser->id, $currencyUsd);
-        $this->assertSame($firstUsdAccount->id, $resultUsd->id);
+        $resultUsd = $this->currencyAccountRepository->getFirstUserCurrencyAccount($telegramUser->getId(), $currencyUsd);
+        $this->assertSame($firstUsdAccount->getId(), $resultUsd->getId());
 
-        $resultEur = $this->currencyAccountRepository->getFirstUserCurrencyAccount($telegramUser->id, $currencyEur);
-        $this->assertSame($firstEurAccount->id, $resultEur->id);
+        $resultEur = $this->currencyAccountRepository->getFirstUserCurrencyAccount($telegramUser->getId(), $currencyEur);
+        $this->assertSame($firstEurAccount->getId(), $resultEur->id);
     }
 
     public function testGetLessProfitUserCurrencyAccount(): void
@@ -71,10 +71,10 @@ class CurrencyAccountRepositoryTest extends TestCase
         $this->fixturesHelper->createCurrencyAccount($telegramUser, 'EUR', 100, 100);
         $second = $this->fixturesHelper->createCurrencyAccount($telegramUser, 'EUR', 200, 200);
 
-        $result = $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($telegramUser->id, 'EUR');
-        $this->assertSame($second->id, $result->id);
+        $result = $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($telegramUser->getId(), 'EUR');
+        $this->assertSame($second->getId(), $result->id);
 
-        $result = $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($telegramUser->id, 'USD');
+        $result = $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($telegramUser->getId(), 'USD');
         $this->assertNull($result);
     }
 
@@ -104,7 +104,7 @@ class CurrencyAccountRepositoryTest extends TestCase
             }
         }
 
-        $result = $this->currencyAccountRepository->getUserBalanceSum($telegramUser->id);
+        $result = $this->currencyAccountRepository->getUserBalanceSum($telegramUser->getId());
         $this->assertSame($expectedSums, $result);
     }
 }

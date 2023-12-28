@@ -27,15 +27,17 @@ class ProcessTelegramBuyRateState extends AbstractProcessTelegramState
             case __('telegram_buttons.confirm'):
                 $this->updateUserState($telegramUser, null);
                 $this->currencyAccountService->create(
-                    $telegramUser->id,
-                    $telegramUser->state_additional['buy-currency'],
-                    (float) $telegramUser->state_additional['buy-currency-sum'],
-                    (float) $telegramUser->state_additional['buy-currency-rate']
+                    $telegramUser->getId(),
+                    // TODO: Change to getter in the model
+                    // TODO: And create a setter as well
+                    $telegramUser->getStateAdditional()['buy-currency'],
+                    (float) $telegramUser->getStateAdditional()['buy-currency-sum'],
+                    (float) $telegramUser->getStateAdditional()['buy-currency-rate']
                 );
 
                 $responseMessage = __('telegram.buySuccessMessage');
                 $responseMessage .= __('telegram.delimiter');
-                $responseMessage .= $this->telegramBotService->buildUserBalanceMessage($telegramUser->id);
+                $responseMessage .= $this->telegramBotService->buildUserBalanceMessage($telegramUser->getId());
 
                 break;
 

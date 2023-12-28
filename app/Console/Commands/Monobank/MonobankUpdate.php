@@ -4,44 +4,34 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Monobank;
 
-use App\Services\Models\TelegramUserService;
+use App\Repositories\TelegramUserRepository;
 use App\Services\Monobank\MonobankCurrencyService;
 use App\Services\Telegram\TelegramBotService;
 use Illuminate\Console\Command;
+use Longman\TelegramBot\Exception\TelegramException;
 
 class MonobankUpdate extends Command
 {
     protected $signature = 'monobank:update';
-    protected $description = 'Monobank update';
+    protected $description = 'Update currency rates';
 
-    private MonobankCurrencyService $monobankCurrencyService;
-    private TelegramUserService $telegramUserService;
-    private TelegramBotService $telegramBotService;
-
+    /**
+     * @throws TelegramException
+     */
     public function handle(
         MonobankCurrencyService $monobankCurrencyService,
-        TelegramUserService $telegramUserService,
+        TelegramUserRepository $telegramUserRepository,
         TelegramBotService $telegramBotService
     ): void {
-        $this->init($monobankCurrencyService, $telegramUserService, $telegramBotService);
-
-        if ($this->monobankCurrencyService->updateCurrencyRates()) {
-            $users = $this->telegramUserService->all();
-
-            foreach ($users as $user) {
-                $report = $this->telegramBotService->buildUserReport($user->id);
-                $this->telegramBotService->sendMessage($user->chat_id, $report);
-            }
+        $currencyRatesUpdated = $monobankCurrencyService->updateCurrencyRates();
+        if (!$currencyRatesUpdated) {
+            return;
         }
-    }
 
-    private function init(
-        MonobankCurrencyService $monobankCurrencyService,
-        TelegramUserService $telegramUserService,
-        TelegramBotService $telegramBotService
-    ): void {
-        $this->monobankCurrencyService = $monobankCurrencyService;
-        $this->telegramUserService = $telegramUserService;
-        $this->telegramBotService = $telegramBotService;
+        $users = $telegramUserRepository->findAll();
+        foreach ($users as $user) {
+            $report = $telegramBotService->buildUserReport($user->getId());
+            $telegramBotService->sendMessage($user->getChatId(), $report);
+        }
     }
 }

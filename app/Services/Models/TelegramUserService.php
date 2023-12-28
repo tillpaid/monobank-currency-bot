@@ -5,30 +5,13 @@ declare(strict_types=1);
 namespace App\Services\Models;
 
 use App\Models\TelegramUser;
-use App\Repositories\TelegramUserRepository;
 
 class TelegramUserService
 {
-    private TelegramUserRepository $telegramUserRepository;
-
-    public function __construct(TelegramUserRepository $telegramUserRepository)
-    {
-        $this->telegramUserRepository = $telegramUserRepository;
-    }
-
-    public function getByChatId(string $chatId): ?TelegramUser
-    {
-        return $this->telegramUserRepository->getByChatId($chatId);
-    }
-
-    public function createIfNotExists(string $chatId): void
-    {
-        $this->telegramUserRepository->createIfNotExists($chatId);
-    }
-
+    // TODO: Will be changed to setter in entity
     public function updateState(TelegramUser $telegramUser, ?string $state, ?array $stateAdditional): bool
     {
-        $telegramUser->state = $state;
+        $telegramUser->setState($state);
 
         if ($stateAdditional) {
             $this->updateStateAdditional($telegramUser, $stateAdditional);
@@ -39,20 +22,12 @@ class TelegramUserService
 
     public function updateStateAdditional(TelegramUser $telegramUser, ?array $stateAdditional): bool
     {
-        if ($telegramUser->state_additional) {
-            $telegramUser->state_additional = array_merge($telegramUser->state_additional, $stateAdditional);
+        if ($telegramUser->getStateAdditional()) {
+            $telegramUser->setStateAdditional(array_merge($telegramUser->getStateAdditional(), $stateAdditional));
         } else {
-            $telegramUser->state_additional = $stateAdditional;
+            $telegramUser->setStateAdditional($stateAdditional);
         }
 
         return $telegramUser->save();
-    }
-
-    /**
-     * @return TelegramUser[]
-     */
-    public function all(): array
-    {
-        return $this->telegramUserRepository->all();
     }
 }

@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Services\Telegram;
 
 use App\Models\CurrencyRate;
-use App\Services\Models\CurrencyAccountService;
-use App\Services\Models\CurrencyRateService;
+use App\Repositories\CurrencyAccountRepository;
+use App\Repositories\CurrencyRateRepository;
+use App\Repositories\TelegramUserRepository;
+use App\Repositories\TelegramUserSendRateRepository;
 use App\Services\Models\TelegramUserSendRateService;
-use App\Services\Models\TelegramUserService;
 use App\Telegram\MakeTelegramKeyboard;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
@@ -17,24 +18,27 @@ use Longman\TelegramBot\Telegram;
 class TelegramBotService
 {
     private ?Telegram $bot;
-    private TelegramUserService $telegramUserService;
+    private TelegramUserRepository $telegramUserRepository;
     private MakeTelegramKeyboard $makeTelegramKeyboard;
-    private CurrencyAccountService $currencyAccountService;
-    private CurrencyRateService $currencyRateService;
+    private CurrencyAccountRepository $currencyAccountRepository;
+    private CurrencyRateRepository $currencyRateRepository;
     private TelegramUserSendRateService $telegramUserSendRateService;
+    private TelegramUserSendRateRepository $telegramUserSendRateRepository;
 
     public function __construct(
-        TelegramUserService $telegramUserService,
+        TelegramUserRepository $telegramUserRepository,
         MakeTelegramKeyboard $makeTelegramKeyboard,
-        CurrencyAccountService $currencyAccountService,
-        CurrencyRateService $currencyRateService,
-        TelegramUserSendRateService $telegramUserSendRateService
+        CurrencyAccountRepository $currencyAccountRepository,
+        CurrencyRateRepository $currencyRateRepository,
+        TelegramUserSendRateService $telegramUserSendRateService,
+        TelegramUserSendRateRepository $telegramUserSendRateRepository,
     ) {
-        $this->telegramUserService = $telegramUserService;
+        $this->telegramUserRepository = $telegramUserRepository;
         $this->makeTelegramKeyboard = $makeTelegramKeyboard;
-        $this->currencyAccountService = $currencyAccountService;
-        $this->currencyRateService = $currencyRateService;
+        $this->currencyAccountRepository = $currencyAccountRepository;
+        $this->currencyRateRepository = $currencyRateRepository;
         $this->telegramUserSendRateService = $telegramUserSendRateService;
+        $this->telegramUserSendRateRepository = $telegramUserSendRateRepository;
 
         $this->bot = null;
     }
@@ -44,8 +48,8 @@ class TelegramBotService
      */
     public function sendMessage(string $chatId, string $message): void
     {
-        $user = $this->telegramUserService->getByChatId($chatId);
-        $keyboard = $this->makeTelegramKeyboard->getKeyboard($user->state ?? null);
+        $user = $this->telegramUserRepository->getByChatId($chatId);
+        $keyboard = $this->makeTelegramKeyboard->getKeyboard($user->getState() ?? null);
 
         $sendData = [
             'chat_id' => $chatId,
@@ -59,7 +63,7 @@ class TelegramBotService
         ];
 
         // Need for Request sendMessage code
-        $telegram = $this->getBot();
+        $this->getBot();
         Request::sendMessage($sendData);
     }
 
@@ -85,7 +89,7 @@ class TelegramBotService
 
     public function buildUserBalanceMessage(int $userId): string
     {
-        $userBalanceSum = $this->currencyAccountService->getUserBalanceSum($userId);
+        $userBalanceSum = $this->currencyAccountRepository->getUserBalanceSum($userId);
 
         if (empty($userBalanceSum)) {
             return __('telegram.userBalanceEmpty');
@@ -120,7 +124,7 @@ class TelegramBotService
     public function buildUserReport(int $userId): string
     {
         $currencies = config('monobank.currencies');
-        $userBalanceSum = $this->currencyAccountService->getUserBalanceSum($userId);
+        $userBalanceSum = $this->currencyAccountRepository->getUserBalanceSum($userId);
 
         $rateChange = [];
         $accountChange = [];
@@ -130,13 +134,13 @@ class TelegramBotService
         ];
 
         foreach ($currencies as $currencyName) {
-            if ($lastCurrencyRates = $this->currencyRateService->getLastTwoCurrencyRates($currencyName)) {
+            if ($lastCurrencyRates = $this->currencyRateRepository->getLastTwoCurrencyRates($currencyName)) {
                 [$rateNew, $rateOld] = $lastCurrencyRates;
 
                 $rateChange[] = $this->getRateChange($rateOld, $rateNew, $userId);
 
                 if (array_key_exists($currencyName, $userBalanceSum)) {
-                    $accountChange[] = $this->getAccountChange($userBalanceSum[$currencyName], $currencyName, $rateNew->buy);
+                    $accountChange[] = $this->getAccountChange($userBalanceSum[$currencyName], $currencyName, $rateNew->getBuy());
                 }
 
                 $this->getAccountSum($userBalanceSum, $rateNew, $totalSum);
@@ -175,10 +179,10 @@ class TelegramBotService
         return $reportMessage;
     }
 
-    public function format($number, $decimals = 2, $trim = true): string
+    public function format(float $number, int $decimals = 2, bool $trim = true): string
     {
         // TODO: Avoid cast to float here
-        $output = number_format((float) $number, $decimals, '.', ' ');
+        $output = number_format($number, $decimals, '.', ' ');
 
         if ($trim) {
             $output = rtrim($output, '0');
@@ -190,20 +194,20 @@ class TelegramBotService
 
     private function getRateChange(CurrencyRate $rateOld, CurrencyRate $rateNew, int $userId): string
     {
-        $currencyName = mb_strtoupper($rateNew->currency);
+        $currencyName = mb_strtoupper($rateNew->getCurrency());
 
-        $buy = $this->format($rateNew->buy, 5);
-        $sell = $this->format($rateNew->sell, 5);
-        $buyDiff = $this->getCurrencyDiff($rateOld->buy, $rateNew->buy, 5);
-        $sellDiff = $this->getCurrencyDiff($rateOld->sell, $rateNew->sell, 5);
+        $buy = $this->format($rateNew->getBuy(), 5);
+        $sell = $this->format($rateNew->getSell(), 5);
+        $buyDiff = $this->getCurrencyDiff($rateOld->getBuy(), $rateNew->getBuy(), 5);
+        $sellDiff = $this->getCurrencyDiff($rateOld->getSell(), $rateNew->getSell(), 5);
 
-        $rateBeenSent = $this->telegramUserSendRateService->checkIfRateChangeBeenSent($userId, $rateNew->id);
+        $rateBeenSent = $this->telegramUserSendRateRepository->findByTelegramUserAndCurrencyRate($userId, $rateNew->getId());
 
         if ($rateBeenSent) {
             $output = "{$currencyName}: {$buy} / {$sell}";
         } else {
             $output = "{$currencyName}: {$buy} / {$sell} (*{$buyDiff} / {$sellDiff}*)";
-            $this->telegramUserSendRateService->updateSendRate($userId, $rateNew->id, $currencyName);
+            $this->telegramUserSendRateService->updateSendRate($userId, $rateNew->getId(), $currencyName);
         }
 
         return $output;
@@ -237,11 +241,11 @@ class TelegramBotService
 
     private function getAccountSum(array $userBalanceSum, CurrencyRate $rateNew, array &$totalSum): void
     {
-        if (array_key_exists($rateNew->currency, $userBalanceSum)) {
-            $balance = $userBalanceSum[$rateNew->currency];
+        if (array_key_exists($rateNew->getCurrency(), $userBalanceSum)) {
+            $balance = $userBalanceSum[$rateNew->getCurrency()];
 
             $totalSum['value'] += $balance['uah_value'];
-            $totalSum['newValue'] += $balance['currency_value'] * $rateNew->buy;
+            $totalSum['newValue'] += $balance['currency_value'] * $rateNew->getBuy();
         }
     }
 

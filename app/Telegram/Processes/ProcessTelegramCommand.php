@@ -41,7 +41,7 @@ class ProcessTelegramCommand
                 break;
 
             case '/report':
-                $responseMessage = $this->telegramBotService->buildUserReport($telegramUser->id);
+                $responseMessage = $this->telegramBotService->buildUserReport($telegramUser->getId());
 
                 break;
 

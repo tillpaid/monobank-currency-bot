@@ -16,21 +16,17 @@ class TelegramUserSendRateService
         $this->telegramUserSendRateRepository = $telegramUserSendRateRepository;
     }
 
-    public function checkIfRateChangeBeenSent(int $telegramUserId, int $currencyRateId): bool
-    {
-        return $this->telegramUserSendRateRepository->rowExists($telegramUserId, $currencyRateId);
-    }
-
+    // TODO: This is not only about update. Needs to be renamed or refactored.
     public function updateSendRate(int $telegramUserId, int $currencyRateId, string $currency): void
     {
         if ($sendRate = $this->telegramUserSendRateRepository->getSendRate($telegramUserId, $currency)) {
-            $sendRate->currency_rate_id = $currencyRateId;
+            $sendRate->setCurrencyRateId($currencyRateId);
             $sendRate->save();
         } else {
             $telegramUserSendRate = new TelegramUserSendRate();
-            $telegramUserSendRate->telegram_user_id = $telegramUserId;
-            $telegramUserSendRate->currency = $currency;
-            $telegramUserSendRate->currency_rate_id = $currencyRateId;
+            $telegramUserSendRate->setTelegramUserId($telegramUserId);
+            $telegramUserSendRate->setCurrency($currency);
+            $telegramUserSendRate->setCurrencyRateId($currencyRateId);
             $telegramUserSendRate->save();
         }
     }

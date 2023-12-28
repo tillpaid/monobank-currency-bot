@@ -35,4 +35,57 @@ class TelegramUser extends Model
     {
         return $this->hasMany(CurrencyAccount::class);
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getChatId(): string
+    {
+        return $this->chat_id;
+    }
+
+    public function setChatId(string $chatId): self
+    {
+        $this->chat_id = $chatId;
+
+        return $this;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(?string $state): self
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    // TODO: Test is this is possible to actually have null here and save it to DB
+    // TODO: Rename to getAdditionalState
+    public function getStateAdditional(): ?array
+    {
+        return $this->state_additional;
+    }
+
+    public function setStateAdditional(?array $stateAdditional): self
+    {
+        $this->state_additional = $stateAdditional;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updated_at;
+    }
 }

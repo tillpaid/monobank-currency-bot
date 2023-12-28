@@ -27,7 +27,7 @@ class TelegramUserSendRateSeeder extends Seeder
                     ->first();
 
                 TelegramUserSendRate::create([
-                    'telegram_user_id' => $user->id,
+                    'telegram_user_id' => $user->getId(),
                     'currency'         => $currency,
                     'currency_rate_id' => $currencyRate->id,
                 ]);

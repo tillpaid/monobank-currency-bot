@@ -5,45 +5,17 @@ declare(strict_types=1);
 namespace App\Services\Models;
 
 use App\Models\CurrencyRate;
-use App\Repositories\CurrencyRateRepository;
 
 class CurrencyRateService
 {
-    private CurrencyRateRepository $currencyRateRepository;
-
-    public function __construct(CurrencyRateRepository $currencyRateRepository)
-    {
-        $this->currencyRateRepository = $currencyRateRepository;
-    }
-
     public function createCurrencyRate(string $currencyName, float $sell, float $buy): bool
     {
         $currencyRate = new CurrencyRate();
-        $currencyRate->currency = $currencyName;
-        $currencyRate->sell = $sell;
-        $currencyRate->buy = $buy;
+        // TODO: Why you call it name? It's not a name, it's a currency code
+        $currencyRate->setCurrency($currencyName);
+        $currencyRate->setSell($sell);
+        $currencyRate->setBuy($buy);
 
         return $currencyRate->save();
-    }
-
-    public function getLatestCurrencyRate(string $currency): ?CurrencyRate
-    {
-        return $this->currencyRateRepository->getLatestCurrencyRate($currency);
-    }
-
-    /**
-     * @return null|CurrencyRate[]
-     */
-    public function getLastTwoCurrencyRates(string $currency): ?array
-    {
-        return $this->currencyRateRepository->getLastTwoCurrencyRates($currency);
-    }
-
-    /**
-     * @return CurrencyRate[]
-     */
-    public function getCurrencyRatesOfLastMonth(string $currency): array
-    {
-        return $this->currencyRateRepository->getCurrencyRatesOfLastMonth($currency);
     }
 }

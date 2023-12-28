@@ -64,13 +64,13 @@ class MonobankCurrencyServiceTest extends TestCase
         $this->assertSame($expectedOutput, $result);
 
         $currencyRates = CurrencyRate::all();
-        $this->assertSame(count($expectedRates), $currencyRates->count());
+        $this->assertCount(count($expectedRates), $currencyRates);
 
         $rates = array_map(
             fn (CurrencyRate $currencyRate) => [
-                'currency' => $currencyRate->currency,
-                'rateSell' => $currencyRate->sell,
-                'rateBuy' => $currencyRate->buy,
+                'currency' => $currencyRate->getCurrency(),
+                'rateSell' => $currencyRate->getSell(),
+                'rateBuy' => $currencyRate->getBuy(),
             ],
             $currencyRates->all()
         );
@@ -155,7 +155,7 @@ class MonobankCurrencyServiceTest extends TestCase
         $this->assertFalse($result);
 
         $currencyRates = CurrencyRate::all();
-        $this->assertSame(0, $currencyRates->count());
+        $this->assertCount(0, $currencyRates);
     }
 
     public function testUpdateCurrencyRatesBadResponseCode(): void
@@ -170,6 +170,6 @@ class MonobankCurrencyServiceTest extends TestCase
         $this->assertFalse($result);
 
         $currencyRates = CurrencyRate::all();
-        $this->assertSame(0, $currencyRates->count());
+        $this->assertCount(0, $currencyRates);
     }
 }

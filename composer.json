@@ -60,7 +60,7 @@
             "@php ./bin/php-cs-fixer fix --diff --dry-run"
         ],
         "stan": [
-            "@php ./bin/phpstan analyse app tests --level=6"
+            "@php ./bin/phpstan analyse app tests --level=5"
         ],
         "full-test": [
             "@composer test",

@@ -23,45 +23,21 @@ class TelegramUserSendRateServiceTest extends TestCase
         $this->telegramUserSendRateService = $this->app->make(TelegramUserSendRateService::class);
     }
 
-    /** @dataProvider checkIfRateChangeBeenSentDataProvider */
-    public function testCheckIfRateChangeBeenSent(bool $exists): void
-    {
-        if ($exists) {
-            $telegramUser = $this->fixturesHelper->createTelegramUser();
-            $currencyRate = $this->fixturesHelper->createCurrencyRate();
-            $this->fixturesHelper->createTelegramUserSendRate($telegramUser->id, $currencyRate->id);
-        }
-
-        $result = $this->telegramUserSendRateService->checkIfRateChangeBeenSent(1, 1);
-        $this->assertSame($exists, $result);
-    }
-
-    /**
-     * @return array<array<string, bool>>
-     */
-    public function checkIfRateChangeBeenSentDataProvider(): array
-    {
-        return [
-            'Exists' => ['exists' => true],
-            'Not exists' => ['exists' => false],
-        ];
-    }
-
     public function testUpdateSendRateNotExists(): void
     {
         $telegramUser = $this->fixturesHelper->createTelegramUser();
         $currencyRate = $this->fixturesHelper->createCurrencyRate();
-        $this->fixturesHelper->createTelegramUserSendRate($telegramUser->id, $currencyRate->id);
+        $this->fixturesHelper->createTelegramUserSendRate($telegramUser->getId(), $currencyRate->getId());
 
-        $this->telegramUserSendRateService->updateSendRate($telegramUser->id, $currencyRate->id, $currencyRate->currency);
+        $this->telegramUserSendRateService->updateSendRate($telegramUser->getId(), $currencyRate->getId(), $currencyRate->getCurrency());
 
         $sendRates = TelegramUserSendRate::all();
         $this->assertCount(1, $sendRates);
 
         $sendRate = $sendRates->first();
-        $this->assertSame($telegramUser->id, $sendRate->telegram_user_id);
-        $this->assertSame($currencyRate->id, $sendRate->currency_rate_id);
-        $this->assertSame($currencyRate->currency, $sendRate->currency);
+        $this->assertSame($telegramUser->getId(), $sendRate->telegram_user_id);
+        $this->assertSame($currencyRate->getId(), $sendRate->currency_rate_id);
+        $this->assertSame($currencyRate->getCurrency(), $sendRate->currency);
     }
 
     public function testUpdateSendRateExists(): void
@@ -69,14 +45,14 @@ class TelegramUserSendRateServiceTest extends TestCase
         $telegramUser = $this->fixturesHelper->createTelegramUser();
         $currencyRate = $this->fixturesHelper->createCurrencyRate();
 
-        $this->telegramUserSendRateService->updateSendRate($telegramUser->id, $currencyRate->id, $currencyRate->currency);
+        $this->telegramUserSendRateService->updateSendRate($telegramUser->getId(), $currencyRate->getId(), $currencyRate->getCurrency());
 
         $sendRates = TelegramUserSendRate::all();
         $this->assertCount(1, $sendRates);
 
         $sendRate = $sendRates->first();
-        $this->assertSame($telegramUser->id, $sendRate->telegram_user_id);
-        $this->assertSame($currencyRate->id, $sendRate->currency_rate_id);
-        $this->assertSame($currencyRate->currency, $sendRate->currency);
+        $this->assertSame($telegramUser->getId(), $sendRate->telegram_user_id);
+        $this->assertSame($currencyRate->getId(), $sendRate->currency_rate_id);
+        $this->assertSame($currencyRate->getCurrency(), $sendRate->currency);
     }
 }

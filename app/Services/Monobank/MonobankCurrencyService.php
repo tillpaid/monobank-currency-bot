@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Monobank;
 
 use App\Models\CurrencyRate;
+use App\Repositories\CurrencyRateRepository;
 use App\Services\Models\CurrencyRateService;
 use Exception;
 use GuzzleHttp\Client;
@@ -14,13 +15,18 @@ class MonobankCurrencyService
 {
     private Client $client;
     private CurrencyRateService $currencyRateService;
+    private CurrencyRateRepository $currencyRateRepository;
     private int $uahCode;
     private array $currencyCodes;
 
-    public function __construct(Client $client, CurrencyRateService $currencyRateService)
-    {
+    public function __construct(
+        Client $client,
+        CurrencyRateService $currencyRateService,
+        CurrencyRateRepository $currencyRateRepository
+    ) {
         $this->client = $client;
         $this->currencyRateService = $currencyRateService;
+        $this->currencyRateRepository = $currencyRateRepository;
 
         $this->uahCode = config('monobank.uahCode');
         $this->currencyCodes = config('monobank.currencyCodes');
@@ -61,7 +67,7 @@ class MonobankCurrencyService
             }
 
             $currencyName = $this->currencyCodes[$newRate['currencyCodeA']] ?? null;
-            $rate = $this->currencyRateService->getLatestCurrencyRate($currencyName);
+            $rate = $this->currencyRateRepository->getLatestCurrencyRate($currencyName);
 
             if ($this->isRateDifferent($rate, $newRate)) {
                 $this->currencyRateService->createCurrencyRate($currencyName, (float) $newRate['rateSell'], (float) $newRate['rateBuy']);
@@ -89,7 +95,7 @@ class MonobankCurrencyService
     {
         return
             null === $rate
-            || round($newRate['rateBuy'], 5) !== round($rate->buy, 5)
-            || round($newRate['rateSell'], 5) !== round($rate->sell, 5);
+            || round($newRate['rateBuy'], 5) !== round($rate->getBuy(), 5)
+            || round($newRate['rateSell'], 5) !== round($rate->getSell(), 5);
     }
 }

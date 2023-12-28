@@ -24,9 +24,9 @@ class FixturesHelper
         array $stateAdditional = null,
     ): TelegramUser {
         $telegramUser = new TelegramUser();
-        $telegramUser->chat_id = $chatId;
-        $telegramUser->state = $state;
-        $telegramUser->state_additional = $stateAdditional;
+        $telegramUser->setChatId($chatId);
+        $telegramUser->setState($state);
+        $telegramUser->setStateAdditional($stateAdditional);
         $telegramUser->save();
 
         return $telegramUser;
@@ -39,11 +39,11 @@ class FixturesHelper
         float $purchaseRate = 37,
     ): CurrencyAccount {
         $currencyAccount = new CurrencyAccount();
-        $currencyAccount->currency = $currency;
-        $currencyAccount->purchase_rate = $purchaseRate;
-        $currencyAccount->currency_value = $currencyValue;
-        $currencyAccount->uah_value = $currencyValue * $purchaseRate;
-        $currencyAccount->telegramUser()->associate($telegramUser);
+        $currencyAccount->setCurrency($currency);
+        $currencyAccount->setPurchaseRate($purchaseRate);
+        $currencyAccount->setCurrencyValue($currencyValue);
+        $currencyAccount->setUahValue($currencyValue * $purchaseRate);
+        $currencyAccount->setTelegramUser($telegramUser);
         $currencyAccount->save();
 
         return $currencyAccount;
@@ -59,12 +59,12 @@ class FixturesHelper
         string $createdAt = null,
     ): CurrencyRate {
         $currencyRate = new CurrencyRate();
-        $currencyRate->currency = $currency;
-        $currencyRate->sell = $sell;
-        $currencyRate->buy = $buy;
+        $currencyRate->setCurrency($currency);
+        $currencyRate->setSell($sell);
+        $currencyRate->setBuy($buy);
 
         if ($createdAt) {
-            $currencyRate->created_at = new DateTime($createdAt);
+            $currencyRate->setCreatedAt(new DateTime($createdAt));
         }
 
         $currencyRate->save();
@@ -78,9 +78,9 @@ class FixturesHelper
         string $currency = self::EUR,
     ): TelegramUserSendRate {
         $telegramUserSendRate = new TelegramUserSendRate();
-        $telegramUserSendRate->telegram_user_id = $telegramUserId;
-        $telegramUserSendRate->currency_rate_id = $currencyRateId;
-        $telegramUserSendRate->currency = $currency;
+        $telegramUserSendRate->setTelegramUserId($telegramUserId);
+        $telegramUserSendRate->setCurrencyRateId($currencyRateId);
+        $telegramUserSendRate->setCurrency($currency);
         $telegramUserSendRate->save();
 
         return $telegramUserSendRate;

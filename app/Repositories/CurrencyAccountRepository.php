@@ -16,8 +16,7 @@ class CurrencyAccountRepository
         $this->currencyAccount = $currencyAccount;
     }
 
-    // TODO: Is it possible to have nullable return type here?
-    public function getUserCurrencySum(int $userId, string $currency): ?float
+    public function getUserCurrencySum(int $userId, string $currency): float
     {
         return (float) $this->currencyAccount
             ->newQuery()

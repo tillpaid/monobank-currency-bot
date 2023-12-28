@@ -18,7 +18,7 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
             case in_array($messageTextLower, config('monobank.currencies'), true):
                 $this->updateUserState($telegramUser, null);
 
-                $rates = $this->currencyRateService->getCurrencyRatesOfLastMonth($messageTextLower);
+                $rates = $this->currencyRateRepository->getCurrencyRatesOfLastMonth($messageTextLower);
                 $ratesResponse = [];
 
                 $ratesMinMax = [
@@ -27,9 +27,10 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
                 ];
 
                 foreach ($rates as $rate) {
-                    $date = $rate->created_at->format('Y-m-d');
-                    $rateBuy = $this->telegramBotService->format($rate->buy, 2, false);
-                    $rateSell = $this->telegramBotService->format($rate->sell, 2, false);
+                    $date = $rate->getCreatedAt()->format('Y-m-d');
+                    $rateBuy = $this->telegramBotService->format($rate->getBuy(), 2, false);
+                    // TODO: Sell can be null. Or can't? Than change the field in the model
+                    $rateSell = $this->telegramBotService->format($rate->getSell(), 2, false);
 
                     $ratesResponse[] = "`* {$date} - {$rateBuy}₴ / {$rateSell}₴`";
 
@@ -66,26 +67,26 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
      */
     private function processMinMaxRates(array &$ratesMinMax, CurrencyRate $rate, string $date): void
     {
-        $buyString = "{$date} - {$rate->buy}₴";
-        $sellString = "{$date} - {$rate->sell}₴";
+        $buyString = "{$date} - {$rate->getBuy()}₴";
+        $sellString = "{$date} - {$rate->getSell()}₴";
 
-        if ($rate->buy <= $ratesMinMax['values']['buy']['min']) {
-            $ratesMinMax['values']['buy']['min'] = $rate->buy;
+        if ($rate->getBuy() <= $ratesMinMax['values']['buy']['min']) {
+            $ratesMinMax['values']['buy']['min'] = $rate->getBuy();
             $ratesMinMax['data']['buy']['min'] = $buyString;
         }
 
-        if ($rate->buy >= $ratesMinMax['values']['buy']['max']) {
-            $ratesMinMax['values']['buy']['max'] = $rate->buy;
+        if ($rate->getBuy() >= $ratesMinMax['values']['buy']['max']) {
+            $ratesMinMax['values']['buy']['max'] = $rate->getBuy();
             $ratesMinMax['data']['buy']['max'] = $buyString;
         }
 
-        if ($rate->sell <= $ratesMinMax['values']['sell']['min']) {
-            $ratesMinMax['values']['sell']['min'] = $rate->sell;
+        if ($rate->getSell() <= $ratesMinMax['values']['sell']['min']) {
+            $ratesMinMax['values']['sell']['min'] = $rate->getSell();
             $ratesMinMax['data']['sell']['min'] = $sellString;
         }
 
-        if ($rate->sell >= $ratesMinMax['values']['sell']['max']) {
-            $ratesMinMax['values']['sell']['max'] = $rate->sell;
+        if ($rate->getSell() >= $ratesMinMax['values']['sell']['max']) {
+            $ratesMinMax['values']['sell']['max'] = $rate->getSell();
             $ratesMinMax['data']['sell']['max'] = $sellString;
         }
     }

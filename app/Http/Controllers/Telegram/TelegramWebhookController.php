@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Telegram;
 use App\Http\Controllers\Controller;
 use App\Services\Telegram\TelegramBotService;
 use App\Services\Telegram\TelegramService;
+use Illuminate\Support\Facades\Log;
 use Longman\TelegramBot\Exception\TelegramException;
 
 class TelegramWebhookController extends Controller
@@ -24,16 +25,16 @@ class TelegramWebhookController extends Controller
 
     public function catchWebhook(): array
     {
-        $telegram = $this->telegramBotService->getBot();
-        $telegram->useGetUpdatesWithoutDatabase();
-
         try {
-            $serverResponse = $telegram->handle();
+            $serverResponse = $this->telegramBotService
+                ->getBot()
+                ->useGetUpdatesWithoutDatabase()
+                ->handle()
+            ;
         } catch (TelegramException $exception) {
-            return [
-                'success' => false,
-                'error' => $exception->getMessage(),
-            ];
+            Log::error('Telegram webhook error', [$exception->getMessage()]);
+
+            return ['success' => false, 'error' => 'Internal server error'];
         }
 
         if ($serverResponse) {

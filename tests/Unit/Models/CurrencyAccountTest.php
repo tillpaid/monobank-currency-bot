@@ -14,7 +14,7 @@ class CurrencyAccountTest extends TestCase
         $telegramUser = $this->fixturesHelper->createTelegramUser();
         $currencyAccount = $this->fixturesHelper->createCurrencyAccount($telegramUser);
 
-        $this->assertNotNull($currencyAccount->telegramUser);
-        $this->assertInstanceOf(TelegramUser::class, $currencyAccount->telegramUser);
+        $this->assertNotNull($currencyAccount->getTelegramUser());
+        $this->assertInstanceOf(TelegramUser::class, $currencyAccount->getTelegramUser());
     }
 }

@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace App\Services\Telegram;
 
-use App\Services\Models\TelegramUserService;
+use App\Repositories\TelegramUserRepository;
 use App\Telegram\ProcessTelegramRequest;
+use Longman\TelegramBot\Exception\TelegramException;
 
 class TelegramService
 {
     private TelegramBotService $telegramBotService;
-    private TelegramUserService $telegramUserService;
+    private TelegramUserRepository $telegramUserRepository;
     private ProcessTelegramRequest $processTelegramRequest;
 
     public function __construct(
         TelegramBotService $telegramBotService,
-        TelegramUserService $telegramUserService,
+        TelegramUserRepository $telegramUserRepository,
         ProcessTelegramRequest $processTelegramRequest
     ) {
         $this->telegramBotService = $telegramBotService;
-        $this->telegramUserService = $telegramUserService;
+        $this->telegramUserRepository = $telegramUserRepository;
         $this->processTelegramRequest = $processTelegramRequest;
     }
 
@@ -35,10 +36,13 @@ class TelegramService
         $chatId = (string) $message['chat']['id'];
         $messageText = $message['text'];
 
-        $this->telegramUserService->createIfNotExists($chatId);
+        $this->telegramUserRepository->createIfNotExists($chatId);
         $this->processMessage($chatId, $messageText);
     }
 
+    /**
+     * @throws TelegramException
+     */
     public function sendMessageAboutChangeEnv(): void
     {
         $chatId = $this->telegramBotService->getMyId();
@@ -55,7 +59,7 @@ class TelegramService
             return;
         }
 
-        $telegramUser = $this->telegramUserService->getByChatId($chatId);
+        $telegramUser = $this->telegramUserRepository->getByChatId($chatId);
         $responseMessage = $this->processTelegramRequest->process($telegramUser, $messageText);
 
         $this->telegramBotService->sendMessage($chatId, $responseMessage);

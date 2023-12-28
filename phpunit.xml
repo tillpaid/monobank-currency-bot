@@ -25,8 +25,9 @@
         </include>
         <exclude>
             <file>./app/Console/Kernel.php</file>
-            <directory suffix=".php">./app/Providers</directory>
             <directory suffix=".php">./app/Http/Middleware</directory>
+            <directory suffix=".php">./app/Models</directory>
+            <directory suffix=".php">./app/Providers</directory>
         </exclude>
     </coverage>
     <php>

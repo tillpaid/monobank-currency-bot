@@ -35,8 +35,8 @@ class MonobankUpdateTest extends TestCase
 
         $expectedSendMessageCalls = array_map(
             fn (TelegramUser $telegramUser) => [
-                'chat_id' => $telegramUser->chat_id,
-                'message' => sprintf('Report for user %d', $telegramUser->id),
+                'chat_id' => $telegramUser->getChatId(),
+                'message' => sprintf('Report for user %d', $telegramUser->getId()),
             ],
             $telegramUsers
         );
