@@ -8,11 +8,9 @@ use App\Models\TelegramUserSendRate;
 
 class TelegramUserSendRateRepository
 {
-    private TelegramUserSendRate $telegramUserSendRate;
-
-    public function __construct(TelegramUserSendRate $telegramUserSendRate)
-    {
-        $this->telegramUserSendRate = $telegramUserSendRate;
+    public function __construct(
+        private TelegramUserSendRate $telegramUserSendRate,
+    ) {
     }
 
     public function findByTelegramUserAndCurrencyRate(int $telegramUserId, int $currencyRateId): bool

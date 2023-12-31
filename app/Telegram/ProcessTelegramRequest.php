@@ -12,15 +12,10 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessTelegramRequest
 {
-    private ProcessTelegramCommand $processTelegramCommand;
-    private ProcessTelegramState $processTelegramState;
-
     public function __construct(
-        ProcessTelegramCommand $processTelegramCommand,
-        ProcessTelegramState $processTelegramState
+        private ProcessTelegramCommand $processTelegramCommand,
+        private ProcessTelegramState $processTelegramState,
     ) {
-        $this->processTelegramCommand = $processTelegramCommand;
-        $this->processTelegramState = $processTelegramState;
     }
 
     public function process(TelegramUser $telegramUser, string $messageText): string

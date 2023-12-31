@@ -15,15 +15,13 @@ use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 
 class ProcessTelegramSellState extends AbstractProcessTelegramState
 {
-    private CurrencyAccountRepository $currencyAccountRepository;
-
     public function __construct(
+        private CurrencyAccountRepository $currencyAccountRepository,
         TelegramUserService $telegramUserService,
         CurrencyRateService $currencyRateService,
         CurrencyAccountService $currencyAccountService,
         CurrencyRateRepository $currencyRateRepository,
         TelegramBotService $telegramBotService,
-        CurrencyAccountRepository $currencyAccountRepository
     ) {
         parent::__construct(
             $telegramUserService,
@@ -32,8 +30,6 @@ class ProcessTelegramSellState extends AbstractProcessTelegramState
             $currencyRateRepository,
             $telegramBotService
         );
-
-        $this->currencyAccountRepository = $currencyAccountRepository;
     }
 
     public function process(TelegramUser $telegramUser, string $messageText): string

@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class CurrencyAccountRepository
 {
-    private CurrencyAccount $currencyAccount;
-
-    public function __construct(CurrencyAccount $currencyAccount)
-    {
-        $this->currencyAccount = $currencyAccount;
+    public function __construct(
+        private CurrencyAccount $currencyAccount,
+    ) {
     }
 
     public function getUserCurrencySum(int $userId, string $currency): float

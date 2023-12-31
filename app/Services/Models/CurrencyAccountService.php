@@ -9,11 +9,9 @@ use App\Repositories\CurrencyAccountRepository;
 
 class CurrencyAccountService
 {
-    private CurrencyAccountRepository $currencyAccountRepository;
-
-    public function __construct(CurrencyAccountRepository $currencyAccountRepository)
-    {
-        $this->currencyAccountRepository = $currencyAccountRepository;
+    public function __construct(
+        private CurrencyAccountRepository $currencyAccountRepository,
+    ) {
     }
 
     public function create(int $userId, string $currency, float $uahValue, float $purchaseRate): bool

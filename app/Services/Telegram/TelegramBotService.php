@@ -18,28 +18,15 @@ use Longman\TelegramBot\Telegram;
 class TelegramBotService
 {
     private ?Telegram $bot;
-    private TelegramUserRepository $telegramUserRepository;
-    private MakeTelegramKeyboard $makeTelegramKeyboard;
-    private CurrencyAccountRepository $currencyAccountRepository;
-    private CurrencyRateRepository $currencyRateRepository;
-    private TelegramUserSendRateService $telegramUserSendRateService;
-    private TelegramUserSendRateRepository $telegramUserSendRateRepository;
 
     public function __construct(
-        TelegramUserRepository $telegramUserRepository,
-        MakeTelegramKeyboard $makeTelegramKeyboard,
-        CurrencyAccountRepository $currencyAccountRepository,
-        CurrencyRateRepository $currencyRateRepository,
-        TelegramUserSendRateService $telegramUserSendRateService,
-        TelegramUserSendRateRepository $telegramUserSendRateRepository,
+        private TelegramUserRepository $telegramUserRepository,
+        private MakeTelegramKeyboard $makeTelegramKeyboard,
+        private CurrencyAccountRepository $currencyAccountRepository,
+        private CurrencyRateRepository $currencyRateRepository,
+        private TelegramUserSendRateService $telegramUserSendRateService,
+        private TelegramUserSendRateRepository $telegramUserSendRateRepository,
     ) {
-        $this->telegramUserRepository = $telegramUserRepository;
-        $this->makeTelegramKeyboard = $makeTelegramKeyboard;
-        $this->currencyAccountRepository = $currencyAccountRepository;
-        $this->currencyRateRepository = $currencyRateRepository;
-        $this->telegramUserSendRateService = $telegramUserSendRateService;
-        $this->telegramUserSendRateRepository = $telegramUserSendRateRepository;
-
         $this->bot = null;
     }
 

@@ -13,21 +13,14 @@ use Illuminate\Support\Facades\Log;
 
 class MonobankCurrencyService
 {
-    private Client $client;
-    private CurrencyRateService $currencyRateService;
-    private CurrencyRateRepository $currencyRateRepository;
     private int $uahCode;
     private array $currencyCodes;
 
     public function __construct(
-        Client $client,
-        CurrencyRateService $currencyRateService,
-        CurrencyRateRepository $currencyRateRepository
+        private Client $client,
+        private CurrencyRateService $currencyRateService,
+        private CurrencyRateRepository $currencyRateRepository,
     ) {
-        $this->client = $client;
-        $this->currencyRateService = $currencyRateService;
-        $this->currencyRateRepository = $currencyRateRepository;
-
         $this->uahCode = config('monobank.uahCode');
         $this->currencyCodes = config('monobank.currencyCodes');
     }

@@ -10,18 +10,11 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class TelegramService
 {
-    private TelegramBotService $telegramBotService;
-    private TelegramUserRepository $telegramUserRepository;
-    private ProcessTelegramRequest $processTelegramRequest;
-
     public function __construct(
-        TelegramBotService $telegramBotService,
-        TelegramUserRepository $telegramUserRepository,
-        ProcessTelegramRequest $processTelegramRequest
+        private TelegramBotService $telegramBotService,
+        private TelegramUserRepository $telegramUserRepository,
+        private ProcessTelegramRequest $processTelegramRequest,
     ) {
-        $this->telegramBotService = $telegramBotService;
-        $this->telegramUserRepository = $telegramUserRepository;
-        $this->processTelegramRequest = $processTelegramRequest;
     }
 
     /**

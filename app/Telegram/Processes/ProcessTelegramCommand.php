@@ -10,15 +10,10 @@ use App\Services\Telegram\TelegramBotService;
 
 class ProcessTelegramCommand
 {
-    protected TelegramUserService $telegramUserService;
-    protected TelegramBotService $telegramBotService;
-
     public function __construct(
-        TelegramUserService $telegramUserService,
-        TelegramBotService $telegramBotService
+        protected TelegramUserService $telegramUserService,
+        protected TelegramBotService $telegramBotService,
     ) {
-        $this->telegramUserService = $telegramUserService;
-        $this->telegramBotService = $telegramBotService;
     }
 
     public function process(TelegramUser $telegramUser, string $messageText): string

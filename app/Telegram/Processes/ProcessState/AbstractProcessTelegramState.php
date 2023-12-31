@@ -14,25 +14,14 @@ use App\Services\Telegram\TelegramBotService;
 // TODO: Convert this class to interface
 abstract class AbstractProcessTelegramState
 {
-    protected TelegramUserService $telegramUserService;
-    protected CurrencyRateService $currencyRateService;
-    protected CurrencyAccountService $currencyAccountService;
-    protected CurrencyRateRepository $currencyRateRepository;
-    protected TelegramBotService $telegramBotService;
-
     // TODO: Move props to child classes
     public function __construct(
-        TelegramUserService $telegramUserService,
-        CurrencyRateService $currencyRateService,
-        CurrencyAccountService $currencyAccountService,
-        CurrencyRateRepository $currencyRateRepository,
-        TelegramBotService $telegramBotService
+        protected TelegramUserService $telegramUserService,
+        protected CurrencyRateService $currencyRateService,
+        protected CurrencyAccountService $currencyAccountService,
+        protected CurrencyRateRepository $currencyRateRepository,
+        protected TelegramBotService $telegramBotService,
     ) {
-        $this->telegramUserService = $telegramUserService;
-        $this->currencyRateService = $currencyRateService;
-        $this->currencyAccountService = $currencyAccountService;
-        $this->currencyRateRepository = $currencyRateRepository;
-        $this->telegramBotService = $telegramBotService;
     }
 
     abstract public function process(TelegramUser $telegramUser, string $messageText): string;

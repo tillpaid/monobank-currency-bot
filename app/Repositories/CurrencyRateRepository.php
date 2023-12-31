@@ -9,13 +9,10 @@ use Carbon\Carbon;
 
 class CurrencyRateRepository
 {
-    private CurrencyRate $currencyRate;
-    private Carbon $carbon;
-
-    public function __construct(CurrencyRate $currencyRate, Carbon $carbon)
-    {
-        $this->currencyRate = $currencyRate;
-        $this->carbon = $carbon;
+    public function __construct(
+        private CurrencyRate $currencyRate,
+        private Carbon $carbon,
+    ) {
     }
 
     public function getLatestCurrencyRate(string $currency): ?CurrencyRate

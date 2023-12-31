@@ -8,11 +8,9 @@ use App\Models\TelegramUser;
 
 class TelegramUserRepository
 {
-    private TelegramUser $telegramUser;
-
-    public function __construct(TelegramUser $telegramUser)
-    {
-        $this->telegramUser = $telegramUser;
+    public function __construct(
+        private TelegramUser $telegramUser,
+    ) {
     }
 
     /**

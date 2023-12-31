@@ -9,11 +9,9 @@ use App\Repositories\TelegramUserSendRateRepository;
 
 class TelegramUserSendRateService
 {
-    private TelegramUserSendRateRepository $telegramUserSendRateRepository;
-
-    public function __construct(TelegramUserSendRateRepository $telegramUserSendRateRepository)
-    {
-        $this->telegramUserSendRateRepository = $telegramUserSendRateRepository;
+    public function __construct(
+        private TelegramUserSendRateRepository $telegramUserSendRateRepository,
+    ) {
     }
 
     // TODO: This is not only about update. Needs to be renamed or refactored.
