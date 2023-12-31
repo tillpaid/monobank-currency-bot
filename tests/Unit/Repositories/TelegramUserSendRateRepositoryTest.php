@@ -22,7 +22,7 @@ class TelegramUserSendRateRepositoryTest extends TestCase
         $this->telegramUserSendRateRepository = $this->app->make(TelegramUserSendRateRepository::class);
     }
 
-    /** @dataProvider findByTelegramUserAndCurrencyRateDataProvider */
+    /** @dataProvider provideFindByTelegramUserAndCurrencyRateCases */
     public function testFindByTelegramUserAndCurrencyRate(
         bool $expectedResult,
         int $telegramUserId,
@@ -43,7 +43,7 @@ class TelegramUserSendRateRepositoryTest extends TestCase
     /**
      * @return array<array<string, bool|int>>
      */
-    public function findByTelegramUserAndCurrencyRateDataProvider(): array
+    public function provideFindByTelegramUserAndCurrencyRateCases(): iterable
     {
         return [
             'Row exists' => [

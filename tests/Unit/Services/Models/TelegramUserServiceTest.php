@@ -6,16 +6,12 @@ namespace Tests\Unit\Services\Models;
 
 use App\Models\TelegramUser;
 use App\Services\Models\TelegramUserService;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Tests\TestCase;
 
 class TelegramUserServiceTest extends TestCase
 {
     private TelegramUserService $telegramUserService;
 
-    /**
-     * @throws BindingResolutionException
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -31,7 +27,7 @@ class TelegramUserServiceTest extends TestCase
     public function testUpdateState(): void
     {
         $state = 'value';
-        $telegramUser = TelegramUser::factory()->create();
+        $telegramUser = $this->fixturesHelper->createTelegramUser();
 
         $this->assertNull($telegramUser->getState());
         $this->telegramUserService->updateState($telegramUser, $state, []);
@@ -42,7 +38,7 @@ class TelegramUserServiceTest extends TestCase
     {
         $state = 'value';
         $stateAdditional = ['key' => 'value'];
-        $telegramUser = TelegramUser::factory()->create();
+        $telegramUser = $this->fixturesHelper->createTelegramUser();
 
         $this->assertNull($telegramUser->getState());
         $this->assertNull($telegramUser->getStateAdditional());
@@ -53,7 +49,7 @@ class TelegramUserServiceTest extends TestCase
 
     public function testUpdateStateAdditional(): void
     {
-        $telegramUser = TelegramUser::factory()->create();
+        $telegramUser = $this->fixturesHelper->createTelegramUser();
         $this->assertNull($telegramUser->getStateAdditional());
 
         $stateAdditional = ['key' => 'value'];

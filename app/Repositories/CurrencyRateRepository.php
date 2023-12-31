@@ -12,8 +12,7 @@ class CurrencyRateRepository
     public function __construct(
         private CurrencyRate $currencyRate,
         private Carbon $carbon,
-    ) {
-    }
+    ) {}
 
     public function getLatestCurrencyRate(string $currency): ?CurrencyRate
     {
@@ -21,7 +20,6 @@ class CurrencyRateRepository
             ->newQuery()
             ->where('currency', $currency)
             ->latest('id')
-            ->get()
             ->first()
         ;
     }

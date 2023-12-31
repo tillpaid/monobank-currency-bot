@@ -14,8 +14,8 @@ class MonobankUpdateTest extends TestCase
 {
     private const COMMAND_NAME = 'monobank:update';
 
-    private MonobankCurrencyService|MockInterface $monobankCurrencyService;
-    private TelegramBotService|MockInterface $telegramBotService;
+    private MockInterface|MonobankCurrencyService $monobankCurrencyService;
+    private MockInterface|TelegramBotService $telegramBotService;
 
     protected function setUp(): void
     {
@@ -34,7 +34,7 @@ class MonobankUpdateTest extends TestCase
         );
 
         $expectedSendMessageCalls = array_map(
-            fn (TelegramUser $telegramUser) => [
+            static fn (TelegramUser $telegramUser) => [
                 'chat_id' => $telegramUser->getChatId(),
                 'message' => sprintf('Report for user %d', $telegramUser->getId()),
             ],
@@ -50,14 +50,14 @@ class MonobankUpdateTest extends TestCase
         $this->telegramBotService
             ->shouldReceive('buildUserReport')
             ->times($telegramUsersCount)
-            ->andReturnUsing(fn (int $userId) => sprintf('Report for user %d', $userId))
+            ->andReturnUsing(static fn (int $userId) => sprintf('Report for user %d', $userId))
         ;
 
         $sendMessageCalls = [];
         $this->telegramBotService
             ->shouldReceive('sendMessage')
             ->times($telegramUsersCount)
-            ->andReturnUsing(function (string $chatId, string $message) use (&$sendMessageCalls): void {
+            ->andReturnUsing(static function (string $chatId, string $message) use (&$sendMessageCalls): void {
                 $sendMessageCalls[] = ['chat_id' => $chatId, 'message' => $message];
             })
         ;

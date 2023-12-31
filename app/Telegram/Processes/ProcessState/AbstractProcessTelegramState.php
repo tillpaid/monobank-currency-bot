@@ -21,8 +21,7 @@ abstract class AbstractProcessTelegramState
         protected CurrencyAccountService $currencyAccountService,
         protected CurrencyRateRepository $currencyRateRepository,
         protected TelegramBotService $telegramBotService,
-    ) {
-    }
+    ) {}
 
     abstract public function process(TelegramUser $telegramUser, string $messageText): string;
 

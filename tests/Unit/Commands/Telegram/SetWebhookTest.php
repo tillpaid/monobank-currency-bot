@@ -16,9 +16,9 @@ class SetWebhookTest extends TestCase
 {
     private const COMMAND_NAME = 'telegram:set-webhook';
 
-    private Telegram|MockInterface $telegram;
-    private TelegramService|MockInterface $telegramService;
-    private TelegramBotService|MockInterface $telegramBotService;
+    private MockInterface|Telegram $telegram;
+    private MockInterface|TelegramService $telegramService;
+    private MockInterface|TelegramBotService $telegramBotService;
 
     protected function setUp(): void
     {

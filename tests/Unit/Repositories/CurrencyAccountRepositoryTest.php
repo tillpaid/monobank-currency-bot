@@ -91,7 +91,7 @@ class CurrencyAccountRepositoryTest extends TestCase
             $expectedSums[$currency] = [
                 'currency_value' => array_sum($currencyValues),
                 'uah_value' => round(array_sum(array_map(
-                    fn ($value) => round($value * $rates[$currency], 5),
+                    static fn ($value) => round($value * $rates[$currency], 5),
                     $currencyValues
                 )), 5),
             ];

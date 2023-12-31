@@ -11,8 +11,7 @@ class CurrencyAccountRepository
 {
     public function __construct(
         private CurrencyAccount $currencyAccount,
-    ) {
-    }
+    ) {}
 
     public function getUserCurrencySum(int $userId, string $currency): float
     {
@@ -30,7 +29,6 @@ class CurrencyAccountRepository
             ->newQuery()
             ->where('telegram_user_id', $userId)
             ->where('currency', $currency)
-            ->get()
             ->first()
         ;
     }
@@ -42,7 +40,6 @@ class CurrencyAccountRepository
             ->where('telegram_user_id', $userId)
             ->where('currency', $currency)
             ->orderBy('purchase_rate', 'DESC')
-            ->get()
             ->first()
         ;
     }

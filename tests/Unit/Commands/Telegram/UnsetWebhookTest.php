@@ -15,8 +15,8 @@ class UnsetWebhookTest extends TestCase
 {
     private const COMMAND_NAME = 'telegram:unset-webhook';
 
-    private Telegram|MockInterface $telegram;
-    private TelegramBotService|MockInterface $telegramBotService;
+    private MockInterface|Telegram $telegram;
+    private MockInterface|TelegramBotService $telegramBotService;
 
     protected function setUp(): void
     {

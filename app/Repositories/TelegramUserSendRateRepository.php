@@ -10,8 +10,7 @@ class TelegramUserSendRateRepository
 {
     public function __construct(
         private TelegramUserSendRate $telegramUserSendRate,
-    ) {
-    }
+    ) {}
 
     public function findByTelegramUserAndCurrencyRate(int $telegramUserId, int $currencyRateId): bool
     {
@@ -31,7 +30,6 @@ class TelegramUserSendRateRepository
             ->newQuery()
             ->where('telegram_user_id', $telegramUserId)
             ->where('currency', $currency)
-            ->get()
             ->first()
         ;
     }

@@ -111,7 +111,7 @@ final class TelegramServiceTest extends TestCase
             }
         }
 
-        $lines = array_map(function ($line) use ($spacesCount) {
+        $lines = array_map(static function ($line) use ($spacesCount) {
             if ('' === trim(substr($line, 0, $spacesCount))) {
                 $line = substr($line, $spacesCount);
             }

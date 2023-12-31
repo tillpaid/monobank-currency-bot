@@ -15,8 +15,7 @@ class TelegramWebhookController extends Controller
     public function __construct(
         private TelegramService $telegramService,
         private TelegramBotService $telegramBotService
-    ) {
-    }
+    ) {}
 
     public function catchWebhook(): array
     {

@@ -11,8 +11,7 @@ class TelegramUserSendRateService
 {
     public function __construct(
         private TelegramUserSendRateRepository $telegramUserSendRateRepository,
-    ) {
-    }
+    ) {}
 
     // TODO: This is not only about update. Needs to be renamed or refactored.
     public function updateSendRate(int $telegramUserId, int $currencyRateId, string $currency): void

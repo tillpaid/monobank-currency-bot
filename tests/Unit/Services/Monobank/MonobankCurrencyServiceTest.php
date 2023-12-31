@@ -30,7 +30,7 @@ class MonobankCurrencyServiceTest extends TestCase
     }
 
     /**
-     * @dataProvider updateCurrencyRatesDataProvider
+     * @dataProvider provideUpdateCurrencyRatesCases
      *
      * @param array<array<string, float|string>> $expectedRates
      * @param array<array<string, float|string>> $existingRates
@@ -67,7 +67,7 @@ class MonobankCurrencyServiceTest extends TestCase
         $this->assertCount(count($expectedRates), $currencyRates);
 
         $rates = array_map(
-            fn (CurrencyRate $currencyRate) => [
+            static fn (CurrencyRate $currencyRate) => [
                 'currency' => $currencyRate->getCurrency(),
                 'rateSell' => $currencyRate->getSell(),
                 'rateBuy' => $currencyRate->getBuy(),
@@ -81,7 +81,7 @@ class MonobankCurrencyServiceTest extends TestCase
     /**
      * @return array<array<string, mixed>>
      */
-    public function updateCurrencyRatesDataProvider(): array
+    public function provideUpdateCurrencyRatesCases(): iterable
     {
         return [
             'Rates not exist' => [

@@ -13,8 +13,7 @@ class ProcessTelegramCommand
     public function __construct(
         protected TelegramUserService $telegramUserService,
         protected TelegramBotService $telegramBotService,
-    ) {
-    }
+    ) {}
 
     public function process(TelegramUser $telegramUser, string $messageText): string
     {

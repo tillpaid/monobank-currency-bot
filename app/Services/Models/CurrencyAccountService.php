@@ -11,8 +11,7 @@ class CurrencyAccountService
 {
     public function __construct(
         private CurrencyAccountRepository $currencyAccountRepository,
-    ) {
-    }
+    ) {}
 
     public function create(int $userId, string $currency, float $uahValue, float $purchaseRate): bool
     {

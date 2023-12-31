@@ -15,8 +15,7 @@ class ProcessTelegramRequest
     public function __construct(
         private ProcessTelegramCommand $processTelegramCommand,
         private ProcessTelegramState $processTelegramState,
-    ) {
-    }
+    ) {}
 
     public function process(TelegramUser $telegramUser, string $messageText): string
     {

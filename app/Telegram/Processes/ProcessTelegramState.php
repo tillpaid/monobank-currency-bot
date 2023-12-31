@@ -19,6 +19,7 @@ use App\Telegram\Processes\ProcessState\Statistics\ProcessTelegramStatisticsCurr
 class ProcessTelegramState
 {
     private ProcessTelegramDefaultState $processTelegramDefaultState;
+
     /** @var AbstractProcessTelegramState[] */
     private array $processors;
 

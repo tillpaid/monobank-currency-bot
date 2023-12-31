@@ -14,8 +14,7 @@ class TelegramService
         private TelegramBotService $telegramBotService,
         private TelegramUserRepository $telegramUserRepository,
         private ProcessTelegramRequest $processTelegramRequest,
-    ) {
-    }
+    ) {}
 
     /**
      * @param array<string, mixed> $data
