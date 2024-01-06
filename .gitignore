@@ -11,6 +11,7 @@
 .env.backup
 
 .php-cs-fixer.cache
+.phpunit.cache
 .phpunit.result.cache
 docker-compose.override.yml
 

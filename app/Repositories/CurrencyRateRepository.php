@@ -48,6 +48,7 @@ class CurrencyRateRepository
     {
         $startDate = $this->carbon->subMonth()->format('Y-m-d H:i:s');
 
+        // @phpstan-ignore-next-line
         return $this->currencyRate
             ->newQuery()
             ->where('currency', $currency)

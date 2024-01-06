@@ -43,7 +43,7 @@ class TelegramUserSendRateRepositoryTest extends TestCase
     /**
      * @return array<array<string, bool|int>>
      */
-    public function provideFindByTelegramUserAndCurrencyRateCases(): iterable
+    public static function provideFindByTelegramUserAndCurrencyRateCases(): iterable
     {
         return [
             'Row exists' => [

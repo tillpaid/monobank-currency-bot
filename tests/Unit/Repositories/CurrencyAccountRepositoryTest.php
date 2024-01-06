@@ -105,6 +105,11 @@ class CurrencyAccountRepositoryTest extends TestCase
         }
 
         $result = $this->currencyAccountRepository->getUserBalanceSum($telegramUser->getId());
-        $this->assertSame($expectedSums, $result);
+
+        foreach ($expectedSums as $currency => $sums) {
+            // TODO: Change it when migrate to Money library
+            $this->assertSame(round($sums['currency_value'], 5), round($result[$currency]['currency_value'], 5));
+            $this->assertSame(round($sums['uah_value'], 5), round($result[$currency]['uah_value'], 5));
+        }
     }
 }

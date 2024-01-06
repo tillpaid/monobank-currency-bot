@@ -81,7 +81,7 @@ class MonobankCurrencyServiceTest extends TestCase
     /**
      * @return array<array<string, mixed>>
      */
-    public function provideUpdateCurrencyRatesCases(): iterable
+    public static function provideUpdateCurrencyRatesCases(): iterable
     {
         return [
             'Rates not exist' => [

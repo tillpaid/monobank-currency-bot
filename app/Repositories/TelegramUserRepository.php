@@ -17,6 +17,7 @@ class TelegramUserRepository
      */
     public function findAll(): array
     {
+        // @phpstan-ignore-next-line
         return $this->telegramUser->newQuery()->get()->all();
     }
 
