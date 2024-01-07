@@ -6,7 +6,7 @@ namespace App\Repositories;
 
 use App\Models\TelegramUser;
 
-class TelegramUserRepository
+readonly class TelegramUserRepository
 {
     public function __construct(
         private TelegramUser $telegramUser,

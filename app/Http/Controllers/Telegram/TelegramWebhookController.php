@@ -13,8 +13,8 @@ use Longman\TelegramBot\Exception\TelegramException;
 class TelegramWebhookController extends Controller
 {
     public function __construct(
-        private TelegramService $telegramService,
-        private TelegramBotService $telegramBotService
+        private readonly TelegramService $telegramService,
+        private readonly TelegramBotService $telegramBotService,
     ) {}
 
     public function catchWebhook(): array

@@ -20,12 +20,12 @@ class TelegramBotService
     private ?Telegram $bot;
 
     public function __construct(
-        private TelegramUserRepository $telegramUserRepository,
-        private MakeTelegramKeyboard $makeTelegramKeyboard,
-        private CurrencyAccountRepository $currencyAccountRepository,
-        private CurrencyRateRepository $currencyRateRepository,
-        private TelegramUserSendRateService $telegramUserSendRateService,
-        private TelegramUserSendRateRepository $telegramUserSendRateRepository,
+        private readonly TelegramUserRepository $telegramUserRepository,
+        private readonly MakeTelegramKeyboard $makeTelegramKeyboard,
+        private readonly CurrencyAccountRepository $currencyAccountRepository,
+        private readonly CurrencyRateRepository $currencyRateRepository,
+        private readonly TelegramUserSendRateService $telegramUserSendRateService,
+        private readonly TelegramUserSendRateRepository $telegramUserSendRateRepository,
     ) {
         $this->bot = null;
     }

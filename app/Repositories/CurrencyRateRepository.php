@@ -7,7 +7,7 @@ namespace App\Repositories;
 use App\Models\CurrencyRate;
 use Carbon\Carbon;
 
-class CurrencyRateRepository
+readonly class CurrencyRateRepository
 {
     public function __construct(
         private CurrencyRate $currencyRate,

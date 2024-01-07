@@ -11,9 +11,9 @@ use Longman\TelegramBot\Exception\TelegramException;
 class TelegramService
 {
     public function __construct(
-        private TelegramBotService $telegramBotService,
-        private TelegramUserRepository $telegramUserRepository,
-        private ProcessTelegramRequest $processTelegramRequest,
+        private readonly TelegramBotService $telegramBotService,
+        private readonly TelegramUserRepository $telegramUserRepository,
+        private readonly ProcessTelegramRequest $processTelegramRequest,
     ) {}
 
     /**

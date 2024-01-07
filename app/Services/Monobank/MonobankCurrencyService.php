@@ -17,9 +17,9 @@ class MonobankCurrencyService
     private array $currencyCodes;
 
     public function __construct(
-        private Client $client,
-        private CurrencyRateService $currencyRateService,
-        private CurrencyRateRepository $currencyRateRepository,
+        private readonly Client $client,
+        private readonly CurrencyRateService $currencyRateService,
+        private readonly CurrencyRateRepository $currencyRateRepository,
     ) {
         $this->uahCode = config('monobank.uahCode');
         $this->currencyCodes = config('monobank.currencyCodes');

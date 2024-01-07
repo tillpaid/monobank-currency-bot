@@ -16,7 +16,7 @@ use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 class ProcessTelegramSellState extends AbstractProcessTelegramState
 {
     public function __construct(
-        private CurrencyAccountRepository $currencyAccountRepository,
+        private readonly CurrencyAccountRepository $currencyAccountRepository,
         TelegramUserService $telegramUserService,
         CurrencyRateService $currencyRateService,
         CurrencyAccountService $currencyAccountService,

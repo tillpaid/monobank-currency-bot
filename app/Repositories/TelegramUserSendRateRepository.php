@@ -6,7 +6,7 @@ namespace App\Repositories;
 
 use App\Models\TelegramUserSendRate;
 
-class TelegramUserSendRateRepository
+readonly class TelegramUserSendRateRepository
 {
     public function __construct(
         private TelegramUserSendRate $telegramUserSendRate,

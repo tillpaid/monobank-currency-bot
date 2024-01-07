@@ -7,7 +7,7 @@ namespace App\Repositories;
 use App\Models\CurrencyAccount;
 use Illuminate\Support\Facades\DB;
 
-class CurrencyAccountRepository
+readonly class CurrencyAccountRepository
 {
     public function __construct(
         private CurrencyAccount $currencyAccount,

@@ -7,7 +7,7 @@ namespace App\Services\Models;
 use App\Models\CurrencyAccount;
 use App\Repositories\CurrencyAccountRepository;
 
-class CurrencyAccountService
+readonly class CurrencyAccountService
 {
     public function __construct(
         private CurrencyAccountRepository $currencyAccountRepository,

@@ -10,7 +10,7 @@ use App\Telegram\Processes\ProcessTelegramState;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class ProcessTelegramRequest
+readonly class ProcessTelegramRequest
 {
     public function __construct(
         private ProcessTelegramCommand $processTelegramCommand,
