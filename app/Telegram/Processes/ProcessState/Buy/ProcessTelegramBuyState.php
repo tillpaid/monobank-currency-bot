@@ -9,27 +9,40 @@ use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 
 class ProcessTelegramBuyState extends AbstractProcessTelegramState
 {
+    public function getState(): ?string
+    {
+        return TelegramUser::STATE_BUY;
+    }
+
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
         $messageTextLower = mb_strtolower($messageText);
 
-        switch (true) {
-            case in_array($messageTextLower, config('monobank.currencies'), true):
-                $this->updateUserState($telegramUser, config('states.buy-sum'), ['buy-currency' => $messageTextLower]);
-                $responseMessage = __('telegram.buySum');
-
-                break;
-
-            case $messageText === __('telegram_buttons.back'):
-                $this->updateUserState($telegramUser, null);
-                $responseMessage = __('telegram.startMessage');
-
-                break;
-
-            default:
-                $responseMessage = __('telegram.currencyNotSupported');
+        if (in_array($messageTextLower, config('monobank.currencies'), true)) {
+            return $this->processCurrency($telegramUser, $messageTextLower);
         }
 
-        return $responseMessage;
+        return match (true) {
+            $messageText === __('telegram_buttons.back') => $this->processBackButton($telegramUser),
+            default => __('telegram.currencyNotSupported'),
+        };
+    }
+
+    private function processCurrency(TelegramUser $telegramUser, string $currency): string
+    {
+        $this->telegramUserService->updateState(
+            $telegramUser,
+            TelegramUser::STATE_BUY_SUM,
+            [TelegramUser::STATE_ADDITIONAL_BUY_CURRENCY => $currency]
+        );
+
+        return __('telegram.buySum');
+    }
+
+    private function processBackButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
+
+        return __('telegram.startMessage');
     }
 }

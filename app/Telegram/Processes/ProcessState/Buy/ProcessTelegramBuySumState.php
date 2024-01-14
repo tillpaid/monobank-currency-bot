@@ -9,37 +9,52 @@ use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 
 class ProcessTelegramBuySumState extends AbstractProcessTelegramState
 {
+    public function getState(): ?string
+    {
+        return TelegramUser::STATE_BUY_SUM;
+    }
+
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
-        switch (true) {
-            case $messageText === __('telegram_buttons.back'):
-                $this->updateUserState($telegramUser, config('states.buy'));
-                $responseMessage = __('telegram.chooseCurrencyBuy');
-
-                break;
-
-            case $messageText === __('telegram_buttons.backHome'):
-                $this->updateUserState($telegramUser, null);
-                $responseMessage = __('telegram.startMessage');
-
-                break;
-
-            case is_numeric($messageText):
-                $messageText = (float) $messageText;
-
-                if ($messageText > 0) {
-                    $this->updateUserState($telegramUser, config('states.buy-rate'), ['buy-currency-sum' => $messageText]);
-                    $responseMessage = $this->buildBuyConfirmMessage($telegramUser);
-                } else {
-                    $responseMessage = __('telegram.numberMustBeGreaterThanZero');
-                }
-
-                break;
-
-            default:
-                $responseMessage = __('telegram.occurredError');
+        if (is_numeric($messageText)) {
+            return $this->processBuySum($telegramUser, $messageText);
         }
 
-        return $responseMessage;
+        return match (true) {
+            $messageText === __('telegram_buttons.back') => $this->processBackButton($telegramUser),
+            $messageText === __('telegram_buttons.backHome') => $this->processBackHomeButton($telegramUser),
+            default => __('telegram.occurredError'),
+        };
+    }
+
+    private function processBuySum(TelegramUser $telegramUser, string $messageText): string
+    {
+        $sum = (float) $messageText;
+
+        if ($sum <= 0) {
+            return __('telegram.numberMustBeGreaterThanZero');
+        }
+
+        $this->telegramUserService->updateState(
+            $telegramUser,
+            TelegramUser::STATE_BUY_RATE,
+            [TelegramUser::STATE_ADDITIONAL_BUY_CURRENCY_SUM => $sum]
+        );
+
+        return $this->buildBuyConfirmMessage($telegramUser);
+    }
+
+    private function processBackButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY);
+
+        return __('telegram.chooseCurrencyBuy');
+    }
+
+    private function processBackHomeButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
+
+        return __('telegram.startMessage');
     }
 }

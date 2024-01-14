@@ -23,6 +23,23 @@ class TelegramUser extends Model
 {
     use HasFactory;
 
+    public const STATE_DEFAULT = null;
+    public const STATE_BUY = 'buy';
+    public const STATE_BUY_SUM = 'buy-sum';
+    public const STATE_BUY_RATE = 'buy-rate';
+    public const STATE_BUY_RATE_OWN = 'buy-rate-own';
+    public const STATE_SELL = 'sell';
+    public const STATE_SELL_SUM = 'sell-sum';
+    public const STATE_SELL_CONFIRM = 'sell-confirm';
+    public const STATE_STATISTICS_CURRENCY = 'statistics-currency';
+
+    public const STATE_ADDITIONAL_BUY_CURRENCY = 'buy-currency';
+    public const STATE_ADDITIONAL_BUY_CURRENCY_SUM = 'buy-currency-sum';
+    public const STATE_ADDITIONAL_BUY_CURRENCY_RATE = 'buy-currency-rate';
+    public const STATE_ADDITIONAL_SELL_CURRENCY = 'sell-currency';
+    public const STATE_ADDITIONAL_SELL_CURRENCY_SUM = 'sell-currency-sum';
+    public const STATE_ADDITIONAL_SELL_CURRENCY_SUM_ALL = 'sell-currency-sum-all';
+
     protected $guarded = [];
 
     protected $casts = [
@@ -70,6 +87,19 @@ class TelegramUser extends Model
     public function getStateAdditional(): ?array
     {
         return $this->state_additional;
+    }
+
+    public function getStateAdditionalValue(string $key): ?string
+    {
+        return $this->state_additional[$key] ?? null;
+    }
+
+    // TODO: Temp solution, need to update code and don't use this method
+    public function getStateAdditionalFloatValue(string $key): ?float
+    {
+        $value = $this->state_additional[$key] ?? null;
+
+        return $value ? (float) $value : null;
     }
 
     public function setStateAdditional(?array $stateAdditional): self

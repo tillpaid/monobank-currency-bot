@@ -9,17 +9,22 @@ use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 
 class ProcessTelegramSellSumState extends AbstractProcessTelegramState
 {
+    public function getState(): ?string
+    {
+        return TelegramUser::STATE_SELL_SUM;
+    }
+
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
         switch (true) {
             case $messageText === __('telegram_buttons.back'):
-                $this->updateUserState($telegramUser, config('states.sell'));
+                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_SELL);
                 $responseMessage = __('telegram.chooseCurrencySell');
 
                 break;
 
             case $messageText === __('telegram_buttons.backHome'):
-                $this->updateUserState($telegramUser, null);
+                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
                 $responseMessage = __('telegram.startMessage');
 
                 break;
@@ -27,14 +32,18 @@ class ProcessTelegramSellSumState extends AbstractProcessTelegramState
             case is_numeric($messageText):
                 $messageText = (float) $messageText;
 
-                $currency = $telegramUser->getStateAdditional()['sell-currency'] ?? 'usd';
-                $currencySumAll = $telegramUser->getStateAdditional()['sell-currency-sum-all'] ?? 0;
+                $currency = $telegramUser->getStateAdditionalValue(TelegramUser::STATE_ADDITIONAL_SELL_CURRENCY) ?? 'usd';
+                $currencySumAll = $telegramUser->getStateAdditionalFloatValue(TelegramUser::STATE_ADDITIONAL_SELL_CURRENCY_SUM_ALL) ?? 0;
 
                 if ($messageText > 0) {
                     if ($currencySumAll >= $messageText) {
                         $currencySum = number_format($messageText, 5, '.', ' ');
 
-                        $this->updateUserState($telegramUser, config('states.sell-confirm'), ['sell-currency-sum' => $messageText]);
+                        $this->telegramUserService->updateState(
+                            $telegramUser,
+                            TelegramUser::STATE_SELL_CONFIRM,
+                            [TelegramUser::STATE_ADDITIONAL_SELL_CURRENCY_SUM => $messageText]
+                        );
                         $responseMessage = __('telegram.sellConfirm', ['sum' => $currencySum, 'currency' => mb_strtoupper($currency)]);
                     } else {
                         $responseMessage = __('telegram.moreThanHave');

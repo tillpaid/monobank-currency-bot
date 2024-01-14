@@ -10,13 +10,18 @@ use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 
 class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramState
 {
+    public function getState(): ?string
+    {
+        return TelegramUser::STATE_STATISTICS_CURRENCY;
+    }
+
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
         $messageTextLower = mb_strtolower($messageText);
 
         switch (true) {
             case in_array($messageTextLower, config('monobank.currencies'), true):
-                $this->updateUserState($telegramUser, null);
+                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
 
                 $rates = $this->currencyRateRepository->getCurrencyRatesOfLastMonth($messageTextLower);
                 $ratesResponse = [];
@@ -50,7 +55,7 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
                 break;
 
             case $messageText === __('telegram_buttons.back'):
-                $this->updateUserState($telegramUser, null);
+                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
                 $responseMessage = __('telegram.startMessage');
 
                 break;

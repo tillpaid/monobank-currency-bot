@@ -9,37 +9,48 @@ use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
 
 class ProcessTelegramBuyRateOwnState extends AbstractProcessTelegramState
 {
+    public function getState(): ?string
+    {
+        return TelegramUser::STATE_BUY_RATE_OWN;
+    }
+
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
-        switch (true) {
-            case $messageText === __('telegram_buttons.back'):
-                $this->updateUserState($telegramUser, config('states.buy-rate'));
-                $responseMessage = $this->buildBuyConfirmMessage($telegramUser);
-
-                break;
-
-            case $messageText === __('telegram_buttons.backHome'):
-                $this->updateUserState($telegramUser, null);
-                $responseMessage = __('telegram.startMessage');
-
-                break;
-
-            case is_numeric($messageText):
-                $messageText = (float) $messageText;
-
-                if ($messageText > 0) {
-                    $this->updateUserState($telegramUser, config('states.buy-rate'));
-                    $responseMessage = $this->buildBuyConfirmMessage($telegramUser, (float) $messageText);
-                } else {
-                    $responseMessage = __('telegram.numberMustBeGreaterThanZero');
-                }
-
-                break;
-
-            default:
-                $responseMessage = __('telegram.occurredError');
+        if (is_numeric($messageText)) {
+            return $this->processOwnRate($telegramUser, $messageText);
         }
 
-        return $responseMessage;
+        return match ($messageText) {
+            __('telegram_buttons.back') => $this->processBackButton($telegramUser),
+            __('telegram_buttons.backHome') => $this->processBackHomeButton($telegramUser),
+            default => __('telegram.occurredError'),
+        };
+    }
+
+    private function processOwnRate(TelegramUser $telegramUser, string $messageText): string
+    {
+        $rate = (float) $messageText;
+
+        if ($rate <= 0) {
+            return __('telegram.numberMustBeGreaterThanZero');
+        }
+
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY_RATE);
+
+        return $this->buildBuyConfirmMessage($telegramUser, $rate);
+    }
+
+    private function processBackButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY_RATE);
+
+        return $this->buildBuyConfirmMessage($telegramUser);
+    }
+
+    private function processBackHomeButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
+
+        return __('telegram.startMessage');
     }
 }

@@ -8,17 +8,22 @@ use App\Models\TelegramUser;
 
 class ProcessTelegramDefaultState extends AbstractProcessTelegramState
 {
+    public function getState(): ?string
+    {
+        return null;
+    }
+
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
         switch ($messageText) {
             case __('telegram_buttons.buy'):
-                $this->updateUserState($telegramUser, config('states.buy'));
+                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY);
                 $responseMessage = __('telegram.chooseCurrencyBuy');
 
                 break;
 
             case __('telegram_buttons.sell'):
-                $this->updateUserState($telegramUser, config('states.sell'));
+                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_SELL);
                 $responseMessage = __('telegram.chooseCurrencySell');
 
                 break;
@@ -34,7 +39,7 @@ class ProcessTelegramDefaultState extends AbstractProcessTelegramState
                 break;
 
             case __('telegram_buttons.statisticsCurrency'):
-                $this->updateUserState($telegramUser, config('states.statistics-currency'));
+                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_STATISTICS_CURRENCY);
                 $responseMessage = __('telegram.chooseCurrency');
 
                 break;

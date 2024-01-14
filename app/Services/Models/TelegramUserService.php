@@ -9,7 +9,7 @@ use App\Models\TelegramUser;
 class TelegramUserService
 {
     // TODO: Will be changed to setter in entity
-    public function updateState(TelegramUser $telegramUser, ?string $state, ?array $stateAdditional): bool
+    public function updateState(TelegramUser $telegramUser, ?string $state = null, ?array $stateAdditional = null): bool
     {
         $telegramUser->setState($state);
 

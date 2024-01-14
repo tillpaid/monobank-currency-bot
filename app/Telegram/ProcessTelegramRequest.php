@@ -32,6 +32,6 @@ readonly class ProcessTelegramRequest
 
     private function isCommand(string $messageText): bool
     {
-        return '/' === substr($messageText, 0, 1);
+        return str_starts_with($messageText, '/');
     }
 }

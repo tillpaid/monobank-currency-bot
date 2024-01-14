@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Telegram;
 
+use App\Models\TelegramUser;
+
 class MakeTelegramKeyboard
 {
     /**
@@ -13,10 +15,10 @@ class MakeTelegramKeyboard
     {
         return match ($state) {
             null => $this->getMainMenuKeyboard(),
-            config('states.buy'), config('states.sell'), config('states.statistics-currency') => $this->getCurrenciesAndBackKeyboard(),
-            config('states.buy-sum'), config('states.buy-rate-own'), config('states.sell-sum') => $this->getBackKeyboard(),
-            config('states.buy-rate') => $this->getEditRateKeyboard(),
-            config('states.sell-confirm') => $this->getConfirmKeyboard(),
+            TelegramUser::STATE_BUY, TelegramUser::STATE_SELL, TelegramUser::STATE_STATISTICS_CURRENCY => $this->getCurrenciesAndBackKeyboard(),
+            TelegramUser::STATE_BUY_SUM, TelegramUser::STATE_BUY_RATE_OWN, TelegramUser::STATE_SELL_SUM => $this->getBackKeyboard(),
+            TelegramUser::STATE_BUY_RATE => $this->getEditRateKeyboard(),
+            TelegramUser::STATE_SELL_CONFIRM => $this->getConfirmKeyboard(),
             default => [],
         };
     }

@@ -36,14 +36,14 @@ class ProcessTelegramState
     ) {
         $this->processTelegramDefaultState = $processTelegramDefaultState;
         $this->processors = [
-            config('states.buy') => $processTelegramBuyState,
-            config('states.buy-sum') => $processTelegramBuySumState,
-            config('states.buy-rate') => $processTelegramBuyRateState,
-            config('states.buy-rate-own') => $processTelegramBuyRateOwnState,
-            config('states.sell') => $processTelegramSellState,
-            config('states.sell-sum') => $processTelegramSellSumState,
-            config('states.sell-confirm') => $processTelegramSellConfirmState,
-            config('states.statistics-currency') => $processTelegramStatisticsCurrencyState,
+            $processTelegramBuyState->getState() => $processTelegramBuyState,
+            $processTelegramBuySumState->getState() => $processTelegramBuySumState,
+            $processTelegramBuyRateState->getState() => $processTelegramBuyRateState,
+            $processTelegramBuyRateOwnState->getState() => $processTelegramBuyRateOwnState,
+            $processTelegramSellState->getState() => $processTelegramSellState,
+            $processTelegramSellSumState->getState() => $processTelegramSellSumState,
+            $processTelegramSellConfirmState->getState() => $processTelegramSellConfirmState,
+            $processTelegramStatisticsCurrencyState->getState() => $processTelegramStatisticsCurrencyState,
         ];
     }
 
@@ -56,12 +56,10 @@ class ProcessTelegramState
 
     private function getProcessor(TelegramUser $telegramUser): AbstractProcessTelegramState
     {
-        if ($telegramUser->getState() && array_key_exists($telegramUser->getState(), $this->processors)) {
-            $output = $this->processors[$telegramUser->getState()];
-        } else {
-            $output = $this->processTelegramDefaultState;
+        if (array_key_exists($telegramUser->getState(), $this->processors)) {
+            return $this->processors[$telegramUser->getState()];
         }
 
-        return $output;
+        return $this->processTelegramDefaultState;
     }
 }

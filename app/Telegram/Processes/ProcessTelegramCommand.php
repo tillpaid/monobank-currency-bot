@@ -10,6 +10,11 @@ use App\Services\Telegram\TelegramBotService;
 
 class ProcessTelegramCommand
 {
+    private const COMMAND_START = '/start';
+    private const COMMAND_PING = '/ping';
+    private const COMMAND_ENV = '/env';
+    private const COMMAND_REPORT = '/report';
+
     public function __construct(
         protected TelegramUserService $telegramUserService,
         protected TelegramBotService $telegramBotService,
@@ -17,40 +22,34 @@ class ProcessTelegramCommand
 
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
-        switch ($messageText) {
-            case '/start':
-                $this->updateUserState($telegramUser, null);
-                $responseMessage = __('telegram.startMessage');
-
-                break;
-
-            case '/ping':
-                $responseMessage = __('telegram.pong');
-
-                break;
-
-            case '/env':
-                $responseMessage = __('telegram.environment', ['env' => config('app.env')]);
-
-                break;
-
-            case '/report':
-                $responseMessage = $this->telegramBotService->buildUserReport($telegramUser->getId());
-
-                break;
-
-            default:
-                $responseMessage = __('telegram.commandNotFound');
-        }
-
-        return $responseMessage;
+        return match ($messageText) {
+            self::COMMAND_START => $this->processStart($telegramUser),
+            self::COMMAND_PING => $this->processPing(),
+            self::COMMAND_ENV => $this->processEnv(),
+            self::COMMAND_REPORT => $this->processReport($telegramUser),
+            default => __('telegram.commandNotFound'),
+        };
     }
 
-    /**
-     * @param null|array<string, float|string> $stateAdditional
-     */
-    private function updateUserState(TelegramUser $telegramUser, ?string $state, ?array $stateAdditional = null): bool
+    private function processStart(TelegramUser $telegramUser): string
     {
-        return $this->telegramUserService->updateState($telegramUser, $state, $stateAdditional);
+        $this->telegramUserService->updateState($telegramUser, null, null);
+
+        return __('telegram.startMessage');
+    }
+
+    private function processPing(): string
+    {
+        return __('telegram.pong');
+    }
+
+    private function processEnv(): string
+    {
+        return __('telegram.environment', ['env' => config('app.env')]);
+    }
+
+    private function processReport(TelegramUser $telegramUser): string
+    {
+        return $this->telegramBotService->buildUserReport($telegramUser->getId());
     }
 }

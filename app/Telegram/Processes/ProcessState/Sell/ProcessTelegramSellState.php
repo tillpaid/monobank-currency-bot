@@ -32,6 +32,11 @@ class ProcessTelegramSellState extends AbstractProcessTelegramState
         );
     }
 
+    public function getState(): ?string
+    {
+        return TelegramUser::STATE_SELL;
+    }
+
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
         $messageTextLower = mb_strtolower($messageText);
@@ -41,7 +46,14 @@ class ProcessTelegramSellState extends AbstractProcessTelegramState
                 $currencySum = $this->currencyAccountRepository->getUserCurrencySum($telegramUser->getId(), $messageTextLower);
 
                 if ($currencySum > 0) {
-                    $this->updateUserState($telegramUser, config('states.sell-sum'), ['sell-currency' => $messageTextLower, 'sell-currency-sum-all' => $currencySum]);
+                    $this->telegramUserService->updateState(
+                        $telegramUser,
+                        TelegramUser::STATE_SELL_SUM,
+                        [
+                            TelegramUser::STATE_ADDITIONAL_SELL_CURRENCY => $messageTextLower,
+                            TelegramUser::STATE_ADDITIONAL_SELL_CURRENCY_SUM_ALL => $currencySum,
+                        ]
+                    );
 
                     $currencySum = number_format($currencySum, 5, '.', ' ');
                     $responseMessage = __('telegram.sellSum', ['currencySum' => $currencySum, 'currency' => mb_strtoupper($messageText)]);
@@ -52,7 +64,7 @@ class ProcessTelegramSellState extends AbstractProcessTelegramState
                 break;
 
             case $messageText === __('telegram_buttons.back'):
-                $this->updateUserState($telegramUser, null);
+                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
                 $responseMessage = __('telegram.startMessage');
 
                 break;

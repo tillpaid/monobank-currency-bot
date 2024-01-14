@@ -23,30 +23,28 @@ abstract class AbstractProcessTelegramState
         protected TelegramBotService $telegramBotService,
     ) {}
 
-    abstract public function process(TelegramUser $telegramUser, string $messageText): string;
+    abstract public function getState(): ?string;
 
-    /**
-     * @param null|array<string, float|string> $stateAdditional
-     */
-    final protected function updateUserState(TelegramUser $telegramUser, ?string $state, ?array $stateAdditional = null): bool
-    {
-        return $this->telegramUserService->updateState($telegramUser, $state, $stateAdditional);
-    }
+    abstract public function process(TelegramUser $telegramUser, string $messageText): string;
 
     final protected function buildBuyConfirmMessage(TelegramUser $telegramUser, ?float $currencyRate = null): string
     {
-        $currency = $telegramUser->getStateAdditional()['buy-currency']
-            ? mb_strtoupper($telegramUser->getStateAdditional()['buy-currency'])
-            : 'USD';
+        $buyCurrency = $telegramUser->getStateAdditionalValue(TelegramUser::STATE_ADDITIONAL_BUY_CURRENCY);
+
+        $currency = $buyCurrency ? mb_strtoupper($buyCurrency) : 'USD';
         $currencyLower = mb_strtolower($currency);
 
         if (null === $currencyRate) {
             $currencyRate = $this->currencyRateRepository->getLatestCurrencyRate($currencyLower)->getSell();
         }
 
-        $this->telegramUserService->updateStateAdditional($telegramUser, ['buy-currency-rate' => $currencyRate]);
+        $this->telegramUserService->updateStateAdditional(
+            $telegramUser,
+            [TelegramUser::STATE_ADDITIONAL_BUY_CURRENCY_RATE => $currencyRate]
+        );
 
-        $sumUah = $telegramUser->getStateAdditional()['buy-currency-sum'] ?? 0;
+        $sumUah = $telegramUser->getStateAdditionalFloatValue(TelegramUser::STATE_ADDITIONAL_BUY_CURRENCY_SUM) ?? 0;
+
         $sumUahFormat = $this->telegramBotService->format($sumUah, 5);
         $uahToCurrency = $this->telegramBotService->format($sumUah / $currencyRate);
 
