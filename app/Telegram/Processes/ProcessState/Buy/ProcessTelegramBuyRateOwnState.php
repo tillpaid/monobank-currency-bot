@@ -5,10 +5,17 @@ declare(strict_types=1);
 namespace App\Telegram\Processes\ProcessState\Buy;
 
 use App\Models\TelegramUser;
-use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
+use App\Services\BuyCurrencyService;
+use App\Services\Models\TelegramUserService;
+use App\Telegram\Processes\ProcessState\ProcessTelegramStateInterface;
 
-class ProcessTelegramBuyRateOwnState extends AbstractProcessTelegramState
+readonly class ProcessTelegramBuyRateOwnState implements ProcessTelegramStateInterface
 {
+    public function __construct(
+        private TelegramUserService $telegramUserService,
+        private BuyCurrencyService $buyCurrencyService,
+    ) {}
+
     public function getState(): ?string
     {
         return TelegramUser::STATE_BUY_RATE_OWN;
@@ -37,13 +44,20 @@ class ProcessTelegramBuyRateOwnState extends AbstractProcessTelegramState
 
         $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY_RATE);
 
-        return $this->buildBuyConfirmMessage($telegramUser, $rate);
+        return $this->buyCurrencyService->prepareBuyCurrencyAndGetConfirmMessage($telegramUser, $rate);
     }
 
     private function processBackButton(TelegramUser $telegramUser): string
     {
         $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY_RATE);
 
-        return $this->buildBuyConfirmMessage($telegramUser);
+        return $this->buyCurrencyService->prepareBuyCurrencyAndGetConfirmMessage($telegramUser);
+    }
+
+    private function processBackHomeButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
+
+        return __('telegram.startMessage');
     }
 }

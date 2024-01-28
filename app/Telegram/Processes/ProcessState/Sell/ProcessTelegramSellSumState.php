@@ -5,10 +5,17 @@ declare(strict_types=1);
 namespace App\Telegram\Processes\ProcessState\Sell;
 
 use App\Models\TelegramUser;
-use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
+use App\Services\Models\TelegramUserService;
+use App\Services\TelegramUserAdditionalStateResolver;
+use App\Telegram\Processes\ProcessState\ProcessTelegramStateInterface;
 
-class ProcessTelegramSellSumState extends AbstractProcessTelegramState
+readonly class ProcessTelegramSellSumState implements ProcessTelegramStateInterface
 {
+    public function __construct(
+        private TelegramUserAdditionalStateResolver $telegramUserAdditionalStateResolver,
+        private TelegramUserService $telegramUserService,
+    ) {}
+
     public function getState(): ?string
     {
         return TelegramUser::STATE_SELL_SUM;
@@ -58,5 +65,12 @@ class ProcessTelegramSellSumState extends AbstractProcessTelegramState
         $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_SELL);
 
         return __('telegram.chooseCurrencySell');
+    }
+
+    private function processBackHomeButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
+
+        return __('telegram.startMessage');
     }
 }

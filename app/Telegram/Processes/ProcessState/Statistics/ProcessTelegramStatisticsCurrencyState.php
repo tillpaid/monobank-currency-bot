@@ -6,10 +6,19 @@ namespace App\Telegram\Processes\ProcessState\Statistics;
 
 use App\Models\CurrencyRate;
 use App\Models\TelegramUser;
-use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
+use App\Repositories\CurrencyRateRepository;
+use App\Services\Models\TelegramUserService;
+use App\Services\Telegram\TelegramBotService;
+use App\Telegram\Processes\ProcessState\ProcessTelegramStateInterface;
 
-class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramState
+readonly class ProcessTelegramStatisticsCurrencyState implements ProcessTelegramStateInterface
 {
+    public function __construct(
+        private TelegramUserService $telegramUserService,
+        private CurrencyRateRepository $currencyRateRepository,
+        private TelegramBotService $telegramBotService,
+    ) {}
+
     public function getState(): ?string
     {
         return TelegramUser::STATE_STATISTICS_CURRENCY;
@@ -65,7 +74,7 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
             // TODO: Sell can be null. Or can't? Than change the field in the model
             $rateSell = $this->telegramBotService->format($rate->getSell(), 2, false);
 
-            $ratesResponse[] = "`* {$date} - {$rateBuy}₴ / {$rateSell}₴`";
+            $ratesResponse[] = sprintf('`* %s - %s₴ / %s₴`', $date, $rateBuy, $rateSell);
         }
 
         return implode("\n", $ratesResponse);

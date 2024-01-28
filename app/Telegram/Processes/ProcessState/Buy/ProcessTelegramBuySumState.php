@@ -5,10 +5,17 @@ declare(strict_types=1);
 namespace App\Telegram\Processes\ProcessState\Buy;
 
 use App\Models\TelegramUser;
-use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
+use App\Services\BuyCurrencyService;
+use App\Services\Models\TelegramUserService;
+use App\Telegram\Processes\ProcessState\ProcessTelegramStateInterface;
 
-class ProcessTelegramBuySumState extends AbstractProcessTelegramState
+readonly class ProcessTelegramBuySumState implements ProcessTelegramStateInterface
 {
+    public function __construct(
+        private TelegramUserService $telegramUserService,
+        private BuyCurrencyService $buyCurrencyService,
+    ) {}
+
     public function getState(): ?string
     {
         return TelegramUser::STATE_BUY_SUM;
@@ -41,7 +48,7 @@ class ProcessTelegramBuySumState extends AbstractProcessTelegramState
             [TelegramUser::STATE_ADDITIONAL_BUY_CURRENCY_SUM => $sum]
         );
 
-        return $this->buildBuyConfirmMessage($telegramUser);
+        return $this->buyCurrencyService->prepareBuyCurrencyAndGetConfirmMessage($telegramUser);
     }
 
     private function processBackButton(TelegramUser $telegramUser): string
@@ -49,5 +56,12 @@ class ProcessTelegramBuySumState extends AbstractProcessTelegramState
         $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY);
 
         return __('telegram.chooseCurrencyBuy');
+    }
+
+    private function processBackHomeButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
+
+        return __('telegram.startMessage');
     }
 }

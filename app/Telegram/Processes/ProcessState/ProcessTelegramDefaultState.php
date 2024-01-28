@@ -5,9 +5,16 @@ declare(strict_types=1);
 namespace App\Telegram\Processes\ProcessState;
 
 use App\Models\TelegramUser;
+use App\Services\Models\TelegramUserService;
+use App\Services\Telegram\TelegramBotService;
 
-class ProcessTelegramDefaultState extends AbstractProcessTelegramState
+readonly class ProcessTelegramDefaultState implements ProcessTelegramStateInterface
 {
+    public function __construct(
+        private TelegramUserService $telegramUserService,
+        private TelegramBotService $telegramBotService,
+    ) {}
+
     public function getState(): ?string
     {
         return null;

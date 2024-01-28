@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace App\Telegram\Processes\ProcessState\Buy;
 
 use App\Models\TelegramUser;
-use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
+use App\Services\Models\TelegramUserService;
+use App\Telegram\Processes\ProcessState\ProcessTelegramStateInterface;
 
-class ProcessTelegramBuyState extends AbstractProcessTelegramState
+readonly class ProcessTelegramBuyState implements ProcessTelegramStateInterface
 {
+    public function __construct(
+        private TelegramUserService $telegramUserService,
+    ) {}
+
     public function getState(): ?string
     {
         return TelegramUser::STATE_BUY;

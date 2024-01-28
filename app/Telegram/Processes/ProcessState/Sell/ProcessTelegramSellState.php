@@ -5,10 +5,19 @@ declare(strict_types=1);
 namespace App\Telegram\Processes\ProcessState\Sell;
 
 use App\Models\TelegramUser;
-use App\Telegram\Processes\ProcessState\AbstractProcessTelegramState;
+use App\Repositories\CurrencyAccountRepository;
+use App\Services\Models\TelegramUserService;
+use App\Services\TelegramUserAdditionalStateResolver;
+use App\Telegram\Processes\ProcessState\ProcessTelegramStateInterface;
 
-class ProcessTelegramSellState extends AbstractProcessTelegramState
+readonly class ProcessTelegramSellState implements ProcessTelegramStateInterface
 {
+    public function __construct(
+        private CurrencyAccountRepository $currencyAccountRepository,
+        private TelegramUserService $telegramUserService,
+        private TelegramUserAdditionalStateResolver $telegramUserAdditionalStateResolver,
+    ) {}
+
     public function getState(): ?string
     {
         return TelegramUser::STATE_SELL;
