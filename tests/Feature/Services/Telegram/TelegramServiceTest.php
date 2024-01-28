@@ -6,12 +6,12 @@ namespace Tests\Feature\Services\Telegram;
 
 use App\Services\Telegram\TelegramBotService;
 use App\Services\Telegram\TelegramService;
+use DateTime;
 use Exception;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Tests\Mocks\TelegramBotServiceMock;
 use Tests\TestCase;
 
-final class TelegramServiceTest extends TestCase
+class TelegramServiceTest extends TestCase
 {
     private const FILES_PATH = __DIR__.'/Resources/';
     private const TEST_FILES = [
@@ -31,9 +31,6 @@ final class TelegramServiceTest extends TestCase
 
     private string $myChatId;
 
-    /**
-     * @throws BindingResolutionException
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -73,11 +70,19 @@ final class TelegramServiceTest extends TestCase
      */
     public function testFirstAttempt(): void
     {
-        $this->fixturesHelper->createCurrencyRate('usd', 37.4, 36.35, '2023-12-24 00:00:00');
-        $this->fixturesHelper->createCurrencyRate('usd', 38.5, 37.5, '2023-12-24 00:01:00');
+        $todayDate = (new DateTime('midnight'))->format('Y-m-d');
+        $today = (new DateTime('midnight'))->format('Y-m-d H:i:s');
+        $todayPlusOne = (new DateTime('midnight +1 minute'))->format('Y-m-d H:i:s');
 
-        $this->fixturesHelper->createCurrencyRate('eur', 41.4, 40.35, '2023-12-24 00:00:00');
-        $this->fixturesHelper->createCurrencyRate('eur', 42.5, 41.5, '2023-12-24 00:01:00');
+        $this->fixturesHelper->createCurrencyRate('usd', 37.4, 36.35, $today);
+        $this->fixturesHelper->createCurrencyRate('usd', 38.5, 37.5, $todayPlusOne);
+
+        $this->fixturesHelper->createCurrencyRate('eur', 41.4, 40.35, $today);
+        $this->fixturesHelper->createCurrencyRate('eur', 42.5, 41.5, $todayPlusOne);
+
+        $placeholders = [
+            '%todayDate%' => $todayDate,
+        ];
 
         foreach (self::TEST_FILES as $testFile) {
             $csvFilePath = sprintf('%s/Resources/%s', __DIR__, $testFile);
@@ -89,7 +94,7 @@ final class TelegramServiceTest extends TestCase
                 $stepResponse = $step[2] ?? '';
 
                 $response = $this->sendMessageAndGetResponse($stepRequest);
-                $expectedResponse = $this->resolveExpectedResponseFromStepData($stepResponse);
+                $expectedResponse = $this->resolveExpectedResponseFromStepData($stepResponse, $placeholders);
 
                 $this->assertSame($expectedResponse, $response, sprintf('Wrong response in %s in file %s', $stepNumber, $testFile));
             }
@@ -98,8 +103,9 @@ final class TelegramServiceTest extends TestCase
         }
     }
 
-    private function resolveExpectedResponseFromStepData(string $message): string
+    private function resolveExpectedResponseFromStepData(string $message, array $placeholders): string
     {
+        $message = str_replace(array_keys($placeholders), array_values($placeholders), $message);
         $lines = explode("\n", $message);
 
         $spacesCount = 0;
@@ -112,7 +118,7 @@ final class TelegramServiceTest extends TestCase
         }
 
         $lines = array_map(static function ($line) use ($spacesCount) {
-            if ('' === trim(substr($line, 0, $spacesCount))) {
+            if (trim(substr($line, 0, $spacesCount)) === '') {
                 $line = substr($line, $spacesCount);
             }
 
@@ -137,7 +143,7 @@ final class TelegramServiceTest extends TestCase
         $this->telegramService->processWebhook($data);
         $messages = $this->telegramBotService->getAndResetMyMessages();
 
-        if (1 !== count($messages)) {
+        if (count($messages) !== 1) {
             throw new Exception(sprintf('Expected 1 message, got %d', count($messages)));
         }
 

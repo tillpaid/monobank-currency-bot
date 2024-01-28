@@ -22,8 +22,8 @@ class ProcessTelegramBuyState extends AbstractProcessTelegramState
             return $this->processCurrency($telegramUser, $messageTextLower);
         }
 
-        return match (true) {
-            $messageText === __('telegram_buttons.back') => $this->processBackButton($telegramUser),
+        return match ($messageText) {
+            __('telegram_buttons.back') => $this->processBackButton($telegramUser),
             default => __('telegram.currencyNotSupported'),
         };
     }

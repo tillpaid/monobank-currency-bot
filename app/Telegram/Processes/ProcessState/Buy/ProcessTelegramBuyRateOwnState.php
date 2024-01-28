@@ -46,11 +46,4 @@ class ProcessTelegramBuyRateOwnState extends AbstractProcessTelegramState
 
         return $this->buildBuyConfirmMessage($telegramUser);
     }
-
-    private function processBackHomeButton(TelegramUser $telegramUser): string
-    {
-        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
-
-        return __('telegram.startMessage');
-    }
 }

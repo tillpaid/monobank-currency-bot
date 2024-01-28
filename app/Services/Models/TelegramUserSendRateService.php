@@ -13,18 +13,26 @@ readonly class TelegramUserSendRateService
         private TelegramUserSendRateRepository $telegramUserSendRateRepository,
     ) {}
 
-    // TODO: This is not only about update. Needs to be renamed or refactored.
-    public function updateSendRate(int $telegramUserId, int $currencyRateId, string $currency): void
+    public function create(int $telegramUserId, int $currencyRateId, string $currency): bool
     {
-        if ($sendRate = $this->telegramUserSendRateRepository->getSendRate($telegramUserId, $currency)) {
-            $sendRate->setCurrencyRateId($currencyRateId);
-            $sendRate->save();
-        } else {
-            $telegramUserSendRate = new TelegramUserSendRate();
-            $telegramUserSendRate->setTelegramUserId($telegramUserId);
-            $telegramUserSendRate->setCurrency($currency);
-            $telegramUserSendRate->setCurrencyRateId($currencyRateId);
-            $telegramUserSendRate->save();
+        $telegramUserSendRate = new TelegramUserSendRate();
+        $telegramUserSendRate->setTelegramUserId($telegramUserId);
+        $telegramUserSendRate->setCurrency($currency);
+        $telegramUserSendRate->setCurrencyRateId($currencyRateId);
+
+        return $telegramUserSendRate->save();
+    }
+
+    public function upsert(int $telegramUserId, int $currencyRateId, string $currency): bool
+    {
+        $sendRate = $this->telegramUserSendRateRepository->getSendRate($telegramUserId, $currency);
+
+        if ($sendRate === null) {
+            return $this->create($telegramUserId, $currencyRateId, $currency);
         }
+
+        $sendRate->setCurrencyRateId($currencyRateId);
+
+        return $sendRate->save();
     }
 }

@@ -39,7 +39,7 @@ class MonobankCurrencyService
         try {
             $response = $this->client->get(config('monobank.monobank_currency_url'));
 
-            if (200 === $response->getStatusCode()) {
+            if ($response->getStatusCode() === 200) {
                 // TODO: Validate that we have a valid JSON
                 $output = json_decode($response->getBody()->getContents(), true);
             }
@@ -73,21 +73,14 @@ class MonobankCurrencyService
 
     private function isItNeedleRate(array $newRate): bool
     {
-        $needle = true;
-
-        if ($newRate['currencyCodeB'] !== $this->uahCode) {
-            $needle = false;
-        } elseif (!in_array($newRate['currencyCodeA'], array_keys($this->currencyCodes), true)) {
-            $needle = false;
-        }
-
-        return $needle;
+        return $newRate['currencyCodeB'] === $this->uahCode
+            && in_array($newRate['currencyCodeA'], array_keys($this->currencyCodes), true);
     }
 
     private function isRateDifferent(?CurrencyRate $rate, array $newRate): bool
     {
         return
-            null === $rate
+            $rate === null
             || round($newRate['rateBuy'], 5) !== round($rate->getBuy(), 5)
             || round($newRate['rateSell'], 5) !== round($rate->getSell(), 5);
     }

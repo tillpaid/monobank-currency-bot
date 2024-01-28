@@ -15,39 +15,44 @@ class ProcessTelegramDefaultState extends AbstractProcessTelegramState
 
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
-        switch ($messageText) {
-            case __('telegram_buttons.buy'):
-                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY);
-                $responseMessage = __('telegram.chooseCurrencyBuy');
+        return match ($messageText) {
+            __('telegram_buttons.buy') => $this->processButtonBuy($telegramUser),
+            __('telegram_buttons.sell') => $this->processButtonSell($telegramUser),
+            __('telegram_buttons.balance') => $this->processButtonBalance($telegramUser),
+            __('telegram_buttons.report') => $this->processButtonReport($telegramUser),
+            __('telegram_buttons.statisticsCurrency') => $this->processButtonStatisticsCurrency($telegramUser),
+            default => __('telegram.occurredError'),
+        };
+    }
 
-                break;
+    private function processButtonBuy(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY);
 
-            case __('telegram_buttons.sell'):
-                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_SELL);
-                $responseMessage = __('telegram.chooseCurrencySell');
+        return __('telegram.chooseCurrencyBuy');
+    }
 
-                break;
+    private function processButtonSell(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_SELL);
 
-            case __('telegram_buttons.balance'):
-                $responseMessage = $this->telegramBotService->buildUserBalanceMessage($telegramUser->getId());
+        return __('telegram.chooseCurrencySell');
+    }
 
-                break;
+    private function processButtonBalance(TelegramUser $telegramUser): string
+    {
+        return $this->telegramBotService->buildUserBalanceMessage($telegramUser->getId());
+    }
 
-            case __('telegram_buttons.report'):
-                $responseMessage = $this->telegramBotService->buildUserReport($telegramUser->getId());
+    private function processButtonReport(TelegramUser $telegramUser): string
+    {
+        return $this->telegramBotService->buildUserReport($telegramUser->getId());
+    }
 
-                break;
+    private function processButtonStatisticsCurrency(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_STATISTICS_CURRENCY);
 
-            case __('telegram_buttons.statisticsCurrency'):
-                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_STATISTICS_CURRENCY);
-                $responseMessage = __('telegram.chooseCurrency');
-
-                break;
-
-            default:
-                $responseMessage = __('telegram.occurredError');
-        }
-
-        return $responseMessage;
+        return __('telegram.chooseCurrency');
     }
 }

@@ -31,7 +31,7 @@ readonly class TelegramUserRepository
     {
         $telegramUserCount = $this->telegramUser->newQuery()->where('chat_id', $chatId)->count();
 
-        if (0 === $telegramUserCount) {
+        if ($telegramUserCount === 0) {
             $this->telegramUser->newQuery()->create(['chat_id' => $chatId]);
         }
     }

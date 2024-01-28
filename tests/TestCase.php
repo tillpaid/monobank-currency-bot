@@ -18,7 +18,7 @@ abstract class TestCase extends BaseTestCase
     use DatabaseTransactions;
 
     protected FixturesHelper $fixturesHelper;
-    protected Generator $faker;
+    protected Generator $fakerGenerator;
     protected Carbon $carbon;
 
     protected function setUp(): void
@@ -26,7 +26,7 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->fixturesHelper = new FixturesHelper();
-        $this->faker = new Generator();
+        $this->fakerGenerator = new Generator();
         $this->carbon = new Carbon();
     }
 }

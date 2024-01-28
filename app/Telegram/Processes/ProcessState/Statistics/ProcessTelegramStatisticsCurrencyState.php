@@ -17,82 +17,106 @@ class ProcessTelegramStatisticsCurrencyState extends AbstractProcessTelegramStat
 
     public function process(TelegramUser $telegramUser, string $messageText): string
     {
-        $messageTextLower = mb_strtolower($messageText);
-
-        switch (true) {
-            case in_array($messageTextLower, config('monobank.currencies'), true):
-                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
-
-                $rates = $this->currencyRateRepository->getCurrencyRatesOfLastMonth($messageTextLower);
-                $ratesResponse = [];
-
-                $ratesMinMax = [
-                    'values' => ['buy' => ['min' => PHP_INT_MAX, 'max' => 0], 'sell' => ['min' => PHP_INT_MAX, 'max' => 0]],
-                    'data' => ['buy' => ['min' => null, 'max' => null], 'sell' => ['min' => null, 'max' => null]],
-                ];
-
-                foreach ($rates as $rate) {
-                    $date = $rate->getCreatedAt()->format('Y-m-d');
-                    $rateBuy = $this->telegramBotService->format($rate->getBuy(), 2, false);
-                    // TODO: Sell can be null. Or can't? Than change the field in the model
-                    $rateSell = $this->telegramBotService->format($rate->getSell(), 2, false);
-
-                    $ratesResponse[] = "`* {$date} - {$rateBuy}₴ / {$rateSell}₴`";
-
-                    $this->processMinMaxRates($ratesMinMax, $rate, $date);
-                }
-
-                $ratesResponse = implode("\n", $ratesResponse);
-                $responseMessage = __('telegram.statisticsCurrencyReport', [
-                    'currencyUpper' => mb_strtoupper($messageText),
-                    'ratesResponse' => $ratesResponse,
-                    'buyMin' => $ratesMinMax['data']['buy']['min'],
-                    'buyMax' => $ratesMinMax['data']['buy']['max'],
-                    'sellMin' => $ratesMinMax['data']['sell']['min'],
-                    'sellMax' => $ratesMinMax['data']['sell']['max'],
-                ]);
-
-                break;
-
-            case $messageText === __('telegram_buttons.back'):
-                $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
-                $responseMessage = __('telegram.startMessage');
-
-                break;
-
-            default:
-                $responseMessage = __('telegram.currencyNotSupported');
+        if ($this->isMessageTextCurrency($messageText)) {
+            return $this->processAction($telegramUser, $messageText);
         }
 
-        return $responseMessage;
+        return match ($messageText) {
+            __('telegram_buttons.back') => $this->processBackButton($telegramUser),
+            default => __('telegram.currencyNotSupported'),
+        };
+    }
+
+    private function processAction(TelegramUser $telegramUser, string $messageText): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
+
+        $currency = mb_strtolower($messageText);
+        $rates = $this->currencyRateRepository->getCurrencyRatesOfLastMonth($currency);
+
+        $data = [
+            'currencyUpper' => mb_strtoupper($currency),
+            'ratesResponse' => $this->resolveRatesFormattedResponse($rates),
+        ];
+
+        return __(
+            'telegram.statisticsCurrencyReport',
+            array_merge($data, $this->resolveMinMaxRates($rates))
+        );
+    }
+
+    private function processBackButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
+
+        return __('telegram.startMessage');
     }
 
     /**
-     * @param array<string, array<string, array<string, null|int>>> $ratesMinMax
+     * @param CurrencyRate[] $rates
      */
-    private function processMinMaxRates(array &$ratesMinMax, CurrencyRate $rate, string $date): void
+    private function resolveRatesFormattedResponse(array $rates): string
     {
-        $buyString = "{$date} - {$rate->getBuy()}₴";
-        $sellString = "{$date} - {$rate->getSell()}₴";
+        $ratesResponse = [];
 
-        if ($rate->getBuy() <= $ratesMinMax['values']['buy']['min']) {
-            $ratesMinMax['values']['buy']['min'] = $rate->getBuy();
-            $ratesMinMax['data']['buy']['min'] = $buyString;
+        foreach ($rates as $rate) {
+            $date = $rate->getCreatedAt()->format('Y-m-d');
+            $rateBuy = $this->telegramBotService->format($rate->getBuy(), 2, false);
+            // TODO: Sell can be null. Or can't? Than change the field in the model
+            $rateSell = $this->telegramBotService->format($rate->getSell(), 2, false);
+
+            $ratesResponse[] = "`* {$date} - {$rateBuy}₴ / {$rateSell}₴`";
         }
 
-        if ($rate->getBuy() >= $ratesMinMax['values']['buy']['max']) {
-            $ratesMinMax['values']['buy']['max'] = $rate->getBuy();
-            $ratesMinMax['data']['buy']['max'] = $buyString;
+        return implode("\n", $ratesResponse);
+    }
+
+    /**
+     * @param CurrencyRate[] $rates
+     */
+    private function resolveMinMaxRates(array $rates): array
+    {
+        $output = ['buyMin' => '', 'buyMax' => '', 'sellMin' => '', 'sellMax' => ''];
+
+        $minBuy = PHP_INT_MAX;
+        $minSell = PHP_INT_MAX;
+        $maxBuy = 0;
+        $maxSell = 0;
+
+        foreach ($rates as $rate) {
+            $date = $rate->getCreatedAt()->format('Y-m-d');
+            $buyString = sprintf('%s - %s₴', $date, $rate->getBuy());
+            $sellString = sprintf('%s - %s₴', $date, $rate->getSell());
+
+            if ($rate->getBuy() <= $minBuy) {
+                $minBuy = $rate->getBuy();
+                $output['buyMin'] = $buyString;
+            }
+
+            if ($rate->getBuy() >= $maxBuy) {
+                $maxBuy = $rate->getBuy();
+                $output['buyMax'] = $buyString;
+            }
+
+            if ($rate->getSell() <= $minSell) {
+                $minSell = $rate->getSell();
+                $output['sellMin'] = $sellString;
+            }
+
+            if ($rate->getSell() >= $maxSell) {
+                $maxSell = $rate->getSell();
+                $output['sellMax'] = $sellString;
+            }
         }
 
-        if ($rate->getSell() <= $ratesMinMax['values']['sell']['min']) {
-            $ratesMinMax['values']['sell']['min'] = $rate->getSell();
-            $ratesMinMax['data']['sell']['min'] = $sellString;
-        }
+        return $output;
+    }
 
-        if ($rate->getSell() >= $ratesMinMax['values']['sell']['max']) {
-            $ratesMinMax['values']['sell']['max'] = $rate->getSell();
-            $ratesMinMax['data']['sell']['max'] = $sellString;
-        }
+    private function isMessageTextCurrency(string $messageText): bool
+    {
+        $lowerMessageText = mb_strtolower($messageText);
+        $currenciesList = config('monobank.currencies');
+
+        return in_array($lowerMessageText, $currenciesList, true);
     }
 }

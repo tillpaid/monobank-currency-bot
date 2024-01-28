@@ -59,7 +59,7 @@ class TelegramBotService
      */
     public function getBot(): Telegram
     {
-        if (null === $this->bot) {
+        if ($this->bot === null) {
             $botUserName = config('telegram.botUserName');
             $botApiKey = config('telegram.botApiToken');
 
@@ -190,14 +190,13 @@ class TelegramBotService
 
         $rateBeenSent = $this->telegramUserSendRateRepository->findByTelegramUserAndCurrencyRate($userId, $rateNew->getId());
 
-        if ($rateBeenSent) {
-            $output = "{$currencyName}: {$buy} / {$sell}";
-        } else {
-            $output = "{$currencyName}: {$buy} / {$sell} (*{$buyDiff} / {$sellDiff}*)";
-            $this->telegramUserSendRateService->updateSendRate($userId, $rateNew->getId(), $currencyName);
+        if (!$rateBeenSent) {
+            $this->telegramUserSendRateService->upsert($userId, $rateNew->getId(), $currencyName);
+
+            return "{$currencyName}: {$buy} / {$sell} (*{$buyDiff} / {$sellDiff}*)";
         }
 
-        return $output;
+        return "{$currencyName}: {$buy} / {$sell}";
     }
 
     private function getAccountChange(array $userBalanceSum, string $currencyName, float $buyRate): string

@@ -22,11 +22,11 @@ class TelegramUserService
 
     public function updateStateAdditional(TelegramUser $telegramUser, ?array $stateAdditional): bool
     {
-        if ($telegramUser->getStateAdditional()) {
-            $telegramUser->setStateAdditional(array_merge($telegramUser->getStateAdditional(), $stateAdditional));
-        } else {
-            $telegramUser->setStateAdditional($stateAdditional);
+        if ($telegramUser->getStateAdditional() !== null && count($telegramUser->getStateAdditional()) > 0) {
+            $stateAdditional = array_merge($telegramUser->getStateAdditional(), $stateAdditional);
         }
+
+        $telegramUser->setStateAdditional($stateAdditional);
 
         return $telegramUser->save();
     }

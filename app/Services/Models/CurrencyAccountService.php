@@ -32,7 +32,7 @@ readonly class CurrencyAccountService
             $currencySum = round($currencySum, 5);
 
             $currencyAccount = $this->currencyAccountRepository->getLessProfitUserCurrencyAccount($userId, $currency);
-            if (null === $currencyAccount) {
+            if ($currencyAccount === null) {
                 break;
             }
 

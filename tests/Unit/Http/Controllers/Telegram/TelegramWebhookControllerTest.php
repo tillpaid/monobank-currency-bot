@@ -28,7 +28,7 @@ class TelegramWebhookControllerTest extends TestCase
 
     public function testCatchWebhookSuccess(): void
     {
-        $requestData = ['update_id' => $this->faker->randomNumber()];
+        $requestData = ['update_id' => $this->fakerGenerator->randomNumber()];
 
         $this->telegramBotService
             ->shouldReceive('getBot')

@@ -69,6 +69,11 @@ $config
         ],
         'php_unit_test_class_requires_covers' => false,
         'php_unit_internal_class' => false,
+        'yoda_style' => [
+            'equal' => false,
+            'identical' => false,
+            'less_and_greater' => false,
+        ],
     ])
     ->setFinder($finder)
 ;

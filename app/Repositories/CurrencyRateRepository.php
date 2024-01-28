@@ -38,7 +38,7 @@ readonly class CurrencyRateRepository
             ->all()
         ;
 
-        return 2 === count($rates) ? $rates : null;
+        return count($rates) === 2 ? $rates : null;
     }
 
     /**

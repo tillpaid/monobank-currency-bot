@@ -5,22 +5,26 @@ declare(strict_types=1);
 namespace App\Telegram\Processes\ProcessState;
 
 use App\Models\TelegramUser;
+use App\Repositories\CurrencyAccountRepository;
 use App\Repositories\CurrencyRateRepository;
 use App\Services\Models\CurrencyAccountService;
 use App\Services\Models\CurrencyRateService;
 use App\Services\Models\TelegramUserService;
 use App\Services\Telegram\TelegramBotService;
+use App\Services\TelegramUserAdditionalStateResolver;
 
 // TODO: Convert this class to interface
 abstract class AbstractProcessTelegramState
 {
     // TODO: Move props to child classes
     public function __construct(
+        protected CurrencyAccountRepository $currencyAccountRepository,
         protected TelegramUserService $telegramUserService,
         protected CurrencyRateService $currencyRateService,
         protected CurrencyAccountService $currencyAccountService,
         protected CurrencyRateRepository $currencyRateRepository,
         protected TelegramBotService $telegramBotService,
+        protected TelegramUserAdditionalStateResolver $telegramUserAdditionalStateResolver,
     ) {}
 
     abstract public function getState(): ?string;
@@ -34,9 +38,7 @@ abstract class AbstractProcessTelegramState
         $currency = $buyCurrency ? mb_strtoupper($buyCurrency) : 'USD';
         $currencyLower = mb_strtolower($currency);
 
-        if (null === $currencyRate) {
-            $currencyRate = $this->currencyRateRepository->getLatestCurrencyRate($currencyLower)->getSell();
-        }
+        $currencyRate ??= $this->currencyRateRepository->getLatestCurrencyRate($currencyLower)->getSell();
 
         $this->telegramUserService->updateStateAdditional(
             $telegramUser,
@@ -44,10 +46,16 @@ abstract class AbstractProcessTelegramState
         );
 
         $sumUah = $telegramUser->getStateAdditionalFloatValue(TelegramUser::STATE_ADDITIONAL_BUY_CURRENCY_SUM) ?? 0;
-
         $sumUahFormat = $this->telegramBotService->format($sumUah, 5);
         $uahToCurrency = $this->telegramBotService->format($sumUah / $currencyRate);
 
         return __('telegram.buyMessage', compact('currencyRate', 'uahToCurrency', 'currency', 'sumUahFormat'));
+    }
+
+    protected function processBackHomeButton(TelegramUser $telegramUser): string
+    {
+        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
+
+        return __('telegram.startMessage');
     }
 }

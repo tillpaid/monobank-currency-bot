@@ -20,9 +20,9 @@ class ProcessTelegramBuySumState extends AbstractProcessTelegramState
             return $this->processBuySum($telegramUser, $messageText);
         }
 
-        return match (true) {
-            $messageText === __('telegram_buttons.back') => $this->processBackButton($telegramUser),
-            $messageText === __('telegram_buttons.backHome') => $this->processBackHomeButton($telegramUser),
+        return match ($messageText) {
+            __('telegram_buttons.back') => $this->processBackButton($telegramUser),
+            __('telegram_buttons.backHome') => $this->processBackHomeButton($telegramUser),
             default => __('telegram.occurredError'),
         };
     }
@@ -49,12 +49,5 @@ class ProcessTelegramBuySumState extends AbstractProcessTelegramState
         $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_BUY);
 
         return __('telegram.chooseCurrencyBuy');
-    }
-
-    private function processBackHomeButton(TelegramUser $telegramUser): string
-    {
-        $this->telegramUserService->updateState($telegramUser, TelegramUser::STATE_DEFAULT);
-
-        return __('telegram.startMessage');
     }
 }

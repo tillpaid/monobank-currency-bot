@@ -29,7 +29,7 @@ class TelegramUserSendRateServiceTest extends TestCase
         $currencyRate = $this->fixturesHelper->createCurrencyRate();
         $this->fixturesHelper->createTelegramUserSendRate($telegramUser->getId(), $currencyRate->getId());
 
-        $this->telegramUserSendRateService->updateSendRate($telegramUser->getId(), $currencyRate->getId(), $currencyRate->getCurrency());
+        $this->telegramUserSendRateService->upsert($telegramUser->getId(), $currencyRate->getId(), $currencyRate->getCurrency());
 
         $sendRates = TelegramUserSendRate::all();
         $this->assertCount(1, $sendRates);
@@ -45,7 +45,7 @@ class TelegramUserSendRateServiceTest extends TestCase
         $telegramUser = $this->fixturesHelper->createTelegramUser();
         $currencyRate = $this->fixturesHelper->createCurrencyRate();
 
-        $this->telegramUserSendRateService->updateSendRate($telegramUser->getId(), $currencyRate->getId(), $currencyRate->getCurrency());
+        $this->telegramUserSendRateService->upsert($telegramUser->getId(), $currencyRate->getId(), $currencyRate->getCurrency());
 
         $sendRates = TelegramUserSendRate::all();
         $this->assertCount(1, $sendRates);
